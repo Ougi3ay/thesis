@@ -15,16 +15,25 @@
 \setmonofont{DejaVu Sans Mono}
 
 % Khmer fonts
-\newfontfamily\khmerfont{Khmer OS Battambang}
+\newfontfamily\khmerfont[
+    Script=Khmer,
+    Scale=1.0
+]{Khmer OS Battambang}
+
 \newfontfamily\khmoul[
-    BoldFont = Khmer OS Muol Light
+    Script=Khmer,
+    Scale=1.0,
+    BoldFont=Khmer OS Muol Light
 ]{Khmer OS Muol Light}
-\newfontfamily\khsr{Khmer OS Siemreap}
+
+\newfontfamily\khsr[
+    Script=Khmer,
+    Scale=1.0
+]{Khmer OS Siemreap}
 
 % Khmer text line breaking
 \XeTeXlinebreaklocale "khm"
 \XeTeXlinebreakskip = 0pt plus 0.5pt minus 0.25pt
-
 
 % Khmer field row for cover page
 \newcommand{\KHCoverRow}[2]{%
@@ -43,10 +52,12 @@
 ]{geometry}
 
 % =====================================================
-% 3. Line Spacing
+% 3. Line Spacing and Paragraph Formatting
 % =====================================================
 \RequirePackage{setspace}
 \onehalfspacing
+
+% Paragraph style
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{8pt}
 
@@ -68,7 +79,6 @@
 \RequirePackage{caption}
 \RequirePackage{float}
 \RequirePackage{etoolbox}
-\RequirePackage{bookmark}
 
 \RequirePackage{tikz}
 \usetikzlibrary{
@@ -123,7 +133,7 @@
     \renewcommand{\listfigurename}{LIST OF FIGURES}%
     \renewcommand{\listtablename}{LIST OF TABLES}%
 }
-\addcontentsline{toc}{chapter}{REFERENCES}
+
 % TOC depth
 % 2 = show chapters, sections, and subsections
 % 3 = number subsubsections in the document
@@ -134,21 +144,8 @@
 \renewcommand{\cftdotsep}{1}
 
 % -----------------------------------------------------
-% TOC chapter format
-% Example:
-% CHAPTER 1 : INTRODUCTION ................. 1
-% -----------------------------------------------------
-\renewcommand{\cftchappresnum}{CHAPTER~}
-\renewcommand{\cftchapaftersnum}{~:~}
-\setlength{\cftchapnumwidth}{5.8em}
-
-% Keep chapter entries bold in TOC
-\renewcommand{\cftchapfont}{\bfseries}
-\renewcommand{\cftchappagefont}{\bfseries}
-\renewcommand{\cftchapleader}{\cftdotfill{\cftdotsep}}
-
-% -----------------------------------------------------
 % Remove extra chapter gap in List of Figures / Tables
+% This makes every LOF / LOT entry spacing equal.
 % -----------------------------------------------------
 \makeatletter
 \patchcmd{\@chapter}
@@ -163,9 +160,19 @@
 \makeatother
 
 % -----------------------------------------------------
-% TOC spacing and alignment
-% This makes chapter, section, and subsection spacing equal.
+% TOC chapter format
+% Example:
+% CHAPTER 1 : INTRODUCTION ................. 1
 % -----------------------------------------------------
+\renewcommand{\cftchappresnum}{CHAPTER~}
+\renewcommand{\cftchapaftersnum}{~:~}
+
+% Keep chapter entries bold in TOC
+\renewcommand{\cftchapfont}{\bfseries}
+\renewcommand{\cftchappagefont}{\bfseries}
+\renewcommand{\cftchapleader}{\cftdotfill{\cftdotsep}}
+
+% TOC spacing
 \setlength{\cftbeforechapskip}{3pt}
 \setlength{\cftbeforesecskip}{3pt}
 \setlength{\cftbeforesubsecskip}{3pt}
@@ -186,9 +193,12 @@
 \renewcommand{\cftsubsecfont}{\normalfont}
 \renewcommand{\cftsubsecpagefont}{\normalfont}
 
+% -----------------------------------------------------
 % Page number spacing in TOC / LOF / LOT
-\cftsetpnumwidth{0.4em}
-\cftsetrmarg{1.5em}
+% Important: wide enough for page numbers like 50, 100, etc.
+% -----------------------------------------------------
+\cftsetpnumwidth{2.5em}
+\cftsetrmarg{3.5em}
 
 % Center TOC title
 \renewcommand{\cfttoctitlefont}{\hspace*{\fill}\Large\bfseries}
@@ -234,22 +244,34 @@
     labelsep=colon
 }
 
+% -----------------------------------------------------
 % List of Figures format
 % Example:
 % Figure 1.1: System Architecture ............ 10
+% -----------------------------------------------------
 \renewcommand{\cftfigpresnum}{Figure~}
-\renewcommand{\cftfigaftersnum}{:}
-\setlength{\cftfignumwidth}{5em}
+\renewcommand{\cftfigaftersnum}{:\ }
+\renewcommand{\cftfigleader}{\cftdotfill{\cftdotsep}}
 
+\setlength{\cftfigindent}{0pt}
+\setlength{\cftfignumwidth}{6.8em}
+\setlength{\cftbeforefigskip}{4pt}
+
+% -----------------------------------------------------
 % List of Tables format
 % Example:
 % Table 1.1: Summary of Results .............. 12
+% -----------------------------------------------------
 \renewcommand{\cfttabpresnum}{Table~}
-\renewcommand{\cfttabaftersnum}{:}
-\setlength{\cfttabnumwidth}{5em}
+\renewcommand{\cfttabaftersnum}{:\ }
+\renewcommand{\cfttableader}{\cftdotfill{\cftdotsep}}
+
+\setlength{\cfttabindent}{0pt}
+\setlength{\cfttabnumwidth}{6.8em}
+\setlength{\cftbeforetabskip}{4pt}
 
 % =====================================================
-% 7. Chapter and Section Title Formatting
+% 8. Chapter and Section Title Formatting
 % =====================================================
 \RequirePackage{titlesec}
 
@@ -318,19 +340,21 @@
 \titlespacing*{\subsubsection}{0cm}{8pt}{4pt}
 
 % =====================================================
-% 9. Citations and Hyperlinks
+% 9. Citations, Bibliography, and Hyperlinks
 % =====================================================
 \RequirePackage[
     backend=biber,
     style=ieee,
     sorting=none
 ]{biblatex}
+
 \DefineBibliographyStrings{english}{%
     bibliography = {REFERENCES},
     references = {REFERENCES},
 }
 
 \RequirePackage{hyperref}
+\RequirePackage{bookmark}
 
 \hypersetup{
     colorlinks=true,
@@ -340,7 +364,7 @@
 }
 
 % =====================================================
-% 10. Command
+% 10. Custom Commands
 % =====================================================
 
 % Centered low-opacity watermark using TikZ
@@ -359,8 +383,10 @@
     }%
 }
 
+% Paragraph manual indent shortcut, only use when needed
 \providecommand{\hs}{\hspace*{1.25cm}}
-% Reference Commands
+
+% Reference commands
 \providecommand{\figref}[1]{Figure~\ref{#1}}
 \providecommand{\tabref}[1]{Table~\ref{#1}}
 \providecommand{\chapref}[1]{Chapter~\ref{#1}}

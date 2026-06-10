@@ -14,7 +14,9 @@
   "customizations": {
     "vscode": {
       "extensions": [
-        "James-Yu.latex-workshop"
+        "James-Yu.latex-workshop",
+        "GitHub.copilot",
+        "GitHub.copilot-chat"
       ],
       "settings": {
         "latex-workshop.latex.outDir": "%DIR%/build",
