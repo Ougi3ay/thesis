@@ -1,0 +1,752 @@
+\chapter{EXPERIMENTS AND RESULTS}
+\label{ch:experiments_results}
+
+This chapter presents the experimental setup, datasets, evaluation metrics, workflows, and observed results of the \texttt{kfc-procedure} framework based strictly on the provided repository and experiment notebooks. The discussion is limited to results and outputs that are explicitly present in the notebooks. No additional numerical results are assumed or fabricated.
+
+\section{Experimental Setup}
+\label{sec:experimental_setup}
+
+The experiments are implemented as Jupyter notebooks under the repository directory:
+
+\begin{verbatim}
+notebooks/experiments/
+|-- classification/
+|   |-- 01\_heart\_disease.ipynb
+|   |-- 02\_diabetes.ipynb
+|   `-- 03\_load\_prediction.ipynb
+`-- regression/
+    |-- 01\_abalone.ipynb
+    |-- 02\_housing\_price.ipynb
+    `-- 03\_wind\_turbine.ipynb
+\end{verbatim}
+
+The hardware environment used to execute the notebooks is not explicitly reported in the provided materials. Therefore, CPU, RAM, GPU, and operating system details are treated as unknown.
+
+\subsection{Software Environment}
+
+The package configuration in \texttt{pyproject.toml} specifies Python version \texttt{>=3.11}. The main dependencies listed in the project configuration are:
+
+\begin{itemize}
+    \item \texttt{pandas}
+    \item \texttt{numpy}
+    \item \texttt{scikit-learn}
+    \item \texttt{matplotlib}
+    \item \texttt{xgboost}
+\end{itemize}
+
+The optional COBRA-related dependencies include:
+
+\begin{itemize}
+    \item \texttt{numba}
+    \item \texttt{faiss-cpu}
+    \item \texttt{xgboost}
+    \item \texttt{pandas}
+    \item \texttt{numpy}
+    \item \texttt{scikit-learn}
+    \item \texttt{matplotlib}
+    \item \texttt{plotly}
+\end{itemize}
+
+The development dependencies include \texttt{pytest}, \texttt{build}, \texttt{twine}, and \texttt{jupyter}. The notebooks additionally import packages such as \texttt{kagglehub}, \texttt{seaborn}, and several scikit-learn preprocessing, model selection, metric, and pipeline utilities.
+
+\subsection{Framework Configuration}
+
+The classification notebooks evaluate standard baseline classifiers, the \texttt{CombinedClassifier}, and the \texttt{KFCClassifier}. The baseline classifiers used in the notebooks are:
+
+\begin{itemize}
+    \item \texttt{LogisticRegression}
+    \item \texttt{RandomForestClassifier}
+    \item \texttt{SVC}
+    \item \texttt{KNeighborsClassifier}
+    \item \texttt{GaussianNB}
+\end{itemize}
+
+The repeated classification experiments configure the \texttt{KFCClassifier} with the following settings:
+
+\begin{itemize}
+    \item divergences: \texttt{euclidean}, \texttt{gkl}, \texttt{is}, and \texttt{logistic}
+    \item local model: \texttt{logistic\_regression}
+    \item combiner: \texttt{combined\_classifier}
+    \item scaling for KFC input: \texttt{MinMaxScaler(feature\_range=(0.05, 0.95))}
+\end{itemize}
+
+The number of clusters differs by dataset. The Heart Disease and Loan Prediction notebooks use \texttt{n\_clusters=2}, while the Diabetes notebook uses \texttt{n\_clusters=4}.
+
+The regression notebooks evaluate baseline regressors and COBRA-based regression models. The baseline regression models include combinations of:
+
+\begin{itemize}
+    \item \texttt{LinearRegression}
+    \item \texttt{Ridge}
+    \item \texttt{Lasso}
+    \item \texttt{RandomForestRegressor}
+    \item \texttt{GradientBoostingRegressor}
+    \item \texttt{SVR}
+    \item \texttt{KNeighborsRegressor}
+\end{itemize}
+
+The regression notebooks evaluate \texttt{GradientCOBRA} and, in some notebooks, \texttt{MixCOBRARegressor}. The Abalone notebook also contains an attempted \texttt{KFCRegressor} experiment using:
+
+\begin{itemize}
+    \item divergences: \texttt{euclidean}, \texttt{gkl}, and \texttt{is}
+    \item local model: \texttt{linear\_regression}
+    \item combiner variants: \texttt{gradientcobra} and \texttt{mixcobra}
+    \item number of clusters: \texttt{n\_clusters=3}
+\end{itemize}
+
+However, the repeated Abalone KFC regression experiment was interrupted by a \texttt{KeyboardInterrupt} during the C-step training of the \texttt{kfc-gradientcobra} configuration. Therefore, no completed repeated KFC regression result is reported in the provided notebook output.
+
+\subsection{Train-Test Strategy}
+
+All six experiment notebooks use an 80/20 train-test split through scikit-learn's \texttt{train\_test\_split}. The classification notebooks use stratified splitting in the main and repeated experiments. The regression notebooks use random splitting without stratification.
+
+The repeated classification experiments use five random seeds:
+
+[
+    {0, 42, 100, 2024, 999}.
+]
+
+For these repeated experiments, results are grouped by model and summarized using the mean and standard deviation of the reported classification metrics. The regression notebooks mainly report single-run results using \texttt{random\_state=42}. The Abalone notebook contains an attempted repeated regression experiment, but the final KFC repeated run was not completed.
+
+\section{Datasets}
+\label{sec:datasets}
+
+The notebooks evaluate the framework on three classification datasets and three regression datasets. The following subsections describe the visible dataset structure, target variables, and preprocessing steps implemented in the notebooks.
+
+\subsection{Classification Datasets}
+
+\subsubsection{Heart Disease Dataset}
+
+The Heart Disease dataset is loaded from Kaggle using:
+
+\begin{verbatim}
+dataset\_download("johnsmith88/heart-disease-dataset")
+\end{verbatim}
+
+The dataset file used in the notebook is \texttt{heart.csv}. The visible input columns are:
+
+\begin{itemize}
+    \item \texttt{age}
+    \item \texttt{sex}
+    \item \texttt{cp}
+    \item \texttt{trestbps}
+    \item \texttt{chol}
+    \item \texttt{fbs}
+    \item \texttt{restecg}
+    \item \texttt{thalach}
+    \item \texttt{exang}
+    \item \texttt{oldpeak}
+    \item \texttt{slope}
+    \item \texttt{ca}
+    \item \texttt{thal}
+\end{itemize}
+
+The target variable is:
+
+\begin{verbatim}
+target
+\end{verbatim}
+
+The task is binary classification. The notebook checks missing values and reports no missing values in the displayed output. It also reports 723 duplicated rows and removes duplicates using:
+
+\begin{verbatim}
+df = df.drop\_duplicates()
+\end{verbatim}
+
+The main split uses \texttt{test\_size=0.2}, \texttt{stratify=y}, and \texttt{random\_state=42}. In the repeated KFC experiment, the input data are scaled using \texttt{MinMaxScaler(feature\_range=(0.05, 0.95))} before fitting \texttt{KFCClassifier}.
+
+\subsubsection{Diabetes Dataset}
+
+The Diabetes dataset is loaded from Kaggle using:
+
+\begin{verbatim}
+dataset\_download("mathchi/diabetes-data-set")
+\end{verbatim}
+
+The dataset file used in the notebook is \texttt{diabetes.csv}. The notebook reports the dataset shape as:
+
+[
+    (768, 9).
+]
+
+The visible input columns are:
+
+\begin{itemize}
+    \item \texttt{Pregnancies}
+    \item \texttt{Glucose}
+    \item \texttt{BloodPressure}
+    \item \texttt{SkinThickness}
+    \item \texttt{Insulin}
+    \item \texttt{BMI}
+    \item \texttt{DiabetesPedigreeFunction}
+    \item \texttt{Age}
+\end{itemize}
+
+The target variable is:
+
+\begin{verbatim}
+Outcome
+\end{verbatim}
+
+The task is binary classification. The notebook checks missing values and does not report missing values in the displayed output. The train-test split uses \texttt{test\_size=0.2}, \texttt{stratify=y}, and \texttt{random\_state=42}. In the repeated KFC experiment, \texttt{MinMaxScaler(feature\_range=(0.05, 0.95))} is applied before fitting \texttt{KFCClassifier}.
+
+\subsubsection{Loan Prediction Dataset}
+
+The Loan Prediction dataset is loaded from Kaggle using:
+
+\begin{verbatim}
+dataset\_download("ninzaami/loan-predication")
+\end{verbatim}
+
+The dataset file used in the notebook is:
+
+\begin{verbatim}
+train\_u6lujuX\_CVtuZ9i (1).csv
+\end{verbatim}
+
+The notebook file is named \texttt{03\_load\_prediction.ipynb}, but the dataset and target variable indicate that the experiment is a loan prediction classification task.
+
+The notebook reports the dataset shape as:
+
+[
+    (614, 13).
+]
+
+The original visible columns include:
+
+\begin{itemize}
+    \item \texttt{Loan\_ID}
+    \item \texttt{Gender}
+    \item \texttt{Married}
+    \item \texttt{Dependents}
+    \item \texttt{Education}
+    \item \texttt{Self\_Employed}
+    \item \texttt{ApplicantIncome}
+    \item \texttt{CoapplicantIncome}
+    \item \texttt{LoanAmount}
+    \item \texttt{Loan\_Amount\_Term}
+    \item \texttt{Credit\_History}
+    \item \texttt{Property\_Area}
+    \item \texttt{Loan\_Status}
+\end{itemize}
+
+The target variable is:
+
+\begin{verbatim}
+Loan\_Status
+\end{verbatim}
+
+The target is converted from string labels to binary values using:
+
+\begin{verbatim}
+df[target] = df[target].astype(str).str.strip()
+df[target] = df[target].map({"Y": 1, "N": 0})
+\end{verbatim}
+
+The identifier column \texttt{Loan\_ID} is removed from the input features. The categorical features reported in the notebook are:
+
+\begin{itemize}
+    \item \texttt{Gender}
+    \item \texttt{Married}
+    \item \texttt{Dependents}
+    \item \texttt{Education}
+    \item \texttt{Self\_Employed}
+    \item \texttt{Property\_Area}
+\end{itemize}
+
+The numerical features reported in the notebook are:
+
+\begin{itemize}
+    \item \texttt{ApplicantIncome}
+    \item \texttt{CoapplicantIncome}
+    \item \texttt{LoanAmount}
+    \item \texttt{Loan\_Amount\_Term}
+    \item \texttt{Credit\_History}
+\end{itemize}
+
+The preprocessing pipeline uses median imputation and \texttt{StandardScaler} for numerical features, and most-frequent imputation with \texttt{OneHotEncoder(handle\_unknown="ignore")} for categorical features. The main train-test split uses \texttt{test\_size=0.2}, \texttt{stratify=y}, and \texttt{random\_state=42}.
+
+In the repeated experiment section, the notebook applies the preprocessor to the full feature matrix before the repeated train-test splits:
+
+\begin{verbatim}
+X\_trans = preprocessor.fit\_transform(X)
+\end{verbatim}
+
+This is reported as an observed notebook workflow only. No additional correction or alternative result is assumed.
+
+\subsection{Regression Datasets}
+
+\subsubsection{Abalone Dataset}
+
+The Abalone dataset is loaded from Kaggle using:
+
+\begin{verbatim}
+dataset\_download("rodolfomendes/abalone-dataset")
+\end{verbatim}
+
+The dataset file used in the notebook is \texttt{abalone.csv}. The notebook reports the dataset shape as:
+
+[
+    (4173, 9).
+]
+
+The visible input columns are:
+
+\begin{itemize}
+    \item \texttt{Sex}
+    \item \texttt{Length}
+    \item \texttt{Diameter}
+    \item \texttt{Height}
+    \item \texttt{Whole weight}
+    \item \texttt{Shucked weight}
+    \item \texttt{Viscera weight}
+    \item \texttt{Shell weight}
+\end{itemize}
+
+The target variable is:
+
+\begin{verbatim}
+Rings
+\end{verbatim}
+
+The task is regression. The categorical feature is \texttt{Sex}. The numerical features are the remaining physical measurements. The preprocessing pipeline applies median imputation and \texttt{MinMaxScaler(feature\_range=(0.05, 0.95))} to numerical features, and most-frequent imputation with one-hot encoding to categorical features. The train-test split uses \texttt{test\_size=0.2} and \texttt{random\_state=42}.
+
+\subsubsection{Housing Price Dataset}
+
+The Housing Price dataset is loaded from Kaggle using:
+
+\begin{verbatim}
+dataset\_download("camnugent/california-housing-prices")
+\end{verbatim}
+
+The dataset file used in the notebook is \texttt{housing.csv}. The notebook reports the dataset shape as:
+
+[
+    (20640, 10).
+]
+
+The visible input columns are:
+
+\begin{itemize}
+    \item \texttt{longitude}
+    \item \texttt{latitude}
+    \item \texttt{housing\_median\_age}
+    \item \texttt{total\_rooms}
+    \item \texttt{total\_bedrooms}
+    \item \texttt{population}
+    \item \texttt{households}
+    \item \texttt{median\_income}
+    \item \texttt{ocean\_proximity}
+\end{itemize}
+
+The target variable is:
+
+\begin{verbatim}
+median\_house\_value
+\end{verbatim}
+
+The task is regression. The categorical feature is \texttt{ocean\_proximity}. The numerical features are the remaining housing and geographic variables. The preprocessing pipeline applies median imputation and \texttt{StandardScaler} to numerical features, and most-frequent imputation with one-hot encoding to the categorical feature. The train-test split uses \texttt{test\_size=0.2} and \texttt{random\_state=42}.
+
+\subsubsection{Wind Turbine Dataset}
+
+The Wind Turbine dataset is loaded from Kaggle using:
+
+\begin{verbatim}
+dataset\_download("berkerisen/wind-turbine-scada-dataset")
+\end{verbatim}
+
+The dataset file used in the notebook is \texttt{T1.csv}. The notebook reports the dataset shape as:
+
+[
+    (50530, 5).
+]
+
+The visible input columns are:
+
+\begin{itemize}
+    \item \texttt{Date/Time}
+    \item \texttt{Wind Speed (m/s)}
+    \item \texttt{Theoretical\_Power\_Curve (KWh)}
+    \item \texttt{Wind Direction ($^\circ$)}
+\end{itemize}
+
+The target variable is:
+
+\begin{verbatim}
+LV ActivePower (kW)
+\end{verbatim}
+
+The task is regression. The notebook treats \texttt{Date/Time} as a categorical column and the remaining three input columns as numerical columns. The preprocessing pipeline applies median imputation and \texttt{StandardScaler} to numerical features, and most-frequent imputation with one-hot encoding to the \texttt{Date/Time} feature. The train-test split uses \texttt{test\_size=0.2} and \texttt{random\_state=42}.
+
+\section{Evaluation Metrics}
+\label{sec:evaluation_metrics}
+
+The evaluation metrics used in the notebooks differ by task type.
+
+\subsection{Classification Metrics}
+
+The classification notebooks implement and report the following metrics:
+
+\begin{itemize}
+    \item Accuracy
+    \item Precision
+    \item Recall
+    \item F1-score
+\end{itemize}
+
+Weighted averaging is used for precision, recall, and F1-score. The metric formulas are:
+
+\begin{align*}
+\text{Accuracy} &= \frac{TP + TN}{TP + TN + FP + FN}, \\ 
+\text{Precision} &= \frac{TP}{TP + FP}, \\ 
+\text{Recall} &= \frac{TP}{TP + FN}, \\ 
+\text{F1} &= 2 \cdot \frac{\text{Precision} \cdot \text{Recall}}{\text{Precision} + \text{Recall}}.
+\end{align*}
+
+The Heart Disease notebook also defines optional support for ROC-AUC and confusion matrix computation, but the reported result tables in the provided notebook outputs use Accuracy, Precision, Recall, and F1-score.
+
+\subsection{Regression Metrics}
+
+The regression metrics vary slightly by notebook.
+
+The Abalone notebook reports:
+
+\begin{itemize}
+    \item Mean Absolute Percentage Error (MAPE)
+    \item Root Mean Squared Error (RMSE)
+    \item $R^2$
+    \item average value of the true target, reported as \texttt{AVG\_Y\_TRUE}
+\end{itemize}
+
+The Housing Price and Wind Turbine notebooks report:
+
+\begin{itemize}
+    \item Mean Absolute Error (MAE)
+    \item Mean Squared Error (MSE)
+    \item Root Mean Squared Error (RMSE)
+    \item $R^2$
+\end{itemize}
+
+The formulas are:
+
+\begin{align*}
+\text{MAE} &= \frac{1}{n}\sum_{i=1}^{n}|y_i - \hat{y}_i|, \\ 
+\text{MSE} &= \frac{1}{n}\sum_{i=1}^{n}(y_i - \hat{y}_i)^2, \\ 
+\text{RMSE} &= \sqrt{\frac{1}{n}\sum_{i=1}^{n}(y_i - \hat{y}_i)^2}, \\ 
+R^2 &= 1 - \frac{\sum_{i=1}^{n}(y_i - \hat{y}_i)^2}{\sum_{i=1}^{n}(y_i - \bar{y})^2}.
+\end{align*}
+
+\section{Experimental Workflow}
+\label{sec:experimental_workflow}
+
+The notebooks follow a common experimental workflow. The complete workflow can be summarized as follows.
+
+\subsection{Data Loading}
+
+Each notebook loads a dataset from Kaggle using \texttt{kagglehub.dataset\_download}. The dataset is then read into a pandas DataFrame using \texttt{pd.read\_csv}. Basic exploratory checks include viewing the first rows, checking missing values, displaying dataset information, and in some notebooks visualizing target distributions or correlation matrices.
+
+\subsection{Preprocessing}
+
+Preprocessing depends on the dataset type and feature structure. Numerical-only classification datasets such as Heart Disease and Diabetes are used directly for baseline models. For KFC classification experiments, the features are scaled to the range $(0.05, 0.95)$ using \texttt{MinMaxScaler}. This scaling is consistent with the use of positive-domain divergences and the logistic divergence in KFC.
+
+Datasets with categorical variables use scikit-learn preprocessing pipelines. Numerical columns are imputed and scaled, while categorical columns are imputed and one-hot encoded. The specific scalers differ by dataset: Abalone uses \texttt{MinMaxScaler(feature\_range=(0.05, 0.95))}, while Housing Price and Wind Turbine use \texttt{StandardScaler}.
+
+\subsection{Model Training}
+
+The notebooks train baseline models and framework models.
+
+For classification, the baseline models are logistic regression, random forest, support vector classifier, k-nearest neighbors, and Gaussian Naive Bayes. The framework models are \texttt{CombinedClassifier} and \texttt{KFCClassifier}.
+
+For regression, the baseline models include linear models, tree-based models, support vector regression, and k-nearest neighbors depending on the notebook. The framework models are \texttt{GradientCOBRA}, \texttt{MixCOBRARegressor}, and attempted KFC regression configurations in the Abalone notebook.
+
+\subsection{KFCProcedure Pipeline}
+
+The KFC pipeline used in the notebooks follows the implementation described in the repository:
+
+\begin{enumerate}
+    \item \textbf{K-Step:} One Bregman clustering model is fitted for each selected divergence.
+    \item \textbf{F-Step:} Local models are trained for each divergence-specific cluster.
+    \item \textbf{C-Step:} The divergence-level prediction matrix is aggregated by the selected combiner.
+\end{enumerate}
+
+In the classification notebooks, the selected combiner is \texttt{combined\_classifier}. In the Abalone regression notebook, \texttt{gradientcobra} and \texttt{mixcobra} are attempted as KFC regression combiners.
+
+\subsection{Prediction and Evaluation}
+
+After training, each model predicts the labels or target values for the test set. The predictions are evaluated using the metrics implemented in the notebook. For repeated classification experiments, the results are stored in a list of dictionaries, converted into a DataFrame, grouped by model, and summarized using mean and standard deviation across five random seeds.
+
+\section{Results and Discussion}
+\label{sec:results_discussion}
+
+This section reports only the results visible in the notebook outputs. Where outputs are incomplete, interrupted, stale, or inconsistent with the surrounding workflow, this is explicitly stated.
+
+\subsection{Classification Results}
+
+The repeated classification experiments report mean and standard deviation over five random seeds. Table~\ref{tab:classification_summary} summarizes the mean Accuracy and mean F1-score from the notebook outputs.
+
+\begin{table}[H]
+    \centering
+    \caption{Repeated Classification Results Reported in the Notebooks}
+    \label{tab:classification_summary}
+    \small
+    \begin{tabular}{l l c c}
+        \hline
+        \textbf{Dataset} & \textbf{Model}                    & \textbf{Accuracy Mean} & \textbf{F1 Mean} \\
+        \hline
+        Heart Disease    & \texttt{gaussian\_nb}              & 0.826230               & 0.826102 \\
+        Heart Disease    & \texttt{logistic\_regression}      & 0.816393               & 0.814112 \\
+        Heart Disease    & \texttt{random\_forest\_classifier} & 0.806557               & 0.805747 \\
+        Heart Disease    & \texttt{combined classifier}      & 0.803279               & 0.802373 \\
+        Heart Disease    & \texttt{kfc}                      & 0.800000               & 0.799087 \\
+        Heart Disease    & \texttt{k\_neighbors\_classifier}   & 0.642623               & 0.636691 \\
+        Heart Disease    & \texttt{svc}                      & 0.642623               & 0.627709 \\
+        \hline
+        Diabetes         & \texttt{random\_forest\_classifier} & 0.779221               & 0.774835 \\
+        Diabetes         & \texttt{gaussian\_nb}              & 0.776623               & 0.775890 \\
+        Diabetes         & \texttt{logistic\_regression}      & 0.775325               & 0.768986 \\
+        Diabetes         & \texttt{combined classifier}      & 0.770130               & 0.759947 \\
+        Diabetes         & \texttt{svc}                      & 0.766234               & 0.753530 \\
+        Diabetes         & \texttt{k\_neighbors\_classifier}   & 0.740260               & 0.737002 \\
+        Diabetes         & \texttt{kfc}                      & 0.740260               & 0.717217 \\
+        \hline
+        Loan Prediction  & \texttt{logistic\_regression}      & 0.831978               & 0.813080 \\
+        Loan Prediction  & \texttt{combined classifier}      & 0.825203               & 0.804095 \\
+        Loan Prediction  & \texttt{svc}                      & 0.825203               & 0.804155 \\
+        Loan Prediction  & \texttt{kfc}                      & 0.822764               & 0.800908 \\
+        Loan Prediction  & \texttt{k\_neighbors\_classifier}   & 0.818428               & 0.803428 \\
+        Loan Prediction  & \texttt{gaussian\_nb}              & 0.813008               & 0.798295 \\
+        Loan Prediction  & \texttt{random\_forest\_classifier} & 0.810298               & 0.796539 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+The repeated classification results show that \texttt{KFCClassifier} runs successfully across all three classification datasets. However, the notebook outputs do not show KFC as the top-performing model on any of the three repeated classification summaries. On Heart Disease, Gaussian Naive Bayes has the highest reported mean accuracy. On Diabetes, Random Forest has the highest reported mean accuracy. On Loan Prediction, Logistic Regression has the highest reported mean accuracy.
+
+The KFC classifier remains competitive in the Loan Prediction experiment, where its mean accuracy is close to the leading models. On Heart Disease and Diabetes, its mean accuracy is below the strongest baseline model in the corresponding notebook summaries.
+
+\subsection{Direct CombinedClassifier Results}
+
+The notebooks also include direct \texttt{CombinedClassifier} experiments and prediction-matrix experiments using \texttt{as\_predictions=True}. These experiments are separate from the repeated KFC results.
+
+For Heart Disease, the direct single-run \texttt{CombinedClassifier} reports:
+
+\[
+\begin{aligned}
+\text{Accuracy} &= 0.786885, \\
+\text{F1} &= 0.786538.
+\end{aligned}
+\]
+
+The external prediction-matrix configuration for Heart Disease reports:
+
+\[
+\begin{aligned}
+\text{Accuracy} &= 0.836066, \\
+\text{F1} &= 0.835441.
+\end{aligned}
+\]
+
+For Diabetes, the direct single-run \texttt{CombinedClassifier} reports:
+
+\[
+\begin{aligned}
+\text{Accuracy} &= 0.714286, \\
+\text{F1} &= 0.697510.
+\end{aligned}
+\]
+
+The external prediction-matrix configuration for Diabetes reports:
+
+\[
+\begin{aligned}
+\text{Accuracy} &= 0.707792, \\
+\text{F1} &= 0.680019.
+\end{aligned}
+\]
+
+For Loan Prediction, one direct \texttt{CombinedClassifier} cell initially uses the import path \texttt{from cobra.combined\_classifier import CombinedClassifier}, which produces a \texttt{ModuleNotFoundError} in the notebook output. A later external prediction-matrix experiment uses the available \texttt{CombinedClassifier} object and reports:
+
+\[
+\begin{aligned}
+\text{Accuracy} &= 0.861789, \\
+\text{F1} &= 0.850399.
+\end{aligned}
+\]
+
+Because the notebook contains an import error before some of the direct Loan Prediction outputs, the repeated experiment table is treated as the more reliable summary for model comparison.
+
+\subsection{Regression Results}
+
+The regression notebooks report single-run results. Table~\ref{tab:abalone_results} shows the Abalone results reported after \texttt{MixCOBRARegressor} is added to the result table.
+
+\begin{table}[H]
+    \centering
+    \caption{Abalone Regression Results Reported in the Notebook}
+    \label{tab:abalone_results}
+    \small
+    \begin{tabular}{l c c c}
+        \hline
+        \textbf{Model}                         & \textbf{MAPE} & \textbf{RMSE} & \textbf{$R^2$} \\
+        \hline
+        \texttt{mixcobra}                      & 0.146203      & 2.211321      & 0.591922 \\
+        \texttt{gradient\_boosting\_regressor} & 0.145524      & 2.220882      & 0.588386 \\
+        \texttt{random\_forest\_regressor}     & 0.147703      & 2.234844      & 0.583194 \\
+        \texttt{gradientcobra}                 & 0.146038      & 2.235015      & 0.583131 \\
+        \texttt{ridge}                         & 0.155186      & 2.259006      & 0.574133 \\
+        \texttt{k\_neighbors\_regressor}       & 0.150249      & 2.372144      & 0.530407 \\
+        \texttt{svr}                           & 0.141190      & 2.416113      & 0.512837 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+In the Abalone notebook, \texttt{MixCOBRARegressor} has the highest reported $R^2$ in the displayed table, followed by Gradient Boosting, Random Forest, and \texttt{GradientCOBRA}. The same notebook also reports an external prediction-matrix \texttt{GradientCOBRA} result:
+
+\[
+\begin{aligned}
+\text{MAPE} &= 0.145510, \\
+\text{RMSE} &= 2.244309, \\
+R^2 &= 0.579656.
+\end{aligned}
+\]
+
+A repeated KFC regression experiment is attempted in the Abalone notebook, but the output ends with a \texttt{KeyboardInterrupt} during \texttt{kfc.fit()} for the \texttt{kfc-gradientcobra} configuration. Therefore, completed repeated KFC regression results are not reported in the provided materials.
+
+Table~\ref{tab:housing_results} presents the Housing Price results.
+
+\begin{table}[H]
+    \centering
+    \caption{Housing Price Regression Results Reported in the Notebook}
+    \label{tab:housing_results}
+    \small
+    \begin{tabular}{l c c c c}
+        \hline
+        \textbf{Model}                       & \textbf{MAE} & \textbf{MSE}       & \textbf{RMSE} & \textbf{$R^2$} \\
+        \hline
+        \texttt{random\_forest\_regressor}     & 31435.282816 & 2373830000.000000  & 48721.968199  & 0.818848 \\
+        \texttt{gradientcobra}               & 35212.248116 & 2824637000.000000  & 53147.311039  & 0.784446 \\
+        \texttt{gradient\_boosting\_regressor} & 38286.079313 & 3125516000.000000  & 55906.311478  & 0.761485 \\
+        \texttt{k\_neighbors\_regressor}       & 40763.476841 & 3758886000.000000  & 61309.752197  & 0.713152 \\
+        \texttt{ridge}                       & 50676.922171 & 4909247000.000000  & 70066.021121  & 0.625365 \\
+        \texttt{svr}                         & 87042.383432 & 13669670000.000000 & 116917.376082 & -0.043161 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+For the Housing Price dataset, Random Forest has the highest reported $R^2$ among the displayed models. \texttt{GradientCOBRA} ranks second in the reported table. The external prediction-matrix \texttt{GradientCOBRA} experiment reports:
+
+\[
+\begin{aligned}
+\text{MAE} &= 34039.854497, \\
+\text{MSE} &= 2738271981.775482, \\
+\text{RMSE} &= 52328.500664, \\
+R^2 &= 0.791037.
+\end{aligned}
+\]
+
+No KFC regression result is reported for the Housing Price notebook.
+
+Table~\ref{tab:wind_results} presents the Wind Turbine results that are consistent with the visible target scale.
+
+\begin{table}[H]
+    \centering
+    \caption{Wind Turbine Regression Results Reported in the Notebook}
+    \label{tab:wind_results}
+    \small
+    \begin{tabular}{l c c c c}
+        \hline
+        \textbf{Model}                       & \textbf{MAE} & \textbf{MSE}  & \textbf{RMSE} & \textbf{$R^2$} \\
+        \hline
+        \texttt{gradient\_boosting\_regressor} & 167.763967   & 150670.135461 & 388.162512    & 0.911698 \\
+        \texttt{gradientcobra}               & 173.286325   & 157047.739110 & 396.292492    & 0.907961 \\
+        \texttt{ridge}                       & 188.769171   & 169505.392561 & 411.710326    & 0.900660 \\
+        \texttt{k\_neighbors\_regressor}       & 174.761782   & 173249.784337 & 416.232849    & 0.898465 \\
+        \texttt{svr}                         & 369.476014   & 285388.178942 & 534.217352    & 0.832746 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+For the Wind Turbine dataset, Gradient Boosting has the highest reported $R^2$, and \texttt{GradientCOBRA} ranks second in the displayed result table. The notebook includes cells for \texttt{MixCOBRARegressor}; however, the later table following the MixCOBRA cell contains values on a much smaller scale than the wind turbine target values and appears inconsistent with the surrounding Wind Turbine outputs. Therefore, the MixCOBRA result for Wind Turbine is treated as not reliably reported in the provided materials.
+
+\subsection{Observed Behavior of KFCProcedure}
+
+The classification notebooks provide completed repeated experiments for \texttt{KFCClassifier}. Across Heart Disease, Diabetes, and Loan Prediction, the KFC pipeline successfully trains and predicts using multiple divergences, local logistic regression models, and the \texttt{CombinedClassifier} combiner.
+
+The observed classification behavior can be summarized as follows:
+
+\begin{itemize}
+    \item KFC runs successfully on all three classification datasets.
+    \item KFC is competitive on the Loan Prediction dataset but is not the top-performing model in the repeated summary.
+    \item KFC does not outperform the strongest baseline on Heart Disease or Diabetes in the reported notebook summaries.
+    \item The KFC experiments use fixed divergence sets and fixed cluster numbers per dataset.
+\end{itemize}
+
+For regression, completed KFCProcedure results are not available in the provided notebook outputs. The Abalone notebook attempts KFC regression configurations, but the run is interrupted by a \texttt{KeyboardInterrupt}. Housing Price and Wind Turbine notebooks do not report completed KFC regression experiments.
+
+\subsection{Observed Behavior of COBRA-Based Models}
+
+The \texttt{CombinedClassifier}, \texttt{GradientCOBRA}, and \texttt{MixCOBRARegressor} experiments show that COBRA-style aggregation models are executable within the notebooks.
+
+For classification, \texttt{CombinedClassifier} is used both directly and in prediction-matrix mode. The direct and external prediction-matrix results vary across datasets. The external prediction-matrix mode is explicitly demonstrated using \texttt{as\_predictions=True}.
+
+For regression, \texttt{GradientCOBRA} is evaluated on Abalone, Housing Price, and Wind Turbine. In the reported results, it performs competitively but does not always outperform the strongest baseline model. \texttt{MixCOBRARegressor} is clearly reported for Abalone, where it achieves the highest reported $R^2$ in the displayed table. For Wind Turbine, its result is not treated as reliable because the displayed values are inconsistent with the target scale and surrounding outputs.
+
+\section{Ablation or Comparison Studies}
+\label{sec:ablation_comparison_studies}
+
+The provided notebooks include model comparison studies, but they do not contain a formal ablation study.
+
+\subsection{Model Comparison Studies}
+
+The notebooks compare framework models against baseline machine learning models. The comparison strategy includes:
+
+\begin{itemize}
+    \item baseline classifiers versus \texttt{CombinedClassifier} and \texttt{KFCClassifier};
+    \item baseline regressors versus \texttt{GradientCOBRA};
+    \item baseline regressors versus \texttt{MixCOBRARegressor} where MixCOBRA is executed and reported;
+    \item direct raw-feature COBRA training versus prediction-matrix mode using \texttt{as\_predictions=True}.
+\end{itemize}
+
+These comparisons are present in the notebooks and are therefore part of the experimental evidence.
+
+\subsection{Divergence Study}
+
+No formal divergence ablation study is found in the provided notebooks. The KFC classification experiments use the fixed divergence set:
+
+[
+    {\texttt{euclidean}, \texttt{gkl}, \texttt{is}, \texttt{logistic}}.
+]
+
+The attempted KFC regression experiment uses:
+
+[
+    {\texttt{euclidean}, \texttt{gkl}, \texttt{is}}.
+]
+
+The notebooks do not report experiments where individual divergences are removed, replaced, or compared independently. Therefore, the effect of each divergence function is not separately reported in the provided materials.
+
+\subsection{Cluster Number Study}
+
+No formal cluster-number ablation study is found in the provided notebooks. The cluster numbers are fixed per experiment:
+
+\begin{itemize}
+    \item Heart Disease KFC classification: \texttt{n\_clusters=2}
+    \item Diabetes KFC classification: \texttt{n\_clusters=4}
+    \item Loan Prediction KFC classification: \texttt{n\_clusters=2}
+    \item Abalone KFC regression attempt: \texttt{n\_clusters=3}
+\end{itemize}
+
+The notebooks do not report systematic experiments over multiple values of \texttt{n\_clusters}. Therefore, the effect of the number of clusters is not reported in the provided materials.
+
+\subsection{Aggregation Method Study}
+
+The notebooks compare several aggregation-related models, including \texttt{CombinedClassifier}, \texttt{GradientCOBRA}, \texttt{MixCOBRARegressor}, and KFC configurations with COBRA-based combiners. However, there is no formal controlled ablation where the same KFC configuration is evaluated with multiple C-step combiners under identical completed conditions. The Abalone notebook attempts both \texttt{kfc-gradientcobra} and \texttt{kfc-mixcobra}, but the run is interrupted before a completed repeated summary is produced.
+
+Therefore, the provided materials support model comparison, but not a complete aggregation-method ablation study.
+
+\section{Chapter Summary}
+\label{sec:chapter_summary_results}
+
+This chapter described the experiments implemented in the provided notebooks for the \texttt{kfc-procedure} framework. The experimental materials cover three classification datasets and three regression datasets. The classification notebooks evaluate baseline classifiers, \texttt{CombinedClassifier}, and \texttt{KFCClassifier}. The regression notebooks evaluate baseline regressors, \texttt{GradientCOBRA}, and \texttt{MixCOBRARegressor} where reported.
+
+The classification results show that \texttt{KFCClassifier} runs successfully across all three classification datasets, but it does not achieve the highest mean accuracy in the repeated result summaries. The regression results show that \texttt{GradientCOBRA} performs competitively across the regression notebooks, while \texttt{MixCOBRARegressor} is clearly reported for the Abalone dataset and obtains the highest reported $R^2$ in that notebook table. Completed KFC regression results are not reported because the Abalone repeated KFC regression run was interrupted, and the Housing Price and Wind Turbine notebooks do not report KFC regression experiments.
+
+No formal ablation study is found for divergence functions, cluster numbers, or aggregation methods. The notebooks provide model comparison studies and prediction-matrix aggregation experiments, but they do not isolate each KFC component through controlled ablation. All conclusions in this chapter are therefore limited to the outputs explicitly present in the provided repository and notebooks.

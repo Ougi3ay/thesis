@@ -1,0 +1,16 @@
+\clearpage
+\phantomsection
+\chapter*{ABSTRACT}
+\addcontentsline{toc}{chapter}{ABSTRACT}
+
+This thesis presents the development of a modular machine learning software framework implementing clusterwise supervised learning methods based on literature  that handle heterogeneous datasets with complex and multiple underlying data distributions. Traditional machine learning libraries frequently have trouble capturing different underlying hidden structures and multiple data distributions, typically requiring manually designed pipelines to handle such complexity. In particular, follows established approaches from clusterwise learning procedures based on aggregation of distances and the GradientCOBRA methodology.
+
+When interacting with complex multi-modal datasets, traditional supervised learning techniques may perform poorly because they often rely on homogenous data and a single global prediction model. In order to overcome this constraint, this study presents an automated approach that finds latent cluster structures, trains predictive models unique to each cluster, and integrates them into a reliable global predictor.
+
+The \textbf{KFC Procedure} package and the \textbf{GradientCOBRA} package are the two primary software programs which make up the proposed system. The KFC Procedure uses a 3-step architecture: the K-Step detects hidden cluster structures under different statistical assumptions, the F-Step for trains predictive models inside each cluster, and the C-Step for aggregating these models using a consensus-based strategy. The GradientCOBRA package provides an advanced model aggregation method based on distance-weighted consensus and supports regression and classification applications. In this work, it redesigned into a modular architecture to improve flexibility, maintainability, and computational efficiency while preserving its core aggregation strategy based on distance-weighted consensus. Its performance is also improved in this work compared to the first version.
+
+The framework supports multiple clustering techniques based on Bregman divergences, including Euclidean distance, Generalized Kullback–Leibler divergence, Itakura–Saito divergence, and Logit-based measures. To guarantee usability for academics and practitioners, the implementation was created in Python with a modular and extendable architecture
+
+The proposed system is evaluated using both simulated datasets and real-world data. To evaluate resilience under various statistical parameters, simulated data are created from distributions including Gaussian, Poisson, Geometric, and Exponential. Furthermore, real-world validation is performed on industrial datasets, including air compressor data, to demonstrate the applicability and effectiveness of the proposed framework.
+
+Standard measures including Root Mean Square Error (RMSE), Mean Absolute Error (MAE), Normalized Mutual Information (NMI), and Coefficient of Determination (R2) are used to evaluate performance. According to experimental data, the suggested framework retains flexibility and extensibility while enhancing predictive performance and resilience when compared to single global models.

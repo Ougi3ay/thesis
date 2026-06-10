@@ -1,0 +1,78 @@
+{
+  // =========================================================
+  // BUILD
+  // =========================================================
+  "latex-workshop.latex.autoBuild.run": "onSave",
+  "latex-workshop.latex.outDir": "%DIR%/build",
+  // =========================================================
+  // RECIPES  (ordered: fast dev → full publish)
+  // =========================================================
+  "latex-workshop.latex.recipe.default": "xelatex + biber (full)",
+  "latex-workshop.latex.recipes": [
+    {
+      "name": "xelatex + biber (full)",
+      "tools": [
+        "xelatex",
+        "biber",
+        "xelatex",
+        "xelatex"
+      ] // 3 xelatex passes
+    },
+    {
+      "name": "xelatex (fast)",
+      "tools": [
+        "xelatex"
+      ] // keep for quick draft checks
+    }
+  ],
+  // =========================================================
+  // TOOLS
+  // =========================================================
+  "latex-workshop.latex.tools": [
+    {
+      "name": "xelatex",
+      "command": "xelatex",
+      "args": [
+        "-interaction=nonstopmode",
+        "-halt-on-error", // stop on first real error, not silently
+        "-synctex=1",
+        "-shell-escape", // required by minted
+        "-output-directory=%OUTDIR%",
+        "%DOC%" // not hardcoded "main.tex"
+      ],
+      "env": {}
+    },
+    {
+      "name": "biber",
+      "command": "biber",
+      "args": [
+        "--input-directory=%OUTDIR%",
+        "--output-directory=%OUTDIR%",
+        "%DOCFILE%"
+      ],
+      "env": {}
+    }
+  ],
+  // =========================================================
+  // VIEWER & SYNCTEX
+  // =========================================================
+  "latex-workshop.view.pdf.viewer": "tab",
+  "latex-workshop.synctex.afterBuild.enabled": true,
+  "latex-workshop.formatting.latex": "latexindent",
+  // =========================================================
+  // CLEAN  (keep build/ tidy, never delete .pdf or .synctex)
+  // =========================================================
+  "latex-workshop.latex.autoClean.run": "never",
+  // =========================================================
+  // EDITOR QUALITY OF LIFE
+  // =========================================================
+  "latex-workshop.intellisense.package.enabled": true,
+  "latex-workshop.latex.autoBuild.interval": 1000, // debounce ms
+  "[latex]": {
+    "editor.formatOnSave": false, // LaTeX formatters break custom spacing
+    "editor.wordWrap": "on",
+    "editor.rulers": [
+      100
+    ]
+  }
+}

@@ -1,0 +1,129 @@
+\begin{titlepage}
+    \thispagestyle{empty}
+
+    \Watermark
+
+    % =====================================================
+    % Header: Logos and Institution Names
+    % =====================================================
+    \begin{center}
+
+        % =====================================================
+        % First row: left logo + ministry + right logo
+        % =====================================================
+        \begin{minipage}[c]{0.20\linewidth}
+            \centering
+            \includegraphics[width=2.8cm]{figures/schools/moey.png}
+        \end{minipage}%
+        \hfill
+        \begin{minipage}[c]{0.60\linewidth}
+            \centering
+            {\bfseries\fontsize{15pt}{18pt}\selectfont \MinistryFR\par}
+        \end{minipage}%
+        \hfill
+        \begin{minipage}[c]{0.20\linewidth}
+            \centering
+            \includegraphics[width=3.2cm]{figures/schools/itc.png}
+        \end{minipage}
+
+        \vspace{0.5cm}
+
+        % =====================================================
+        % Second row: institute name centered full width
+        % =====================================================
+        {\bfseries\fontsize{17pt}{18pt}\selectfont \InstituteFR\par}
+
+    \end{center}
+
+    \vspace{-0.3cm}
+
+    % =====================================================
+    % Department
+    % =====================================================
+    \begin{center}
+        {\bfseries\fontsize{13pt}{15pt}\selectfont \DepartmentFR\par}
+    \end{center}
+
+    \vspace{1.5cm}
+
+    % =====================================================
+    % Main Approval Information
+    % =====================================================
+    \noindent
+    \hspace*{3.5cm}
+    \begin{minipage}{0.70\textwidth}
+        \raggedright
+
+        {\bfseries\fontsize{14pt}{15pt}\selectfont \DegreeProjectFR\par}
+
+        \vspace{0.5cm}
+
+        {\bfseries\fontsize{13pt}{15pt}\selectfont
+            \StudentLabelFR:
+            \emph{\href{mailto:\StudentEmail}{\StudentNameFR}}
+            \par}
+
+        \vspace{0.5cm}
+
+        {\bfseries\fontsize{12pt}{15pt}\selectfont
+            \DefenseDateLabelFR: \DefenseDateFR
+            \par}
+
+        \vspace{0.5cm}
+
+        {\bfseries\fontsize{13pt}{15pt}\selectfont
+            \ApprovalLabelFR
+            \par}
+
+        \vspace{1cm}
+
+        {\bfseries\fontsize{13pt}{15pt}\selectfont
+            \DirectorLabelFR: \underline{\hspace{6.5cm}}
+            \par}
+
+        \vspace{1cm}
+
+        {\bfseries\fontsize{12pt}{15pt}\selectfont
+            \AcademicCityFR, le \ApprovalDateFR
+            \par}
+
+    \end{minipage}
+
+    \vspace{0.6cm}
+
+    % =====================================================
+    % Thesis Details
+    % =====================================================
+    \noindent
+    {
+        \renewcommand{\arraystretch}{1.5}
+        \begin{tabularx}{\textwidth}{@{}p{5.3cm}@{\hspace{0.2cm}: \hspace{0.2cm}}X@{}}
+                        {\bfseries\fontsize{13pt}{15pt}\selectfont \TopicLabelFR}           &
+                        {\bfseries\fontsize{13pt}{15pt}\selectfont \ThesisTitleFR}                            \\
+
+                        {\bfseries\fontsize{13pt}{15pt}\selectfont \EnterpriseLabelFR}           &
+                        {\bfseries\fontsize{13pt}{15pt}\selectfont \EnterpriseFR}                             \\
+
+                        {\bfseries\fontsize{13pt}{15pt}\selectfont \DepartmentHeadLabelFR}       &
+                        {\bfseries\fontsize{13pt}{15pt}\selectfont \DepartmentHeadFR}                         \\
+
+                        {\bfseries\fontsize{13pt}{15pt}\selectfont \SupervisorLabelFR}           &
+                        {\bfseries\fontsize{13pt}{15pt}\selectfont \SupervisorFR}                             \\
+
+                        {\bfseries\fontsize{13pt}{15pt}\selectfont \EnterpriseSupervisorLabelFR} &
+                        {\bfseries\fontsize{13pt}{15pt}\selectfont \EnterpriseSupervisorFR}                   \\
+        \end{tabularx}
+    }
+
+    \vfill
+
+    % =====================================================
+    % Bottom Location and Year
+    % =====================================================
+    \begin{center}
+        {\bfseries\fontsize{13pt}{15pt}\selectfont
+            \AcademicCityFR, \AcademicYearFR
+            \par}
+    \end{center}
+
+\end{titlepage}

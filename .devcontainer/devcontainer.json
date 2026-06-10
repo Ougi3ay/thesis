@@ -1,0 +1,28 @@
+{
+  "name": "Thesis Report",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "workspaceFolder": "/workspace",
+  "mounts": [
+    "source=${localWorkspaceFolder},target=/workspace,type=bind"
+  ],
+  "runArgs": [
+    "--name",
+    "thesis-report"
+  ],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "James-Yu.latex-workshop"
+      ],
+      "settings": {
+        "latex-workshop.latex.outDir": "%DIR%/build",
+        "latex-workshop.latex.autoBuild.run": "onSave",
+        "latex-workshop.latex.recipe.default": "latexmk",
+        "editor.wordWrap": "on",
+        "files.autoSave": "afterDelay"
+      }
+    }
+  }
+}
