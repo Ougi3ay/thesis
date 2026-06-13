@@ -1,196 +1,201 @@
 \chapter{IMPLEMENTATION}
 \label{ch:implementation}
 
-This chapter presents the software implementation of the
-\texttt{kfc\_procedure} library. The repository implements two connected machine learning subsystems: the KFC clusterwise learning framework and the COBRA prediction-space aggregation framework. These subsystems are implemented as a single Python package so that clusterwise local learning and kernel-based aggregation can be used independently or combined within one workflow.
 
-Building on the methodological design introduced in Chapter~\ref{ch:methodology}, this chapter focuses on how the framework is realized in code. The discussion covers package organization,
-interface design, factory-based component registration, clustering and
-divergence implementations, COBRA aggregation components, orchestration
-logic, utility functions, tests, and packaging infrastructure.
+This chapter presents the software implementation of the \textbf{kfc\_procedure} Python package. The package contains two connected machine learning subsystems: the \KFCProcedure{} clusterwise learning framework and the \GradientCOBRA{} prediction-space aggregation framework. These subsystems are implemented within a single Python package so that clusterwise local learning and kernel-based aggregation can be used independently or combined within one workflow.
 
-The implementation follows a research-library structure rather than a
-large application architecture. It uses a \texttt{src/} package layout,
-scikit-learn-style estimator interfaces, modular factories, and
-component-level tests for the COBRA core subsystem. The chapter therefore
-emphasizes traceability between the repository structure and the
-implemented machine learning workflows.
 
-% =============================================================
-\section{Repository Architecture}
+Building on the methodological design introduced in \chapref{ch:methodology}, this chapter focuses on how the proposed framework is realized in code. The discussion covers repository organization, software design principles, interface design, factory-based component registration, clustering and divergence implementations, COBRA aggregation components, orchestration logic, utility functions, testing, documentation, and packaging infrastructure.
+
+The implementation follows the structure of a research-oriented Python library rather than a large-scale application architecture. It uses a \textbf{src/} package layout, scikit-learn-style estimator interfaces, modular factory registries, and component-level tests for the COBRA core subsystem. Therefore, this chapter emphasizes the traceability between the repository structure and the implemented machine learning workflows.
+
+% ============================
+\section{Source Code Architecture}
 \label{sec:repository_architecture}
 
-The repository is organized as a Python package using a \texttt{src/}
-layout. The main implementation is located under
-\texttt{src/kfc\_procedure/}, while experiment notebooks, tests, package
-configuration, and CI workflow files are stored at the repository level.
+The repository is organized as a Python package using a \textbf{src/} layout. This structure separates the importable package implementation from experiment notebooks, tests, package configuration files, documentation assets, and automation workflows. Figure~\ref{fig:kfcprocedure_repository_structure} shows the overall repository structure.
 
 \subsection{Top-Level Repository Structure}
 
-The main repository contains the following verified components:
+\begin{figure}[H]
+      \centering
+      \begin{minipage}{0.85\textwidth}
+            \begin{Verbatim}[fontsize=\footnotesize, baselinestretch=0.9]
+                  kfc-procedure/
+                  ├── .github/
+                  │   └── workflows/
+                  │       └── ci-cd.yml
+                  ├── notebooks/
+                  │   ├── kfc.ipynb
+                  │   └── experiments/
+                  │       ├── classification/
+                  │       └── regression/
+                  ├── src/
+                  │   └── kfc_procedure/
+                  ├── tests/
+                  │   └── cobra/
+                  ├── pyproject.toml
+                  ├── requirements.txt
+                  ├── README.md
+                  ├── LICENSE
+                  └── .pylintrc
+            \end{Verbatim}
+      \end{minipage}
+      \caption{Overall repository structure of the KFCProcedure project}
+      \label{fig:kfcprocedure_repository_structure}
+\end{figure}
 
-\begin{verbatim}
-kfc-procedure/
-├── .github/workflows/ci-cd.yml     # this auto
-├── notebooks/
-│   ├── kfc.ipynb
-│   └── experiments/
-│       ├── classification/
-│       └── regression/
-├── src/
-│   └── kfc_procedure/
-├── tests/
-│   └── cobra/
-├── pyproject.toml
-├── requirements.txt
-├── README.md
-├── LICENSE
-└── .pylintrc
-\end{verbatim}
-
-The \texttt{pyproject.toml} file defines the package metadata, Python
-requirement, dependencies, optional extras, setuptools configuration,
-and pytest settings. The package name is \texttt{kfc-procedure}, with
-the import package located at \texttt{kfc\_procedure}. The project uses
-Python~3.11 or newer.
+As shown in Figure~\ref{fig:kfcprocedure_repository_structure}, the repository separates source code, notebooks, tests, packaging configuration, and automation files. The package configuration defines the package metadata, Python version requirement, dependencies, optional extras, build configuration, and pytest settings. The distribution package is named \textbf{kfc-procedure}, while the importable Python package is named \textbf{kfc\_procedure}. The project requires Python~3.11 or newer.
 
 \subsection{Main Package Structure}
 
-The implementation package is organized as follows:
+The implementation package is organized into a high-level orchestration module, a KFC core subsystem, a COBRA aggregation subsystem, and utility components. Figure~\ref{fig:kfcprocedure_package_structure} shows the main internal package structure.
 
-\begin{verbatim}
-kfc_procedure/
-├── __init__.py
-├── kfc.py
-├── core/
-│   ├── clustering/
-│   ├── combiner/
-│   ├── ml/
-│   ├── steps/
-│   └── factory.py
-├── cobra/
-│   ├── gradientcobra.py
-│   ├── mixcobra.py
-│   ├── combined_classifier.py
-│   ├── superlearner.py
-│   ├── core/
-│   └── utils/
-└── utils/
-    ├── logger.py
-    └── resolve.py
-\end{verbatim}
+\begin{figure}[H]
+      \centering
+      \begin{minipage}{0.85\textwidth}
+            \begin{Verbatim}[fontsize=\footnotesize, baselinestretch=0.9]
+                  kfc_procedure/
+                  ├── kfc.py
+                  ├── core/
+                  │   ├── clustering/
+                  │   ├── combiner/
+                  │   ├── ml/
+                  │   ├── steps/
+                  │   └── factory.py
+                  ├── cobra/
+                  │   ├── gradientcobra.py
+                  │   ├── mixcobra.py
+                  │   ├── combined_classifier.py
+                  │   ├── core/
+                  │   └── utils/
+                  └── utils/
+                  ├── logger.py
+                  └── resolve.py
+            \end{Verbatim}
+      \end{minipage}
+      \caption{Main package structure of the KFCProcedure framework}
+      \label{fig:kfcprocedure_package_structure}
+\end{figure}
 
-This structure separates the framework into four implementation layers:
+As shown in Figure~\ref{fig:kfcprocedure_package_structure}, the framework is separated into four main implementation layers. Table~\ref{tab:implementation_layers} summarizes the role of each layer.
 
-\begin{itemize}
-      \item \textbf{KFC core layer:} Implemented under
-            \texttt{core/}. It contains Bregman clustering, local model
-            wrappers, K-step/F-step/C-step workflow components, and KFC
-            combiners.
+\begin{table}[H]
+      \centering
+      \caption{Main Implementation Layers of the Framework}
+      \label{tab:implementation_layers}
+      \renewcommand{\arraystretch}{1.2}
+      \begin{tabularx}{\textwidth}{
+                  >{\raggedright\arraybackslash}p{3.5cm}
+                  >{\raggedright\arraybackslash}X
+            }
+            \toprule
+            \textbf{Layer}          & \textbf{Description}                                                                                                                                \\
+            \midrule
+            KFC core layer          &
+            Provides the main clusterwise learning components, including Bregman clustering, local model wrappers, K-step/F-step/C-step workflow components, and KFC combiner strategies. \\
 
-      \item \textbf{COBRA aggregation layer:} Implemented under
-            \texttt{cobra/}. It contains \texttt{GradientCOBRA},
-            \texttt{MixCOBRARegressor}, \texttt{CombinedClassifier},
-            \texttt{SuperLearner}, and reusable COBRA core components.
+            COBRA aggregation layer &
+            Provides COBRA-based aggregation models, including \textbf{GradientCOBRA}, \textbf{MixCOBRARegressor}, \textbf{CombinedClassifier}, and reusable aggregation components.      \\
 
-      \item \textbf{Orchestration layer:} Implemented in
-            \texttt{kfc.py}. It exposes the high-level classes
-            \texttt{KFCProcedure}, \texttt{KFCRegressor}, and
-            \texttt{KFCClassifier}.
+            Orchestration layer     &
+            Exposes the high-level classes \textbf{KFCProcedure}, \textbf{KFCRegressor}, and \textbf{KFCClassifier}, which coordinate training and prediction workflows.                  \\
 
-      \item \textbf{Utility layer:} Implemented under both
-            \texttt{kfc\_procedure/utils/} and \texttt{kfc\_procedure/cobra/utils/}.
-            The top-level utilities support KFC logging and resolution helpers,
-            while COBRA utilities support splitting, normalization constants,
-            estimator resolution, and distance helpers.
-\end{itemize}
+            Utility layer           &
+            Provides supporting functions for logging, component resolution, data splitting, normalization constants, estimator management, and distance-related helper operations.       \\
+            \bottomrule
+      \end{tabularx}
+
+
+\end{table}
 
 \subsection{Clusterwise Learning Subsystem}
 
-The KFC subsystem is implemented under \texttt{core/}:
+The clusterwise learning subsystem forms the KFC core of the framework. It is responsible for constructing divergence-specific clusters, training local predictive models inside those clusters, and combining the resulting prediction outputs. Table~\ref{tab:kfc_core_components} summarizes the main components of this subsystem.
 
-\begin{verbatim}
-core/
-├── clustering/
-│   ├── bregman.py
-│   └── divergences/
-├── ml/
-├── steps/
-│   ├── kstep.py
-│   ├── fstep.py
-│   └── cstep.py
-├── combiner/
-└── factory.py
-\end{verbatim}
+\begin{table}[H]
+      \centering
+      \caption{Main Components of the Clusterwise Learning Subsystem}
+      \label{tab:kfc_core_components}
+      \renewcommand{\arraystretch}{1.2}
+      \begin{tabularx}{\textwidth}{
+                  >{\raggedright\arraybackslash}p{3.5cm}
+                  >{\raggedright\arraybackslash}X
+            }
+            \toprule
+            \textbf{Component}       & \textbf{Role}                                                              \\
+            \midrule
+            Clustering     &
+            Implements divergence-based clustering using Bregman K-Means and registered divergence functions.     \\
 
-The \texttt{clustering/} package implements \texttt{BregmanKMeans} and
-the divergence classes used for cluster assignment. The \texttt{steps/}
-package implements the three KFC workflow stages. The \texttt{ml/}
-package wraps scikit-learn estimators for local cluster-level learning,
-and the \texttt{combiner/} package implements final aggregation
-strategies.
+            Local learning &
+            Provides local predictive models and adapters for training cluster-specific models during the F-step. \\
+
+            Workflow step  &
+            Defines the K-step, F-step, and C-step execution logic used in the clusterwise learning pipeline.     \\
+
+            Combiner       &
+            Implements final aggregation strategies for combining divergence-level prediction outputs.            \\
+
+            Factory        &
+            Resolves divergences, local models, and combiners through registered component names.                 \\
+            \bottomrule
+      \end{tabularx}
+
+\end{table}
+
+The clusterwise learning subsystem therefore follows the structure of the proposed KFC procedure. The K-step constructs divergence-specific cluster assignments, the F-step trains local models within the clusters, and the C-step combines the divergence-level prediction matrix into a final prediction.
 
 \subsection{COBRA Aggregation Subsystem}
 
-The COBRA subsystem is implemented under \texttt{cobra/}:
+The COBRA aggregation subsystem provides models and reusable components for prediction-space aggregation. It supports regression aggregation through \textbf{GradientCOBRA} and \textbf{MixCOBRARegressor}, classification aggregation through \textbf{CombinedClassifier}. Table~\ref{tab:cobra_subsystem_components} summarizes the main components of the COBRA subsystem.
 
-\begin{verbatim}
-cobra/
-├── gradientcobra.py
-├── mixcobra.py
-├── combined_classifier.py
-├── superlearner.py
-├── core/
-│   ├── adapters/
-│   ├── aggregators/
-│   ├── cv/
-│   ├── distances/
-│   ├── estimators/
-│   ├── kernels/
-│   ├── losses/
-│   ├── normalizers/
-│   ├── optimizers/
-│   ├── splitters/
-│   ├── factory.py
-│   └── types.py
-└── utils/
-\end{verbatim}
+\begin{table}[H]
+      \centering
+      \caption{Main Components of the COBRA Aggregation Subsystem}
+      \label{tab:cobra_subsystem_components}
+      \renewcommand{\arraystretch}{1.2}
+      \begin{tabularx}{\textwidth}{
+                  >{\raggedright\arraybackslash}p{3.8cm}
+                  >{\raggedright\arraybackslash}X
+            }
+            \toprule
+            \textbf{Component}        & \textbf{Role}\\
+            \midrule
+            GradientCOBRA             &
+            Provides regression aggregation based on prediction-space distances and kernel-weighted calibration targets. \\
 
-The main COBRA classes coordinate reusable core components such as
-distances, kernels, losses, optimizers, and aggregators. This design
-allows \texttt{GradientCOBRA}, \texttt{MixCOBRARegressor}, and
-\texttt{CombinedClassifier} to share the same component infrastructure
-while implementing different aggregation workflows.
+            MixCOBRARegressor         &
+            Combines input-space and prediction-space distance information for regression aggregation.\\
+
+            CombinedClassifier        &
+            Provides classification aggregation by combining the predictions of multiple classification models.\\
+
+            Reusable COBRA components &
+            Provide shared infrastructure for distances, kernels, losses, optimizers, splitters, normalizers, adapters, cross-validation, estimators, and aggregators. \\
+            \bottomrule
+      \end{tabularx}
+
+\end{table}
+
+The main COBRA classes reuse the same component infrastructure while implementing different aggregation workflows. This design avoids duplicating common logic for distance computation, kernel weighting, optimization, and aggregation.
 
 \subsection{Architectural Summary}
 
-The repository implements a two-subsystem architecture. The KFC subsystem
-builds divergence-specific clusterwise predictors, while the COBRA
-subsystem aggregates predictions in prediction space using
-distance-based and kernel-based mechanisms. The two subsystems interact
-through the KFC C-step, where COBRA-based combiners can be selected as
-aggregation strategies.
+The codebase implements a two-subsystem architecture. The KFC subsystem builds divergence-specific clusterwise predictors, while the COBRA subsystem aggregates predictions using distance-based and kernel-based mechanisms. The two subsystems interact through the KFC C-step, where COBRA-based combiners can be selected as aggregation strategies. This structure supports modular experimentation because clustering, local learning, prediction aggregation, optimization, and utility operations are separated into specialized components.
 
 
 \section{Software Design Principles}
 \label{sec:software_design_principles}
 
-The \texttt{kfc\_procedure} framework is designed based on a set of
-established software engineering principles that ensure modularity,
-extensibility, maintainability, and interoperability. Given the
-complexity of combining clusterwise learning with prediction-space
-aggregation, the system architecture is carefully structured to enforce
-clear separation of concerns and well-defined abstraction boundaries.
+The \textbf{\textit{kfc\_procedure}} framework is designed according to a set of software engineering principles that support modularity, extensibility, maintainability, and interoperability. Since the framework combines clusterwise supervised learning with COBRA-based prediction-space aggregation, the implementation requires clear structural boundaries between orchestration logic, clustering procedures, local learning models, aggregation mechanisms, optimization components, and supporting utilities.
 
-This section presents the key design principles used throughout the
-implementation, together with illustrative diagrams that describe their
-application in the system.
+This section presents the main design principles applied throughout the implementation. Each principle is described in relation to the repository structure and illustrated using architectural diagrams to show how the design is reflected in the actual framework.
 
 % ============================================================
 \subsection{Layered and Modular Architecture}
 
-The framework follows a layered architecture in which high-level
-orchestration is separated from low-level algorithmic components.
+The framework adopts a layered and modular architecture in which high-level orchestration logic is separated from lower-level algorithmic components. This organization allows the main workflow coordination to remain independent from the implementation details of clustering, local model training, kernel computation, optimization, and aggregation. As a result, the system becomes easier to maintain, test, and extend.
 
 \begin{figure}[H]
       \centering
@@ -206,10 +211,10 @@ orchestration is separated from low-level algorithmic components.
                   arrow/.style={-Latex, thick}
             ]
 
-            \node[box] (top) {Orchestration Layer\\ \texttt{kfc.py}};
+            \node[box] (top) {Orchestration Layer\\ \textbf{kfc}};
 
-            \node[box, below left=of top] (kfc) {Clusterwise Learning\\ \texttt{core/}};
-            \node[box, below right=of top] (cobra) {COBRA Aggregation\\ \texttt{cobra/}};
+            \node[box, below left=of top] (kfc) {Clusterwise Learning\\ \textbf{core/}};
+            \node[box, below right=of top] (cobra) {COBRA Aggregation\\ \textbf{cobra/}};
 
             \node[box, below=of kfc] (kfc2) {
                   Clustering,\\ ML Models, \\and Pipeline Steps
@@ -226,106 +231,122 @@ orchestration is separated from low-level algorithmic components.
             \draw[arrow] (cobra) -- (cobra2);
 
       \end{tikzpicture}
-      \caption{Layered modular architecture of the \texttt{kfc\_procedure} framework}
+      \caption{Layered modular architecture of the \textbf{kfc\_procedure} framework}
+      \label{fig:layered-modular-architecture}
 \end{figure}
 
-\textbf{Explanation.}
-This structure ensures that the orchestration layer coordinates the
-pipeline, while the underlying learning and aggregation components
-operate independently. This reduces coupling and improves scalability.
+As illustrated in \figref{fig:layered-modular-architecture}, the orchestration layer implemented in \textbf{kfc.py} provides the high-level entry point of the framework. This layer coordinates the execution of the K-step, F-step, and C-step, while the lower-level packages provide the algorithmic components required by each stage. The \textbf{core/} package contains the clusterwise learning components, whereas the \textbf{cobra/} package contains the COBRA-based aggregation components.
+
+This architectural separation reduces coupling between the main workflow and the underlying algorithms. Consequently, clustering methods, learning models, and aggregation mechanisms can be modified or extended without requiring major changes to the orchestration layer.
 
 % ============================================================
-\subsection{Interface-Driven Design (Abstraction)}
+\subsection{Interface-Driven Design}
 
-All major components are defined using abstract base classes, ensuring
-that implementations follow a consistent contract.
+The framework applies interface-driven design by defining common contracts for major component families. Instead of requiring the pipeline to depend directly on concrete implementations, components are accessed through shared interfaces or scikit-learn-style method conventions such as \textbf{fit()}, \textbf{predict()}, and, where applicable, \textbf{predict\_proba()}. This design improves consistency across different modules and allows alternative implementations to be integrated more easily.
 
 \begin{figure}[H]
       \centering
       \begin{tikzpicture}[
                   node distance=1.6cm,
-                  box/.style={draw, rounded corners, align=center, minimum width=3.8cm},
+                  box/.style={
+                              draw,
+                              rounded corners,
+                              align=center,
+                              text width=3.8cm,
+                              font=\small,
+                              minimum height=1.1cm
+                        },
                   arrow/.style={-Latex, thick}
             ]
 
-            \node[box] (base) {BaseEstimator};
+            \node[box] (base) {Abstract Component Interface};
 
-            \node[box, below left=of base] (a) {Sklearn Wrapper};
-            \node[box, below=of base] (b) {Mean Regressor};
-            \node[box, below right=of base] (c) {Custom Model};
+            \node[box, below left=of base] (a) {Local Model\\Interface};
+            \node[box, below=of base] (b) {Kernel / Distance\\Interface};
+            \node[box, below right=of base] (c) {Optimizer / Combiner\\Interface};
 
             \draw[arrow] (base) -- (a);
             \draw[arrow] (base) -- (b);
             \draw[arrow] (base) -- (c);
 
       \end{tikzpicture}
-      \caption{Interface-driven design using abstract base estimators}
+      \caption{Interface-driven design across reusable framework components}
+      \label{fig:interface-driven-design}
 \end{figure}
 
-\textbf{Explanation.}
-This design allows multiple implementations to be swapped without
-modifying the overall pipeline, ensuring flexibility and consistency
-across modules such as estimators, kernels, and optimizers.
+As shown in \figref{fig:interface-driven-design}, the framework uses abstract component families to organize local models, kernels, distances, optimizers, and combiners. For example, local learning models are required to expose common training and prediction behavior, while COBRA components such as kernels, distances, losses, and optimizers follow their own reusable interfaces.
+
+This design allows the framework to support multiple interchangeable implementations while preserving a stable pipeline structure. Therefore, new estimators, kernels, optimizers, or aggregation methods can be introduced without changing the high-level training and prediction workflow.
 
 % ============================================================
-\subsection{Composition over Inheritance}
+\subsection{Composition-Based Design}
 
-Instead of deep inheritance hierarchies, the system relies on
-composition to build complex pipelines from independent components.
+The implementation follows a composition-based design, where complex workflows are constructed by combining independent components rather than relying on deep inheritance hierarchies. In the KFC pipeline, the main procedure is composed of separate K-step, F-step, and C-step objects, each of which encapsulates a specific part of the learning process.
 
 \begin{figure}[H]
       \centering
       \begin{tikzpicture}[
-                  box/.style={draw, rounded corners, align=center, minimum width=4.2cm},
-                  arrow/.style={-Latex, thick}
+                  node distance=1.4cm,
+                  box/.style={
+                              draw,
+                              rounded corners,
+                              align=center,
+                              text width=4.2cm,
+                              font=\small,
+                              minimum height=1.1cm
+                        },
+                  arrow/.style={-Latex, thick},
+                  dashedarrow/.style={-Latex, thick, dashed}
             ]
 
-            % Main system
             \node[box] (kfc) {KFCProcedure};
 
-            % Core pipeline steps
-            \node[box, below left=of kfc] (kstep) {KStep\\Divergence-based Clustering};
+            \node[box, below left=of kfc] (kstep) {KStep\\Divergence-Based Clustering};
             \node[box, below=of kfc] (fstep) {FStep\\Local Models per Cluster};
             \node[box, below right=of kfc] (cstep) {CStep\\Combiner / Aggregation};
 
-            % Internal components of each step
-            \node[box, below=1.4cm of kstep] (div) {Bregman Divergences\\(Multiple Metrics)};
-            \node[box, below=1.4cm of fstep] (est) {BaseEstimator\\(Local Learners)};
-            \node[box, below=1.4cm of cstep] (comb) {Combiner Strategy\\(Voting / Weighted / Stacking)};
+            \node[box, below=1.4cm of kstep] (div) {Bregman Divergences\\Multiple Metrics};
+            \node[box, below=1.4cm of fstep] (est) {Local Estimators\\Cluster-Level Learners};
+            \node[box, below=1.4cm of cstep] (comb) {Aggregation Strategy\\Voting / Weighted / COBRA};
 
-            % Inheritance layer
-            \node[box, left=1.4cm of kfc] (sk) {BaseEstimator\\(scikit-learn API)};
+            \node[box, left=1.5cm of kfc] (sk) {scikit-learn-style\\Estimator API};
 
-            % Connections (composition)
             \draw[arrow] (kfc) -- (kstep);
             \draw[arrow] (kfc) -- (fstep);
             \draw[arrow] (kfc) -- (cstep);
 
-            % Internal decomposition
             \draw[arrow] (kstep) -- (div);
             \draw[arrow] (fstep) -- (est);
             \draw[arrow] (cstep) -- (comb);
 
-            % Inheritance relation (different meaning)
-            \draw[arrow] (kfc) -- (sk);
+            \draw[dashedarrow] (kfc) -- (sk);
 
       \end{tikzpicture}
-      \caption{Hybrid composition-based pipeline with scikit-learn inheritance interface.}
+      \caption{Composition-based organization of the KFC pipeline}
+      \label{fig:composition-based-design}
 \end{figure}
 
-\textbf{Explanation.}
-Each component is injected into the main pipeline, allowing independent
-replacement and reducing tight coupling between modules.
+As illustrated in \figref{fig:composition-based-design}, \textbf{KFCProcedure} does not directly implement all clustering, learning, and aggregation logic inside one monolithic class. Instead, it coordinates independent pipeline components. The K-step handles divergence-based clustering, the F-step trains local models within discovered clusters, and the C-step combines the divergence-level prediction outputs.
+
+This design improves maintainability because each pipeline stage can be developed and tested independently. It also improves extensibility because new clustering divergences, local estimators, or aggregation strategies can be composed into the existing workflow with limited changes to the overall architecture.
 
 % ============================================================
 \subsection{Strategy Design Pattern}
 
-Different algorithms are implemented as interchangeable strategies.
+The framework applies the strategy design pattern by implementing alternative algorithms as interchangeable strategies. This principle is especially important in the aggregation stage, where different prediction combination methods can be selected depending on the task, model configuration, or experimental objective.
 
 \begin{figure}[H]
       \centering
       \begin{tikzpicture}[
-                  box/.style={draw, rounded corners, align=center, minimum width=3.6cm},
+                  node distance=1.4cm,
+                  box/.style={
+                              draw,
+                              rounded corners,
+                              align=center,
+                              text width=3.8cm,
+                              font=\small,
+                              minimum height=1.1cm
+                        },
                   arrow/.style={-Latex, thick}
             ]
 
@@ -340,31 +361,40 @@ Different algorithms are implemented as interchangeable strategies.
             \draw[arrow] (s) -- (g);
 
       \end{tikzpicture}
-      \caption{Strategy pattern for aggregation methods}
+      \caption{Strategy pattern for interchangeable aggregation methods}
+      \label{fig:strategy-design-pattern}
 \end{figure}
 
-\textbf{Explanation.}
-This design allows runtime selection of different aggregation methods
-without modifying the core pipeline logic.
+As shown in \figref{fig:strategy-design-pattern}, the aggregation stage can use different strategies, including rule-based aggregation, weighted voting, weighted averaging, stacking-based methods, or COBRA-based aggregation. These strategies share the same role within the pipeline but differ in their internal prediction-combination mechanisms.
+
+This design enables runtime selection of aggregation methods without modifying the core KFC workflow. It also supports fair experimentation, since different aggregation strategies can be compared under the same pipeline structure.
 
 % ============================================================
 \subsection{Factory-Based Construction}
 
-Components are dynamically created using a factory layer.
+The framework adopts factory-based construction to support dynamic component creation from configuration parameters. Instead of directly instantiating specific classes inside the pipeline, the system delegates component creation to factory and registry mechanisms. This approach separates object construction from workflow execution.
 
 \begin{figure}[H]
       \centering
       \begin{tikzpicture}[
-                  box/.style={draw, rounded corners, align=center, minimum width=4cm},
+                  node distance=1.4cm,
+                  box/.style={
+                              draw,
+                              rounded corners,
+                              align=center,
+                              text width=4.0cm,
+                              font=\small,
+                              minimum height=1.1cm
+                        },
                   arrow/.style={-Latex, thick}
             ]
 
             \node[box] (cfg) {Configuration Input};
 
-            \node[box, below=of cfg] (f) {Factory Layer\\ \texttt{factory.py}};
+            \node[box, below=of cfg] (f) {Factory and Registry Layer\\ \textbf{factory.py}};
 
-            \node[box, below left=of f] (c1) {Clusterer};
-            \node[box, below=of f] (c2) {Estimator};
+            \node[box, below left=of f] (c1) {Clusterer / Divergence};
+            \node[box, below=of f] (c2) {Estimator / Combiner};
             \node[box, below right=of f] (c3) {Kernel / Optimizer};
 
             \draw[arrow] (cfg) -- (f);
@@ -373,52 +403,50 @@ Components are dynamically created using a factory layer.
             \draw[arrow] (f) -- (c3);
 
       \end{tikzpicture}
-      \caption{Factory-based dynamic component creation}
+      \caption{Factory-based construction of configurable framework components}
+      \label{fig:factory-based-construction}
 \end{figure}
 
-\textbf{Explanation.}
-This enables configuration-driven model construction and improves
-flexibility in experimental setups.
+As illustrated in \figref{fig:factory-based-construction}, the factory layer receives configuration inputs and resolves them into concrete framework components. For example, a user may select a divergence, estimator, kernel, optimizer, or combiner by name, while the factory layer is responsible for instantiating the corresponding implementation.
 
-% ============================================================
+This mechanism improves reproducibility and extensibility. Experimental configurations can be changed without altering the pipeline source code, and new algorithms can be registered in the factory system while preserving the existing interface used by the orchestration layer.
+
+% ==============================
 \subsection{Separation of Concerns}
 
-Each module is responsible for a single well-defined functionality.
+The implementation follows the principle of separation of concerns by assigning each module a specific and clearly defined responsibility. This principle prevents unrelated functionalities from being mixed within the same component and ensures that clustering, local learning, kernel computation, optimization, aggregation, and support operations remain structurally independent.
 
 \begin{figure}[H]
       \centering
       \begin{tikzpicture}[
                   box/.style={
-                        draw,
-                        rounded corners,
-                        align=center,
-                        text width=3.2cm,
-                        font=\small,
-                        minimum height=1.4cm
-                  },
+                              draw,
+                              rounded corners,
+                              align=center,
+                              text width=3.4cm,
+                              font=\small,
+                              minimum height=1.4cm
+                        },
                   center/.style={
-                        draw,
-                        rounded corners,
-                        align=center,
-                        text width=4.5cm,
-                        fill=gray!10,
-                        font=\small,
-                        minimum height=1.5cm
-                  },
+                              draw,
+                              rounded corners,
+                              align=center,
+                              text width=4.5cm,
+                              fill=gray!10,
+                              font=\small,
+                              minimum height=1.5cm
+                        },
                   arrow/.style={-Latex, thick}
             ]
 
-            % Center system
-            \node[center] (sys) {KFCProcedure System};
+            \node[center] (sys) {KFCProcedure Framework};
 
-            % Independent modules
-            \node[box, above=1.5cm of sys] (a) {core/clustering};
-            \node[box, left=1.6cm of sys] (b) {core/ml};
-            \node[box, right=1.6cm of sys] (c) {cobra/kernels};
-            \node[box, below left=1.4cm of sys] (d) {cobra/optimizers};
-            \node[box, below right=1.4cm of sys] (e) {utils};
+            \node[box, above=1.5cm of sys] (a) {Clustering Module};
+            \node[box, left=1.8cm of sys] (b) {Local Learning Module};
+            \node[box, right=1.8cm of sys] (c) {Kernel Computation Module};
+            \node[box, below left=1.4cm of sys] (d) {Optimization Module};
+            \node[box, below right=1.4cm of sys] (e) {Utility Layer};
 
-            % connections (usage, not flow)
             \draw[arrow] (sys) -- (a);
             \draw[arrow] (sys) -- (b);
             \draw[arrow] (sys) -- (c);
@@ -426,1073 +454,1114 @@ Each module is responsible for a single well-defined functionality.
             \draw[arrow] (sys) -- (e);
 
       \end{tikzpicture}
-      \caption{Modular separation of concerns: independent components used by the KFCProcedure system}
+      \caption{Separation of concerns in the KFCProcedure framework}
+      \label{fig:separation_of_concerns}
 \end{figure}
 
-\textbf{Explanation.}
-This modular separation enforces clear responsibility boundaries across subsystems, enabling independent development, testing, and extension of each component.
+As shown in Figure~\ref{fig:separation_of_concerns}, the framework is organized around specialized modules with distinct responsibilities. The clustering module is responsible for divergence-based clustering and cluster assignment. The local learning module provides the predictive models used within the F-step. The kernel computation module supports kernel-based similarity transformations for COBRA-style aggregation, while the optimization module provides procedures for tuning aggregation-related parameters. The utility layer supplies reusable support functions such as logging, component resolution, data splitting, normalization, and other auxiliary operations.
 
-% ============================================================
+This separation allows each module to evolve independently while maintaining a coherent overall system structure. For example, a new divergence function can be introduced into the clustering module without requiring changes to the optimization module, provided that the expected interfaces remain consistent. Therefore, separation of concerns contributes directly to the clarity, maintainability, and scalability of the implementation.
+
+% ==========================================
 \subsection{Extensibility-Oriented Design}
 
-The KFCProcedure framework is designed to support extensibility across all
-three stages of the learning pipeline: K-Step (divergence-based clustering),
-F-Step (cluster-wise learning), and C-Step (ensemble aggregation). Each stage
-exposes a stable interface that enables substitution of algorithmic components
-without modifying the core pipeline logic.
+The framework is designed to support extensibility across the three main stages of the KFC learning pipeline: K-step, F-step, and C-step. Each stage exposes stable component boundaries, allowing new divergences, local estimators, and aggregation strategies to be integrated without modifying the overall workflow.
 
-Extensibility is achieved through a factory and registry mechanism that
-dynamically selects implementations based on configuration. This design
-allows the framework to integrate new learning strategies in a modular and
-decoupled manner.
+Extensibility is achieved through a combination of abstract interfaces, factory registries, and configuration-driven component selection. This design enables the framework to support both existing implementations and future algorithmic extensions.
 
 \begin{figure}[H]
-    \centering
+      \centering
 
-    \resizebox{0.98\linewidth}{!}{%
-    \begin{tikzpicture}[
-        box/.style={
-            draw,
-            rounded corners,
-            align=center,
-            text width=4.3cm,
-            minimum height=1.3cm,
-            font=\small
-        },
-        mainbox/.style={box, fill=gray!10},
-        newbox/.style={box, fill=gray!5},
-        arrow/.style={-Latex, thick}
-    ]
+      \resizebox{0.98\linewidth}{!}{%
+            \begin{tikzpicture}[
+                        box/.style={
+                                    draw,
+                                    rounded corners,
+                                    align=center,
+                                    text width=4.3cm,
+                                    minimum height=1.3cm,
+                                    font=\small
+                              },
+                        mainbox/.style={box, fill=gray!10},
+                        newbox/.style={box, fill=gray!5},
+                        arrow/.style={-Latex, thick}
+                  ]
 
-        % Core system
-        \node[mainbox] (system) {KFCProcedure System\\
-        \footnotesize K-Step $\rightarrow$ F-Step $\rightarrow$ C-Step};
+                  \node[mainbox] (system) {KFCProcedure System\\
+                        \footnotesize K-Step $\rightarrow$ F-Step $\rightarrow$ C-Step};
 
-        % Interface layer
-        \node[box, below=1.2cm of system] (interface)
-        {Abstract Interfaces\\
-        \footnotesize Divergence / Estimator / Combiner};
+                  \node[box, below=1.2cm of system] (interface)
+                  {Abstract Interfaces\\
+                        \footnotesize Divergence / Estimator / Combiner};
 
-        % Factory layer
-        \node[box, below=1.2cm of interface] (factory)
-        {Factory \& Registry Layer\\
-        \footnotesize configuration-driven selection of components};
+                  \node[box, below=1.2cm of interface] (factory)
+                  {Factory \& Registry Layer\\
+                        \footnotesize Configuration-Driven Component Selection};
 
-        % Existing components (KFC-based only)
-        \node[box, below left=1.5cm and 1.2cm of factory] (existing)
-        {Existing Components\\
-        \footnotesize
-        K-Step: Euclidean\\
-        F-Step: linear \\
-        C-Step: voting combiners};
+                  \node[box, below left=1.5cm and 1.2cm of factory] (existing)
+                  {Existing Components\\
+                        \footnotesize
+                        K-Step: registered divergences\\
+                        F-Step: local estimators\\
+                        C-Step: registered combiners};
 
-        % New extensions (still KFC scope)
-        \node[newbox, below right=1.5cm and 1.2cm of factory] (new)
-        {Pluggable Extensions\\
-        \footnotesize
-        new divergences for K-Step\\
-        new estimators for F-Step\\
-        new combiners for C-Step};
+                  \node[newbox, below right=1.5cm and 1.2cm of factory] (new)
+                  {Pluggable Extensions\\
+                        \footnotesize
+                        new divergences for K-Step\\
+                        new estimators for F-Step\\
+                        new combiners for C-Step};
 
-        % Connections
-        \draw[arrow] (system) -- (interface);
-        \draw[arrow] (interface) -- (factory);
-        \draw[arrow] (factory) -- (existing);
-        \draw[arrow] (factory) -- (new);
+                  \draw[arrow] (system) -- (interface);
+                  \draw[arrow] (interface) -- (factory);
+                  \draw[arrow] (factory) -- (existing);
+                  \draw[arrow] (factory) -- (new);
 
-    \end{tikzpicture}%
-    }
+            \end{tikzpicture}%
+      }
 
-    \caption{Extensibility in KFCProcedure across K-Step, F-Step, and C-Step components}
+      \caption{Extensibility of the KFCProcedure Framework}
+      \label{fig:extensibility-oriented-design}
 \end{figure}
 
-\textbf{Explanation.}
-The extensibility of the KFCProcedure framework is achieved through a
-layered design in which each stage of the pipeline defines abstract
-interfaces for its functionality. The K-Step supports interchangeable
-divergence measures for clustering, the F-Step allows different supervised
-learning models as local estimators, and the C-Step enables multiple
-aggregation strategies for final prediction.
+As illustrated in \figref{fig:extensibility-oriented-design}, extensibility is supported at multiple levels of the pipeline. The K-step can be extended by introducing additional divergence measures for clustering. The F-step can be extended by registering new supervised learning models as local estimators. The C-step can be extended by adding new aggregation strategies, including rule-based, stacking-based, or COBRA-based combiners.
 
-A factory and registry mechanism is used to instantiate concrete
-implementations based on configuration parameters. This enables seamless
-integration of new algorithms within each stage of the pipeline while
-preserving the stability of the overall architecture.
+This design is particularly useful for research-oriented machine learning frameworks, where experimental flexibility is required. New methods can be added and evaluated within the same architectural structure, which improves comparability, reproducibility, and long-term maintainability.
 
-As a result, the framework supports modular experimentation across all
-components of the KFC pipeline without requiring modification of existing
-code.
-
-% ============================================================
+% =============================================
 \subsection{Summary}
 
-Overall, the \texttt{kfc\_procedure} framework is built on modular,
-interface-driven, and extensible design principles. The combination of
-layered architecture, composition, and design patterns ensures that the
-system remains flexible, scalable, and suitable for both research and
-production environments.
+Overall, the \textbf{\textit{kfc\_procedure}} framework is implemented using a modular, layered, interface-driven, and extensibility-oriented software architecture. The combination of composition, strategy-based selection, factory-based construction, and separation of concerns ensures that the framework remains flexible and maintainable while supporting multiple machine learning workflows.
+
+These design principles are important because the framework integrates two related but distinct subsystems: KFC clusterwise learning and COBRA prediction-space aggregation. By maintaining clear architectural boundaries between these subsystems, the implementation supports independent development, systematic experimentation, and future extension of the proposed framework.
+
+% ============================
 
 \section{Core Interface Layer}
 \label{sec:core_interface_layer}
 
-The repository does not implement one single universal interface layer.
-Instead, it defines several interface families for different parts of
-the framework. The KFC subsystem defines abstractions for divergences,
-local models, and combiners, while the COBRA subsystem defines
-abstractions for estimators, splitters, distances, kernels, losses,
-optimizers, normalizers, adapters, cross-validation, and aggregators.
+The framework does not rely on a single universal interface layer. Instead, it defines several interface families for different parts of the system. The KFC subsystem provides abstractions for divergences, local models, and combiners, while the COBRA subsystem provides abstractions for estimators, splitters, distances, kernels, losses, optimizers, normalizers, adapters, cross-validation strategies, and aggregators.
 
-This design keeps the two subsystems modular while still allowing them
-to interact through the prediction matrix passed from the KFC F-step to
-the C-step.
+This design keeps the two subsystems modular while still allowing them to interact through the prediction matrix produced by the KFC F-step and passed to the C-step combiner.
 
 \subsection{Factory Infrastructure}
 
-Two registry-based factory infrastructures are implemented:
+The framework uses registry-based factory mechanisms to create and manage configurable components. These factories allow components to be selected by string identifiers instead of requiring users to instantiate each object manually. Table~\ref{tab:factory_infrastructure} summarizes the two main factory infrastructures used in the framework.
 
-\begin{itemize}
-      \item \texttt{core/factory.py}: used by KFC components such as
-            divergence factories, local model factories, and combiner factories.
+\begin{table}[H]
+      \centering
+      \caption{Factory Infrastructure in the Framework}
+      \label{tab:factory_infrastructure}
+      \renewcommand{\arraystretch}{1.2}
+      \begin{tabularx}{\textwidth}{
+                  >{\raggedright\arraybackslash}p{3.4cm}
+                  >{\raggedright\arraybackslash}X
+            }
+            \toprule
+            \textbf{Factory Scope}       & \textbf{Supported Components}                                                                                                                  \\
+            \midrule
+            KFC factory infrastructure   &
+            Supports KFC-related components such as divergence factories, local model factories, and combiner factories.                                                                  \\
 
-      \item \texttt{cobra/core/factory.py}: used by COBRA components such
-            as kernels, distances, losses, optimizers, splitters, estimators,
-            adapters, normalizers, and aggregators.
-\end{itemize}
+            COBRA factory infrastructure &
+            Supports COBRA-related components such as estimators, splitters, distances, kernels, losses, optimizers, normalizers, adapters, cross-validation strategies, and aggregators. \\
+            \bottomrule
+      \end{tabularx}
+\end{table}
 
-Both factory systems support case-insensitive registration, aliases,
-category labels, runtime creation, and discovery of available
-components. This allows users to select components by string identifiers
-such as \texttt{"euclidean"}, \texttt{"rbf"}, \texttt{"mse"},
-\texttt{"grid"}, or \texttt{"weighted\_mean"}.
+Both factory systems support case-insensitive registration, aliases, category labels, runtime object creation, and discovery of available components. This allows users to select components through identifiers such as \textbf{euclidean}, \textbf{rbf}, \textbf{mse}, \textbf{grid}, or \textbf{weighted\_mean}. As a result, the framework remains configurable while preserving a consistent interface for component resolution.
 
 \subsection{KFC Interface Families}
 
-The KFC subsystem relies on the following core abstractions:
+The KFC subsystem relies on several core interface families to support divergence registration, local model training, and prediction aggregation. These abstractions provide a consistent way to extend the framework with new divergences, local learners, and combiners. Table~\ref{tab:kfc_interface_families} summarizes the main KFC interface families.
 
-\begin{itemize}
-      \item \textbf{\texttt{BaseBregmanDivergence}:} Defines the interface
-            for divergence functions used by \texttt{BregmanKMeans}. Concrete
-            divergences implement \texttt{phi()}, \texttt{grad\_phi()}, and
-            \texttt{in\_domain()}.
+\begin{table}[H]
+      \centering
+      \caption{KFC Interface Families}
+      \label{tab:kfc_interface_families}
+      \renewcommand{\arraystretch}{1.2}
+      \begin{tabularx}{\textwidth}{
+                  >{\raggedright\arraybackslash}p{3.8cm}
+                  >{\raggedright\arraybackslash}X
+            }
+            \toprule
+            \textbf{Interface Family}    & \textbf{Role}                                                                                                                         \\
+            \midrule
+            Bregman divergence interface &
+            Defines the structure for divergence functions used by \textbf{BregmanKMeans}. Concrete divergences implement the required mathematical functions and domain checks. \\
 
-      \item \textbf{\texttt{BregmanDivergenceFactory}:} Registers and
-            instantiates divergence implementations. The registered divergence
-            names are \texttt{"euclidean"}, \texttt{"gkl"}, \texttt{"is"}, and
-            \texttt{"logistic"}.
+            Divergence factory           &
+            Registers and instantiates supported divergence implementations, including \textbf{euclidean}, \textbf{gkl}, \textbf{is}, and \textbf{logistic}.                     \\
 
-      \item \textbf{\texttt{BaseLocalModel}:} Defines the local model
-            interface used by the F-step. Local models must implement
-            \texttt{fit()} and \texttt{predict()}.
+            Local model interface        &
+            Defines the interface used by local predictive models in the F-step. Local models are expected to provide fitting and prediction behavior.                           \\
 
-      \item \textbf{\texttt{LocalModelFactory}:} Registers local models.
-            It includes a native mean regressor and automatically registers
-            compatible scikit-learn classifiers and regressors.
+            Local model factory          &
+            Registers local models and resolves them by name. It includes a native mean regressor and compatible scikit-learn classifiers and regressors.                        \\
 
-      \item \textbf{\texttt{BaseCombiner}:} Defines the interface for
-            C-step combiners. Each combiner implements \texttt{fit()} and
-            \texttt{combine()}, while \texttt{predict()} delegates to
-            \texttt{combine()}.
+            Combiner interface           &
+            Defines the interface for C-step combiners used to aggregate divergence-level prediction outputs.                                                                    \\
 
-      \item \textbf{\texttt{CombinerFactory}:} Registers regression and
-            classification combiners, including simple rules, stacking
-            combiners, and COBRA-based combiners.
-\end{itemize}
+            Combiner factory             &
+            Registers regression and classification combiners, including simple aggregation rules, stacking-based combiners, and COBRA-based combiners.                          \\
+            \bottomrule
+      \end{tabularx}
+\end{table}
 
-The clustering workflow itself is implemented by \texttt{BregmanKMeans}
-and \texttt{KStep}. There is no separate generic \texttt{BaseClusterer}
-class in the repository.
+The clustering workflow is handled directly by \textbf{BregmanKMeans} and \textbf{KStep}. The current implementation does not define a separate generic \textbf{BaseClusterer} abstraction.
+
 
 \subsection{COBRA Interface Families}
 
-The COBRA subsystem defines a larger set of interfaces under
-\texttt{cobra/core/}. These include:
+The COBRA subsystem defines a set of reusable interface families that support estimator management, data splitting, distance computation, kernel weighting, optimization, aggregation, cross-validation, and normalization. These interfaces follow a factory-based design so that different components can be selected and configured consistently. Table~\ref{tab:cobra_interface_families} summarizes the main COBRA interface families.
 
-\begin{itemize}
-      \item \textbf{\texttt{BaseEstimator}} and
-            \textbf{\texttt{EstimatorFactory}} for COBRA base learners.
+\begin{table}[H]
+      \centering
+      \caption{COBRA Interface Families}
+      \label{tab:cobra_interface_families}
+      \renewcommand{\arraystretch}{1.2}
+      \begin{tabularx}{\textwidth}{
+                  >{\raggedright\arraybackslash}p{5cm}
+                  >{\raggedright\arraybackslash}X
+            }
+            \toprule
+            \textbf{Interface Family}   & \textbf{Role}                                                                                   \\
+            \midrule
+            Data splitter interfaces    &
+            Support train/calibration splitting strategies used during COBRA model fitting.                                               \\
 
-      \item \textbf{\texttt{BaseDataSplitter}} and
-            \textbf{\texttt{SplitterFactory}} for train/calibration splitting.
+            Estimator interfaces        &
+            Define and resolve COBRA base learners through estimator abstractions and factory registration.                               \\
 
-      \item \textbf{\texttt{BaseDistance}} and
-            \textbf{\texttt{DistanceFactory}} for pairwise distance computation.
+            Distance interfaces         &
+            Provide pairwise distance computation for prediction-space or input-space comparison.                                         \\
 
-      \item \textbf{\texttt{BaseKernel}} and
-            \textbf{\texttt{KernelFactory}} for distance-to-weight
-            transformations.
+            Kernel interfaces           &
+            Transform computed distances into aggregation weights.                                                                        \\
 
-      \item \textbf{\texttt{BaseKernelAdapter}} and
-            \textbf{\texttt{KernelAdapterFactory}} for one-parameter and
-            two-parameter distance transformations.
+            Kernel adapter interfaces   &
+            Support one-parameter and two-parameter transformations of distance matrices before kernel weighting.                         \\
 
-      \item \textbf{\texttt{BaseLoss}} and
-            \textbf{\texttt{LossFactory}} for optimization objectives.
+            Loss interfaces             &
+            Define optimization objectives used when tuning aggregation parameters.                                                       \\
 
-      \item \textbf{\texttt{BaseOptimizer}} and
-            \textbf{\texttt{OptimizerFactory}} for grid-search and
-            gradient-based parameter optimization.
+            Optimizer interfaces        &
+            Provide grid-search and gradient-based methods for tuning parameters such as bandwidth, $\alpha$, and $\beta$.                \\
 
-      \item \textbf{\texttt{BaseAggregator}} and
-            \textbf{\texttt{AggregatorFactory}} for weighted mean and weighted
-            vote aggregation.
+            Aggregator interfaces       &
+            Combine calibration targets through weighted mean aggregation for regression or weighted vote aggregation for classification. \\
 
-      \item \textbf{\texttt{BaseCrossValidator}} and
-            \textbf{\texttt{CVFactory}} for K-fold, stratified K-fold, and
-            time-series cross-validation strategies.
+            Cross-validation interfaces &
+            Provide K-fold, stratified K-fold, and time-series validation strategies for internal parameter selection.                    \\
 
-      \item \textbf{\texttt{BaseNormalizer}} and
-            \textbf{\texttt{NormalizerFactory}} for reusable standard and
-            min-max normalization utilities.
-\end{itemize}
+            Normalizer interfaces       &
+            Provide reusable standard and min--max normalization utilities for model inputs or prediction-space values.                   \\
+            \bottomrule
+      \end{tabularx}
+\end{table}
 
 \subsection{Scikit-Learn Compatibility}
 
-The high-level estimators inherit from or follow scikit-learn-style
-interfaces. \texttt{KFCProcedure}, \texttt{KFCRegressor}, and
-\texttt{KFCClassifier} expose \texttt{fit()} and \texttt{predict()}.
-The COBRA classes \texttt{GradientCOBRA} and
-\texttt{MixCOBRARegressor} inherit from scikit-learn estimator and
-regressor mixin classes, while \texttt{CombinedClassifier} follows a
-classifier-style interface with \texttt{fit()}, \texttt{predict()}, and
-\texttt{predict\_proba()}.
+The high-level estimators inherit from or follow scikit-learn-style interfaces. \textbf{KFCProcedure}, \textbf{KFCRegressor}, and \textbf{KFCClassifier} expose \textbf{fit()} and \textbf{predict()} methods. The COBRA classes \textbf{GradientCOBRA} and \textbf{MixCOBRARegressor} inherit from scikit-learn estimator and regressor mixin classes, while \textbf{CombinedClassifier} follows a classifier-style interface with \textbf{fit()}, \textbf{predict()}, and \textbf{predict\_proba()}.
 
-One implementation limitation should be noted: the full
-\texttt{KFCProcedure.predict\_proba()} method calls
-\texttt{FStep.predict\_proba()}, but the current \texttt{FStep} class
-does not implement this method. Therefore, full KFC probability
-prediction should not be described as a completed feature in the current
-implementation.
+One implementation limitation should be noted. The full \textbf{KFCProcedure.predict\_proba()} method calls \textbf{FStep.predict\_proba()}, but the current \textbf{FStep} class does not implement this method. Therefore, full KFC probability prediction should not be described as a completed feature in the current implementation.
 
-\section{Clusterwise Learning Subsystem (KFC)}
+% ============================
+
+\section{Clusterwise Learning Subsystem}
 \label{sec:kfc_subsystem}
 
-The Clusterwise Learning Subsystem implements the KFC part of the
-library. It is located under \texttt{src/kfc\_procedure/core/} and is
-responsible for divergence-based clustering, local model training, and
-combiner-based prediction fusion.
+The clusterwise learning subsystem forms the core KFC component of the library. It integrates divergence-based clustering, cluster-specific predictive modeling, and combiner-based prediction fusion to support supervised learning on heterogeneous data structures.
 
 \subsection{Subsystem Architecture}
 
-The KFC subsystem is organized into five main packages:
+The KFC subsystem is organized around five main architectural components: clustering, local learning, workflow steps, prediction combiners, and factory-based component resolution. These components separate the responsibilities of the clusterwise learning pipeline and make the framework easier to extend and maintain. Table~\ref{tab:kfc_subsystem_architecture} summarizes the main components of the KFC subsystem.
 
-\begin{verbatim}
-core/
-├── clustering/
-├── ml/
-├── steps/
-├── combiner/
-└── factory.py
-\end{verbatim}
+\begin{table}[H]
+      \centering
+      \caption{Main Components of the KFC Subsystem}
+      \label{tab:kfc_subsystem_architecture}
+      \renewcommand{\arraystretch}{1.2}
+      \begin{tabularx}{\textwidth}{
+                  >{\raggedright\arraybackslash}p{3.5cm}
+                  >{\raggedright\arraybackslash}X
+            }
+            \toprule
+            \textbf{Component}   & \textbf{Role in the KFC Subsystem}                                         \\
+            \midrule
+            Clustering           &
+            Provides divergence-based clustering through Bregman K-Means and registered divergence functions. \\
 
-The implementation separates the clusterwise workflow into three
-pipeline stages:
+            Local learning       &
+            Provides local predictive models used within the clusters produced by the K-step.                 \\
 
-\begin{itemize}
-      \item \textbf{K-step:} implemented in \texttt{steps/kstep.py};
-            fits one \texttt{BregmanKMeans} model per divergence.
+            Workflow steps       &
+            Defines the K-step, F-step, and C-step execution logic of the clusterwise learning pipeline.      \\
 
-      \item \textbf{F-step:} implemented in \texttt{steps/fstep.py};
-            trains local models for each divergence and cluster.
+            Prediction combiners &
+            Combines the divergence-level prediction outputs produced by the F-step.                          \\
 
-      \item \textbf{C-step:} implemented in \texttt{steps/cstep.py};
-            combines the divergence-level prediction matrix using a registered
-            combiner.
-\end{itemize}
+            Factory resolution   &
+            Resolves clustering models, local models, and combiners from registered component names.          \\
+            \bottomrule
+      \end{tabularx}
+\end{table}
+
+The implementation separates the clusterwise workflow into three main pipeline stages, as summarized in Table~\ref{tab:kfc_pipeline_stages}.
+
+\begin{table}[H]
+      \centering
+      \caption{Main Pipeline Stages of the KFC Workflow}
+      \label{tab:kfc_pipeline_stages}
+      \renewcommand{\arraystretch}{1.2}
+      \begin{tabularx}{\textwidth}{
+                  >{\raggedright\arraybackslash}p{2.5cm}
+                  >{\raggedright\arraybackslash}X
+            }
+            \toprule
+            \textbf{Stage} & \textbf{Description}                                                                             \\
+            \midrule
+            K-step         &
+            Fits one Bregman K-Means model for each selected divergence and produces divergence-specific cluster assignments. \\
+
+            F-step         &
+            Trains local predictive models for each divergence and observed cluster.                                          \\
+
+            C-step         &
+            Combines the divergence-level prediction matrix using the selected registered combiner.                           \\
+            \bottomrule
+      \end{tabularx}
+\end{table}
+
 
 \subsection{Clustering Module}
 
-The clustering module is implemented in:
+The clustering module provides the divergence-based clustering mechanism used in the K-step of the \KFCProcedure{} framework. Its main role is to partition the input data into clusters under different divergence assumptions before local predictive models are trained within each cluster.
 
-\begin{verbatim}
-core/clustering/
-├── bregman.py
-└── divergences/
-\end{verbatim}
+The central class of this module is \textbf{BregmanKMeans}. It follows a Lloyd-style clustering procedure and provides several implementation features that support repeated initialization, divergence-based sample assignment, centroid updating, and scikit-learn-style usage. Table~\ref{tab:bregman_kmeans_features} summarizes the main features of this clustering component.
 
-The central class is \texttt{BregmanKMeans}. It follows a Lloyd-style
-clustering procedure with the following implementation features:
+\begin{table}[H]
+      \centering
+      \caption{Main Features of BregmanKMeans}
+      \label{tab:bregman_kmeans_features}
+      \renewcommand{\arraystretch}{1.2}
+      \begin{tabularx}{\textwidth}{
+                  >{\raggedright\arraybackslash}p{4.2cm}
+                  >{\raggedright\arraybackslash}X
+            }
+            \toprule
+            \textbf{Feature}             & \textbf{Description}                                                                                                              \\
+            \midrule
+            Centroid initialization      &
+            Initializes centroids randomly from training samples.                                                                                                            \\
 
-\begin{itemize}
-      \item random centroid initialization from training samples;
-      \item multiple random initializations through \texttt{n\_init};
-      \item assignment using the selected Bregman divergence;
-      \item centroid update using arithmetic means;
-      \item empty-cluster reinitialization;
-      \item distortion computation, including a streaming variant for
-            memory-safe distance evaluation;
-      \item scikit-learn-style methods such as \texttt{fit()},
-            \texttt{predict()}, \texttt{transform()}, \texttt{fit\_predict()},
-            \texttt{fit\_transform()}, and \texttt{score()}.
-\end{itemize}
+            Multiple initializations     &
+            Supports repeated random initializations through \varname{n\_init}.                                                                                              \\
 
-The divergence implementations are located in
-\texttt{core/clustering/divergences/}. The registered divergences are:
+            Divergence-based assignment  &
+            Assigns samples to clusters using the selected Bregman divergence.                                                                                               \\
 
-\begin{itemize}
-      \item \texttt{"euclidean"}: \texttt{SquaredEuclidean};
-      \item \texttt{"gkl"}: \texttt{GKLDivergence};
-      \item \texttt{"is"}: \texttt{ItakuraSaito};
-      \item \texttt{"logistic"}: \texttt{LogisticLoss}.
-\end{itemize}
+            Centroid update              &
+            Updates cluster centroids using arithmetic means.                                                                                                                \\
 
-The \texttt{validate\_divergence\_domain()} function checks that the
-input matrix contains finite values and satisfies the selected
-divergence domain before clustering is performed.
+            Empty-cluster handling       &
+            Reinitializes empty clusters during the clustering process.                                                                                                      \\
+
+            Distortion computation       &
+            Computes clustering distortion, including a streaming variant for memory-safe distance evaluation.                                                               \\
+
+            Scikit-learn-style interface &
+            Provides methods such as \varname{fit()}, \varname{predict()}, \varname{transform()}, \varname{fit_predict()}, \varname{fit_transform()}, and \varname{score()}. \\
+            \bottomrule
+      \end{tabularx}
+\end{table}
+
+The clustering module supports several registered divergence functions, as shown in Table~\ref{tab:supported_bregman_divergences}.
+
+\begin{table}[H]
+      \centering
+      \caption{Supported Bregman Divergences}
+      \label{tab:supported_bregman_divergences}
+      \renewcommand{\arraystretch}{1.2}
+      \begin{tabularx}{\textwidth}{
+                  >{\raggedright\arraybackslash}p{3.5cm}
+                  >{\raggedright\arraybackslash}X
+            }
+            \toprule
+            \textbf{Identifier} & \textbf{Divergence Function} \\
+            \midrule
+            \textbf{euclidean}  &
+            Squared Euclidean divergence.                      \\
+
+            \textbf{gkl}        &
+            Generalized Kullback--Leibler divergence.          \\
+
+            \textbf{is}         &
+            Itakura--Saito divergence.                         \\
+
+            \textbf{logistic}   &
+            Logistic loss-based divergence.                    \\
+            \bottomrule
+      \end{tabularx}
+\end{table}
+
+Before clustering is performed, the \textbf{validate\_divergence\_domain()} function checks whether the input matrix contains finite values and satisfies the mathematical domain requirements of the selected divergence. This validation step helps prevent invalid clustering operations, especially for divergences that require non-negative or strictly positive input values.
 
 \subsection{Machine Learning Module}
 
-The local learning module is implemented under \texttt{core/ml/}. It
-contains:
+The machine learning module supports the F-step of the \KFCProcedure{} framework. Its main role is to provide local predictive models that can be trained separately within the clusters produced by the K-step. The module includes abstract model interfaces, native local models, scikit-learn adapters, and a registry mechanism for resolving models by name. Table~\ref{tab:machine_learning_module_components} summarizes the main components of this module.
 
-\begin{itemize}
-      \item \texttt{BaseLocalModel}: the abstract interface for F-step
-            local models;
-      \item \texttt{MeanRegressor}: a native local model based on
-            scikit-learn's \texttt{DummyRegressor};
-      \item \texttt{SklearnLocalModel}: an adapter that wraps compatible
-            scikit-learn estimators;
-      \item \texttt{LocalModelFactory}: a registry for resolving local
-            models by name.
-\end{itemize}
+\begin{table}[H]
+      \centering
+      \caption{Machine Learning Module Components}
+      \label{tab:machine_learning_module_components}
+      \renewcommand{\arraystretch}{1.2}
+      \begin{tabularx}{\textwidth}{
+                  >{\raggedright\arraybackslash}p{3.5cm}
+                  >{\raggedright\arraybackslash}X
+            }
+            \toprule
+            \textbf{Component} & \textbf{Description}                                                             \\
+            \midrule
+            BaseLocalModel     &
+            Defines the abstract interface used by local models in the F-step.                                    \\
 
-The function \texttt{register\_all\_sklearn\_models()} automatically
-registers compatible scikit-learn classifiers and regressors using
-snake-case names such as \texttt{linear\_regression},
-\texttt{logistic\_regression}, \texttt{random\_forest\_regressor}, and
-\texttt{k\_neighbors\_classifier}, depending on the classes available
-from scikit-learn.
+            MeanRegressor      &
+            Provides a simple native local regression model based on a mean prediction strategy.                  \\
+
+            SklearnLocalModel  &
+            Wraps compatible scikit-learn estimators so they can be used as local models inside the KFC pipeline. \\
+
+            LocalModelFactory  &
+            Provides a registry mechanism for resolving local models by name.                                     \\
+            \bottomrule
+      \end{tabularx}
+\end{table}
+
+The function \varname{register_all_sklearn_models()} automatically registers compatible scikit-learn classifiers and regressors using standardized snake-case identifiers. Examples include \varname{linear_regression}, \varname{logistic_regression}, \varname{random_forest_regressor}, and \varname{k_neighbors_classifier}. This registration mechanism allows users to select local models through configuration names instead of manually instantiating estimator objects.
+
+
 
 \subsection{KFC Workflow Steps}
 
-The KFC pipeline is implemented through three concrete step classes:
+The KFC pipeline is organized into three main workflow steps: clustering, local model training, and prediction aggregation. These steps correspond to the K-step, F-step, and C-step of the framework. Table~\ref{tab:kfc_workflow_steps} summarizes the role of each step in the pipeline.
 
-\begin{itemize}
-      \item \textbf{\texttt{KStep}:} Receives a list of divergence
-            identifiers or divergence objects. It creates and fits one
-            \texttt{BregmanKMeans} model per divergence and stores both fitted
-            models and training cluster assignments.
+\begin{table}[H]
+      \centering
+      \caption{KFC Workflow Steps}
+      \label{tab:kfc_workflow_steps}
+      \renewcommand{\arraystretch}{1.2}
+      \begin{tabularx}{\textwidth}{
+                  >{\raggedright\arraybackslash}p{2.5cm}
+                  >{\raggedright\arraybackslash}p{3.3cm}
+                  >{\raggedright\arraybackslash}X
+            }
+            \toprule
+            \textbf{Step}                   & \textbf{Main Function} & \textbf{Description}                                                                                                                  \\
+            \midrule
+            KStep                           &
+            Divergence-based clustering     &
+            Receives divergence identifiers or divergence objects, fits one Bregman K-Means model for each divergence, and stores the fitted clustering models and training cluster assignments.             \\
 
-      \item \textbf{\texttt{FStep}:} Receives the cluster labels generated
-            by \texttt{KStep}. For each divergence and each observed cluster, it
-            resolves a local model from \texttt{LocalModelFactory}, trains it on
-            the corresponding subset, and stores it in a nested dictionary.
+            FStep                           &
+            Cluster-specific model training &
+            Uses the cluster labels generated by KStep. For each divergence and observed cluster, it resolves a local model, trains it on the corresponding data subset, and stores the fitted local models. \\
 
-      \item \textbf{\texttt{CStep}:} Receives the prediction matrix
-            generated by \texttt{FStep}. It resolves a combiner from
-            \texttt{CombinerFactory}, fits it when required, and exposes
-            \texttt{predict()} for final aggregation.
-\end{itemize}
+            CStep                           &
+            Prediction aggregation          &
+            Receives the prediction matrix generated by FStep, resolves the selected combiner, fits the combiner when required, and produces the final prediction through aggregation.                       \\
+            \bottomrule
+      \end{tabularx}
+\end{table}
 
-During prediction, \texttt{FStep.predict()} returns a matrix of shape
-\texttt{(n\_samples, n\_divergences)}. Each column corresponds to one
-divergence-specific predictive view. The clusters are used internally to
-route each sample to the correct local model, but the final matrix has
-one column per divergence, not one column per cluster.
+During prediction, \textbf{FStep.predict()} returns a prediction matrix of shape \textbf{(n\_samples, n\_divergences)}. Each column represents one divergence-specific predictive view. The cluster assignments are used internally to route each sample to the appropriate local model, but the final prediction matrix contains one column per divergence rather than one column per cluster.
+
 
 \subsection{Combiner Module}
 
-The combiner module is implemented under \texttt{core/combiner/}. It
-contains separate regression and classification combiners.
+The combiner module is responsible for the C-step of the \KFCProcedure{} framework. Its main function is to combine the prediction outputs produced by the cluster-specific models in the F-step. The module supports both regression and classification tasks through separate registered combiner strategies. \tabref{tab:registered_prediction_combiners} summarizes the registered prediction combiners used in the framework.
 
-The registered regression combiners are:
+\begin{table}[H]
+      \centering
+      \caption{Registered Prediction Combiners}
+      \label{tab:registered_prediction_combiners}
+      \resizebox{\textwidth}{!}{%
+            \begin{tabularx}{\textwidth}{
+                        >{\raggedright\arraybackslash}p{2.5cm}
+                        >{\raggedright\arraybackslash}p{3.3cm}
+                        >{\raggedright\arraybackslash}X
+                  }
+                  \toprule
+                  \textbf{Task}  & \textbf{Combiner Identifier}  & \textbf{Description}                                                    \\
+                  \midrule
+                  Regression     & \textbf{mean}                 & Computes the row-wise arithmetic mean of prediction columns.            \\
+                  Regression     & \textbf{weighted\_mean}       & Combines prediction columns using linear-regression-based weights.      \\
+                  Regression     & \textbf{stacking\_regressor}  & Applies a meta-regression model to combine prediction outputs.          \\
+                  Regression     & \textbf{gradientcobra}        & Uses \textbf{GradientCOBRA} as a COBRA-based regression combiner.       \\
+                  Regression     & \textbf{mixcobra}             & Uses \textbf{MixCOBRARegressor} as a mixed-space regression combiner.   \\
+                  \midrule
+                  Classification & \textbf{majority\_vote}       & Applies hard voting across prediction columns for classification.       \\
+                  Classification & \textbf{stacking\_classifier} & Applies logistic-regression-based stacking for classification.          \\
+                  Classification & \textbf{combined\_classifier} & Uses \textbf{CombinedClassifier} as a classification aggregation model. \\
+                  \bottomrule
+            \end{tabularx}%
+      }
+\end{table}
 
-\begin{itemize}
-      \item \texttt{"mean"}: row-wise arithmetic mean;
-      \item \texttt{"weighted\_mean"}: linear-regression-based weighted
-            combination;
-      \item \texttt{"stacking\_regressor"}: meta-regression using a
-            configurable regressor, with linear regression as the default;
-      \item \texttt{"gradientcobra"}: wrapper around
-            \texttt{cobra.gradientcobra.GradientCOBRA};
-      \item \texttt{"mixcobra"}: wrapper around
-            \texttt{cobra.mixcobra.MixCOBRARegressor}.
-\end{itemize}
+For COBRA-based KFC combiners, the corresponding COBRA model is called with \textbf{as\_predictions=True}. This setting is necessary because the combiner does not receive the original feature matrix directly. Instead, it receives the prediction matrix generated by the F-step. Therefore, the COBRA-based combiner operates in prediction space when it is used inside the KFC pipeline.
 
-The registered classification combiners are:
-
-\begin{itemize}
-      \item \texttt{"majority\_vote"}: hard voting across prediction
-            columns;
-      \item \texttt{"stacking\_classifier"}: logistic-regression-based
-            stacking;
-      \item \texttt{"combined\_classifier"}: wrapper around
-            \texttt{cobra.combined\_classifier.CombinedClassifier}.
-\end{itemize}
-
-The COBRA-based KFC combiners call the corresponding COBRA model with
-\texttt{as\_predictions=True}. This is important because the input to
-the combiner is already a prediction matrix produced by the F-step.
 
 \subsection{Subsystem Summary}
 
-The KFC subsystem implements the clusterwise learning part of the
-framework through explicit packages for clustering, local model
-wrapping, pipeline steps, and prediction combiners. Its implementation
-is modular: divergence selection, local model choice, and final
-aggregation strategy can be changed independently through the factory
-registries.
+The KFC subsystem implements the clusterwise learning part of the framework through explicit packages for clustering, local model wrapping, pipeline steps, and prediction combiners. Its implementation is modular: divergence selection, local model choice, and final aggregation strategy can be changed independently through factory registries.
 
+% ============================
 
 \section{COBRA Aggregation Subsystem}
 \label{sec:cobra_subsystem}
 
-The COBRA Aggregation Subsystem implements prediction-space aggregation
-models and reusable aggregation components. It is located under
-\texttt{src/kfc\_procedure/cobra/}. Unlike the KFC subsystem, which
-first partitions the input space into clusters, the COBRA subsystem
-works primarily by constructing or receiving a prediction matrix and
-then aggregating calibration targets according to distance-based kernel
-weights.
+The COBRA aggregation subsystem implements prediction-space aggregation models and reusable aggregation components. Unlike the KFC subsystem, which first partitions the input space into clusters, the COBRA subsystem primarily works by constructing or receiving a prediction matrix and then aggregating calibration targets according to distance-based kernel weights. This makes the subsystem suitable for combining the outputs of multiple predictive models in a flexible and modular way.
 
 \subsection{Subsystem Architecture}
 
-The COBRA package contains four main model-level files:
+The subsystem is organized around several model-level components that support regression, classification, and stacking-style aggregation. Table~\ref{tab:cobra_model_components} summarizes the main components of the COBRA aggregation subsystem.
 
-\begin{itemize}
-      \item \texttt{gradientcobra.py}: implements
-            \texttt{GradientCOBRA} for regression aggregation.
+\begin{table}[H]
+      \centering
+      \caption{Main Components of the COBRA Aggregation Subsystem}
+      \label{tab:cobra_model_components}
+      \begin{tabularx}{\textwidth}{lX}
+            \toprule
+            \textbf{Component}              & \textbf{Role in the Subsystem}                                             \\
+            \midrule
+            \textbf{GradientCOBRA}          &
+            Provides regression aggregation based on prediction-space distances and kernel-weighted calibration targets. \\
 
-      \item \texttt{mixcobra.py}: implements
-            \texttt{MixCOBRARegressor}, which combines input-space and
-            prediction-space distances.
+            \textbf{MixCOBRARegressor}      &
+            Combines input-space and prediction-space distance information for regression aggregation.                   \\
 
-      \item \texttt{combined\_classifier.py}: implements
-            \texttt{CombinedClassifier} and \texttt{CombinedClassifierFast} for
-            classification aggregation.
+            \textbf{CombinedClassifier}     &
+            Provides classification aggregation by combining the predictions of multiple classification models.          \\
 
-      \item \texttt{superlearner.py}: implements a standalone
-            \texttt{SuperLearner} stacking-style estimator.
-\end{itemize}
+            \textbf{CombinedClassifierFast} &
+            Provides a faster variant of the combined classification aggregation procedure.                              \\
+            \bottomrule
+      \end{tabularx}
+\end{table}
 
-The reusable component infrastructure is located under
-\texttt{cobra/core/}. It contains adapters, aggregators,
-cross-validation strategies, distances, estimators, kernels, losses,
-normalizers, optimizers, splitters, factories, and shared type
-definitions.
+In addition to these model-level components, the subsystem includes reusable infrastructure for estimator management, data splitting, normalization, distance computation, kernel functions, loss functions, optimization, aggregation, and shared type definitions. These reusable components reduce code duplication and make the aggregation models easier to extend and maintain.
+
 
 \subsection{Core Engine Structure}
 
-The COBRA core package is implemented as a factory-driven component
-system:
+The COBRA core engine is designed as a factory-driven component system. It separates the main aggregation workflow into reusable components for distance computation, kernel weighting, loss evaluation, optimization, estimator management, and data splitting. This modular design makes the subsystem easier to extend and allows different aggregation strategies to reuse the same underlying infrastructure. Table~\ref{tab:cobra_core_engine_components} summarizes the main components of the COBRA core engine.
 
-\begin{itemize}
-      \item \textbf{Adapters:} \texttt{OneParameterKernelAdapter}
-            scales one distance matrix by a bandwidth parameter.
-            \texttt{TwoParameterKernelAdapter} combines two distance matrices
-            using coefficients $\alpha$ and $\beta$.
+\begin{table}[H]
+      \centering
+      \caption{Core Components of the COBRA Engine}
+      \label{tab:cobra_core_engine_components}
+      \begin{tabularx}{\textwidth}{lX}
+            \toprule
+            \textbf{Component}        & \textbf{Role in the Core Engine}                                                                                                                                                                                                                \\
+            \midrule
+            \textbf{Adapters}         &
+            Provide kernel-adapter mechanisms. \textbf{OneParameterKernelAdapter} scales one distance matrix using a bandwidth parameter, while \textbf{TwoParameterKernelAdapter} combines two distance matrices using coefficients $\alpha$ and $\beta$.                              \\
 
-      \item \textbf{Aggregators:} \texttt{WeightedMeanAggregator}
-            performs regression aggregation, while
-            \texttt{WeightedVoteAggregator} performs classification aggregation.
+            \textbf{Aggregators}      &
+            Combine calibration targets using computed weights. \textbf{WeightedMeanAggregator} is used for regression aggregation, while \textbf{WeightedVoteAggregator} is used for classification aggregation.                                                                       \\
 
-      \item \textbf{Cross-validation:} \texttt{KFoldCV},
-            \texttt{StratifiedKFoldCV}, and \texttt{TimeSeriesCV} provide fold
-            generators. The main COBRA classes use K-fold cross-validation by
-            default.
+            \textbf{Cross-validation} &
+            Provides fold-generation strategies, including \textbf{KFoldCV}, \textbf{StratifiedKFoldCV}, and \textbf{TimeSeriesCV}. These components support internal validation and parameter-selection procedures.                                                                    \\
 
-      \item \textbf{Distances:} Euclidean, Manhattan, Minkowski, Cosine,
-            and Hamming distances are implemented. Hamming distance is especially
-            relevant for classification prediction vectors.
+            \textbf{Distances}        &
+            Implements distance measures such as Euclidean, Manhattan, Minkowski, Cosine, and Hamming distances. Hamming distance is especially useful for comparing classification prediction vectors.                                                                                 \\
 
-      \item \textbf{Estimators:} The COBRA estimator layer includes
-            \texttt{BaseEstimator}, \texttt{MeanRegressor},
-            \texttt{SklearnEstimator}, and automatic scikit-learn estimator
-            registration through \texttt{EstimatorFactory}.
+            \textbf{Estimators}       &
+            Provides estimator abstraction and registration through components such as \textbf{BaseEstimator}, \textbf{MeanRegressor}, \textbf{SklearnEstimator}, and \textbf{EstimatorFactory}. This allows scikit-learn estimators to be used consistently within the COBRA workflow. \\
 
-      \item \textbf{Kernels:} The registered kernels include radial/RBF,
-            exponential, reverse-cosh, Cauchy, Epanechnikov, biweight,
-            triweight, triangular, COBRA threshold, and naive kernels.
+            \textbf{Kernels}          &
+            Defines kernel functions used to convert distances into aggregation weights. The available kernels include radial/RBF, exponential, reverse-cosh, Cauchy, Epanechnikov, biweight, triweight, triangular, COBRA threshold, and naive kernels.                                \\
 
-      \item \textbf{Losses:} The available losses include MSE, MAE,
-            Huber, quantile, log loss, and hinge loss.
+            \textbf{Losses}           &
+            Provides objective functions for model evaluation and optimization, including MSE, MAE, Huber, quantile, log loss, and hinge loss.                                                                                                                                          \\
 
-      \item \textbf{Normalizers:} Standard and min-max normalizers are
-            implemented as reusable components. The main COBRA classes also use
-            scalar normalization constants from \texttt{cobra/utils/preprocessing.py}.
+            \textbf{Normalizers}      &
+            Provides reusable normalization components, including standard normalization and min--max normalization. Shared preprocessing utilities are also used to compute scalar normalization constants where required.                                                             \\
 
-      \item \textbf{Optimizers:} The optimizer layer includes
-            \texttt{GridSearchOptimizer}, \texttt{GradientDescentOptimizer},
-            \texttt{MomentumOptimizer}, and \texttt{AdamOptimizer}. These
-            optimizers tune aggregation parameters such as bandwidth, alpha, and
-            beta.
+            \textbf{Optimizers}       &
+            Tunes aggregation parameters such as bandwidth, $\alpha$, and $\beta$. The optimizer layer includes \textbf{GridSearchOptimizer}, \textbf{GradientDescentOptimizer}, \textbf{MomentumOptimizer}, and \textbf{AdamOptimizer}.                                                \\
 
-      \item \textbf{Splitters:} \texttt{RandomHoldoutSplitter} and
-            \texttt{OverlapSplitter} create training and calibration partitions.
-\end{itemize}
+            \textbf{Splitters}        &
+            Creates training and calibration partitions through strategies such as \textbf{RandomHoldoutSplitter} and \textbf{OverlapSplitter}.                                                                                                                                         \\
+            \bottomrule
+      \end{tabularx}
+\end{table}
+
 
 \subsection{GradientCOBRA Implementation}
 
-\texttt{GradientCOBRA} is implemented as a scikit-learn-compatible
-regressor. Its default estimator pool includes linear regression, ridge
-CV, lasso CV, k-nearest-neighbor regression, random forest regression,
-and support vector regression.
+\textbf{GradientCOBRA} is implemented as a scikit-learn-compatible regressor for prediction-space aggregation. Its default estimator pool includes linear regression, ridge regression with cross-validation, lasso regression with cross-validation, k-nearest-neighbor regression, random forest regression, and support vector regression. These base estimators are used to generate prediction outputs that are later combined through the COBRA aggregation mechanism.
 
-The \texttt{fit()} method supports two execution modes:
+The \textbf{fit()} method supports two execution modes:
 
 \begin{itemize}
-      \item \textbf{Raw-feature mode:} The model splits the data into
-            estimator-training and calibration subsets, trains the base
-            estimators, and constructs a prediction matrix on the calibration
-            data.
+      \item \textbf{Raw-feature mode:} The model receives the original feature matrix, splits the data into estimator-training and calibration subsets, trains the base estimators, and constructs a prediction matrix on the calibration data.
 
-      \item \textbf{Prediction-matrix mode:} When
-            \texttt{as\_predictions=True}, the input is treated as an existing
-            prediction matrix and base estimator training is skipped.
+      \item \textbf{Prediction-matrix mode:} When \textbf{as\_predictions=True}, the input is treated as an existing prediction matrix. In this case, base estimator training is skipped, and the model directly performs aggregation on the provided predictions.
 \end{itemize}
 
-After the prediction matrix is prepared, the class computes a scalar
-normalization constant, constructs a distance matrix, applies a
-one-parameter kernel adapter, evaluates kernel weights, and optimizes
-the bandwidth through cross-validation.
+After the prediction matrix has been prepared, \textbf{GradientCOBRA} computes a scalar normalization constant, constructs a distance matrix in prediction space, applies a one-parameter kernel adapter, evaluates kernel-based aggregation weights, and optimizes the bandwidth parameter through cross-validation. This design allows the model to operate both as a standalone regression aggregator and as a combiner inside the \KFCProcedure{} pipeline.
+
+
 
 \subsection{MixCOBRARegressor Implementation}
 
-\texttt{MixCOBRARegressor} extends the prediction-space aggregation
-idea by using both input-space and prediction-space distances. Its
-default estimator pool includes linear regression, ridge, lasso,
-k-nearest-neighbor regression, random forest regression, and support
-vector regression.
+\textbf{MixCOBRARegressor} extends the prediction-space aggregation idea by using both input-space and prediction-space distances. Its default estimator pool includes linear regression, ridge, lasso, k-nearest-neighbor regression, random forest regression, and support vector regression.
 
-The class supports two modes controlled by \texttt{one\_parameter}:
+The class supports two modes controlled by \textbf{one\_parameter}:
 
 \begin{itemize}
-      \item \textbf{One-parameter mode:} Input features and prediction
-            features are concatenated after normalization, and a single
-            bandwidth-like parameter is optimized.
+      \item \textbf{One-parameter mode:} Input features and prediction features are concatenated after normalization, and a single bandwidth-like parameter is optimized.
 
-      \item \textbf{Two-parameter mode:} Input-space distance and
-            prediction-space distance are computed separately and combined by
-            the two-parameter adapter using $\alpha$ and $\beta$.
+      \item \textbf{Two-parameter mode:} Input-space distance and prediction-space distance are computed separately and combined by the two-parameter adapter using $\alpha$ and $\beta$.
 \end{itemize}
 
-Therefore, MixCOBRA should be described as a mixed-space distance
-aggregation method, not as a method that combines multiple kernel
-strategies.
+Therefore, \textbf{MixCOBRARegressor} should be described as a mixed-space distance aggregation method, not as a method that combines multiple kernel strategies.
 
 \subsection{CombinedClassifier Implementation}
 
-\texttt{CombinedClassifier} implements a COBRA-style classifier. Its
-default estimator pool includes logistic regression, decision tree
-classifier, support vector classifier, and k-nearest-neighbor
-classifier. The default distance is Hamming distance, the default kernel
-is RBF, and the default aggregator is weighted vote.
+\textbf{CombinedClassifier} implements a COBRA-style classifier. Its default estimator pool includes logistic regression, decision tree classifier, support vector classifier, and k-nearest-neighbor classifier. The default distance is Hamming distance, the default kernel is RBF, and the default aggregator is weighted vote.
 
-The class supports both raw-feature mode and
-\texttt{as\_predictions=True} mode. In raw-feature mode, it trains base
-classifiers and constructs prediction vectors. In prediction-matrix
-mode, the given input matrix is used directly as the classifier
-prediction space.
+The class supports both raw-feature mode and \textbf{as\_predictions=True} mode. In raw-feature mode, it trains base classifiers and constructs prediction vectors. In prediction-matrix mode, the given input matrix is used directly as the classifier prediction space.
 
-The file also contains \texttt{CombinedClassifierFast}, an optional
-extension that can build a FAISS index when FAISS is available and
-\texttt{use\_faiss=True}. This is an acceleration path for nearest
-neighbor search, not the default classifier path.
-
-\subsection{SuperLearner Implementation}
-
-The repository includes a standalone \texttt{SuperLearner} estimator in
-\texttt{cobra/superlearner.py}. This class implements a stacking-style
-workflow with base learners, cross-validated prediction features, and
-meta-learners. It also supports \texttt{as\_predictions=True}, where the
-input is treated directly as prediction features.
-
-Unlike the newer COBRA core components, \texttt{SuperLearner} is less
-integrated with the factory-based COBRA core infrastructure. It should
-therefore be described as a standalone ensemble component rather than as
-a core dependency of \texttt{GradientCOBRA} or \texttt{MixCOBRARegressor}.
+The file also contains \textbf{CombinedClassifierFast}, an optional extension that can build a FAISS index when FAISS is available and \textbf{use\_faiss=True}. This is an acceleration path for nearest-neighbor search, not the default classifier path.
 
 \subsection{Subsystem Summary}
 
-The COBRA subsystem implements a modular prediction-space aggregation
-framework. Its main classes reuse core components for splitting,
-estimator management, normalization, distance computation, kernel
-weighting, optimization, loss evaluation, and aggregation. The same
-subsystem can be used independently or as a KFC combiner through the
-C-step.
+The COBRA subsystem implements a modular prediction-space aggregation framework. Its main classes reuse core components for splitting, estimator management, normalization, distance computation, kernel weighting, optimization, loss evaluation, and aggregation. The same subsystem can be used independently or as a KFC combiner through the C-step.
 
-\section{Orchestration Layer (kfc.py)}
+
+% ============================
+
+\section{Orchestration Layer}
 \label{sec:orchestration_layer}
 
-The orchestration layer is implemented in \texttt{kfc.py}. It provides
-the high-level estimator classes \texttt{KFCProcedure},
-\texttt{KFCRegressor}, and \texttt{KFCClassifier}. This layer coordinates
-the K-step, F-step, and C-step into one end-to-end workflow.
+The orchestration layer provides the high-level estimator classes used to coordinate training and prediction in the framework. Its main role is to connect the K-step, F-step, and C-step into a unified workflow, while also allowing direct COBRA-based aggregation models to be used when required.
 
 \subsection{Main Classes}
 
-The orchestration layer exposes three classes:
+The orchestration layer exposes three main classes, as summarized in Table~\ref{tab:orchestration_main_classes}.
 
-\begin{itemize}
-      \item \texttt{KFCProcedure}: the general estimator with a
-            \texttt{task} parameter set to either \texttt{"regression"} or
-            \texttt{"classification"}.
+\begin{table}[H]
+      \centering
+      \caption{Main Classes in the Orchestration Layer}
+      \label{tab:orchestration_main_classes}
+      \renewcommand{\arraystretch}{1.2}
+      \begin{tabularx}{\textwidth}{
+                  >{\raggedright\arraybackslash}p{3.2cm}
+                  >{\raggedright\arraybackslash}p{3.0cm}
+                  >{\raggedright\arraybackslash}X
+            }
+            \toprule
+            \textbf{Class}               & \textbf{Task} & \textbf{Description}                             \\
+            \midrule
+            \textbf{KFCProcedure}        &
+            Regression or Classification &
+            General estimator with a configurable \textbf{task} parameter.                                  \\
 
-      \item \texttt{KFCRegressor}: a convenience wrapper that initializes
-            \texttt{KFCProcedure} with \texttt{task="regression"}.
+            \textbf{KFCRegressor}        &
+            Regression                   &
+            Convenience wrapper that initializes \textbf{KFCProcedure} with \textbf{task="regression"}.     \\
 
-      \item \texttt{KFCClassifier}: a convenience wrapper that initializes
-            \texttt{KFCProcedure} with \texttt{task="classification"}.
-\end{itemize}
+            \textbf{KFCClassifier}       &
+            Classification               &
+            Convenience wrapper that initializes \textbf{KFCProcedure} with \textbf{task="classification"}. \\
+            \bottomrule
+      \end{tabularx}
+\end{table}
 
-\subsection{Training Execution Flow}
+\subsection{KFCProcedure Workflow}
 
-The \texttt{fit()} method performs the following verified sequence:
+The \KFCProcedure{} workflow consists of two main phases: training and prediction. During training, the data are separated into two subsets. The first subset is used for divergence-based clustering and local model training, while the second subset is used to calibrate the final combiner. During prediction, new samples are first assigned to divergence-specific clusters, routed through the corresponding local models, and then aggregated by the fitted C-step combiner.
 
-\begin{enumerate}
-      \item Convert \texttt{X} and \texttt{y} into NumPy arrays.
-      \item Split the dataset into two subsets using
-            \texttt{train\_test\_split} with \texttt{test\_size=0.5}.
-      \item Use stratified splitting when \texttt{task="classification"}.
-      \item Fit \texttt{KStep} on the K/F training subset.
-      \item Obtain training cluster assignments from
-            \texttt{kstep\_.clusters\_}.
-      \item Predict cluster assignments for the C-step calibration subset.
-      \item Fit \texttt{FStep} using the K/F subset and training cluster
-            assignments.
-      \item Generate the calibration prediction matrix using
-            \texttt{FStep.predict()}.
-      \item Fit \texttt{CStep} on the calibration prediction matrix and
-            its corresponding target values.
-\end{enumerate}
+Figure~\ref{fig:kfc_training_prediction_workflow} summarizes the training and prediction workflow of \KFCProcedure{}.
 
-This implementation uses the first split for clustering and local model
-training, and the second split for training the final combiner. The
-purpose is to avoid fitting the combiner on the same predictions used to
-train the local models.
+\begin{figure}[H]
+      \centering
+      \begin{tikzpicture}[
+                  font=\small,
+                  node distance=0.55cm,
+                  box/.style={
+                              draw,
+                              rounded corners,
+                              align=center,
+                              text width=5.7cm,
+                              minimum height=0.75cm
+                        },
+                  title/.style={
+                              font=\bfseries,
+                              align=center
+                        },
+                  arrow/.style={-Latex, thick}
+            ]
 
-\subsection{Prediction Execution Flow}
+            % Training column
+            \node[title] (train_title) at (0,0) {Training Workflow};
+            \node[box, below=0.35cm of train_title] (t1) {Input training data $(X, y)$};
+            \node[box, below=of t1] (t2) {Convert inputs into NumPy arrays};
+            \node[box, below=of t2] (t3) {Split data into K/F training subset and C-step calibration subset};
+            \node[box, below=of t3] (t4) {Fit \textbf{KStep} and obtain divergence-specific cluster assignments};
+            \node[box, below=of t4] (t5) {Fit \textbf{FStep} using cluster-specific local models};
+            \node[box, below=of t5] (t6) {Generate calibration prediction matrix};
+            \node[box, below=of t6] (t7) {Fit \textbf{CStep} using the prediction matrix and calibration targets};
+            \node[box, below=of t7] (t8) {Trained \KFCProcedure{} model};
 
-The \texttt{predict()} method performs the following sequence:
+            \draw[arrow] (t1) -- (t2);
+            \draw[arrow] (t2) -- (t3);
+            \draw[arrow] (t3) -- (t4);
+            \draw[arrow] (t4) -- (t5);
+            \draw[arrow] (t5) -- (t6);
+            \draw[arrow] (t6) -- (t7);
+            \draw[arrow] (t7) -- (t8);
 
-\begin{enumerate}
-      \item Check that \texttt{kstep\_}, \texttt{fstep\_}, and
-            \texttt{cstep\_} are fitted.
-      \item Convert the new input \texttt{X} into a NumPy array.
-      \item Use \texttt{KStep.predict()} to assign clusters under each
-            fitted divergence.
-      \item Use \texttt{FStep.predict()} to route samples to local models
-            and build the divergence-level prediction matrix.
-      \item Use \texttt{CStep.predict()} to produce the final prediction.
-\end{enumerate}
+            % Prediction column
+            \node[title] (pred_title) at (7.0,0) {Prediction Workflow};
+            \node[box, below=0.35cm of pred_title] (p1) {Input new data $X$};
+            \node[box, below=of p1] (p2) {Check that K-step, F-step, and C-step are fitted};
+            \node[box, below=of p2] (p3) {Assign divergence-specific clusters using \textbf{KStep}};
+            \node[box, below=of p3] (p4) {Route samples through cluster-specific local models using \textbf{FStep}};
+            \node[box, below=of p4] (p5) {Construct divergence-level prediction matrix};
+            \node[box, below=of p5] (p6) {Apply fitted \textbf{CStep} combiner};
+            \node[box, below=of p6] (p7) {Final prediction output};
 
-The orchestration layer does not perform general-purpose preprocessing
-such as scaling, missing-value imputation, or encoding. These steps are
-handled in notebooks or by the user before calling the framework.
+            \draw[arrow] (p1) -- (p2);
+            \draw[arrow] (p2) -- (p3);
+            \draw[arrow] (p3) -- (p4);
+            \draw[arrow] (p4) -- (p5);
+            \draw[arrow] (p5) -- (p6);
+            \draw[arrow] (p6) -- (p7);
 
-\subsection{Combiner Integration}
+      \end{tikzpicture}
+      \caption{Training and prediction workflow of \KFCProcedure{}}
+      \label{fig:kfc_training_prediction_workflow}
+\end{figure}
 
-The C-step combiner may be a simple rule-based combiner, a stacking
-combiner, or a COBRA-based combiner. Therefore, the orchestration layer
-should not be described as always ending with COBRA aggregation. COBRA
-aggregation is used only when the selected combiner is
-\texttt{"gradientcobra"}, \texttt{"mixcobra"}, or
-\texttt{"combined\_classifier"}.
+The C-step may use different types of combiners, including simple rule-based combiners, stacking-based combiners, and COBRA-based combiners. Therefore, the \KFCProcedure{} workflow should be understood as a general clusterwise learning pipeline, not as a pipeline that always ends with COBRA aggregation. COBRA aggregation is used only when the selected combiner corresponds to a COBRA-based option, such as \textbf{"gradientcobra"}, \textbf{"mixcobra"}, or \textbf{"combined\_classifier"}.
 
-\subsection{Probability Prediction Limitation}
+\subsection{Direct COBRA Aggregation Workflow}
 
-Although \texttt{KFCProcedure} defines a \texttt{predict\_proba()} method
-for classification, the current implementation calls
-\texttt{FStep.predict\_proba()}, which is not implemented in
-\texttt{FStep}. Therefore, Chapter~6 should not present full KFC
-probability prediction as a completed supported workflow. Probability
-prediction is implemented inside some lower-level components, such as
-\texttt{CombinedClassifier}, but not through the full KFC orchestration
-pipeline in its current state.
+The direct COBRA aggregation workflow can be used independently from the KFC pipeline. In raw-feature mode, the COBRA model trains a pool of base estimators and constructs a prediction matrix from their outputs. In prediction-matrix mode, the model receives an existing prediction matrix directly and skips base estimator training.
 
-\subsection{Subsystem Summary}
+Figure~\ref{fig:direct_cobra_workflow} summarizes the direct COBRA aggregation workflow.
 
-The orchestration layer provides a unified entry point for KFC training
-and inference. It coordinates the three pipeline stages while allowing
-the user to select divergences, local models, and combiners through
-configuration parameters and factory-registered component names.
+\begin{figure}[H]
+      \centering
+      \begin{tikzpicture}[
+                  font=\small,
+                  node distance=0.7cm,
+                  box/.style={
+                              draw,
+                              rounded corners,
+                              align=center,
+                              text width=7.8cm,
+                              minimum height=0.8cm
+                        },
+                  smallbox/.style={
+                              draw,
+                              rounded corners,
+                              align=center,
+                              text width=5.2cm,
+                              minimum height=0.8cm
+                        },
+                  arrow/.style={-Latex, thick}
+            ]
+
+            \node[smallbox] (raw) at (-3.1,0) {Raw-feature mode\\Input features and target};
+            \node[smallbox] (pred) at (3.1,0) {Prediction-matrix mode\\Input existing prediction matrix};
+
+            \node[box, below=1.1cm of raw, xshift=3.1cm] (matrix) {Construct or receive the prediction matrix};
+
+            \node[box, below=of matrix] (dist) {Compute distances in prediction space\\or in both input and prediction spaces for \textbf{MixCOBRARegressor}};
+            \node[box, below=of dist] (kernel) {Transform distances using kernel adapters and kernel functions};
+            \node[box, below=of kernel] (optim) {Optimize aggregation parameters through validation};
+            \node[box, below=of optim] (aggregate) {Aggregate calibration targets using distance-based weights};
+            \node[box, below=of aggregate] (output) {Final COBRA prediction output};
+
+            \draw[arrow] (raw) -- node[left, font=\scriptsize] {fit estimators} (matrix);
+            \draw[arrow] (pred) -- node[right, font=\scriptsize] {\textbf{as\_predictions=True}} (matrix);
+            \draw[arrow] (matrix) -- (dist);
+            \draw[arrow] (dist) -- (kernel);
+            \draw[arrow] (kernel) -- (optim);
+            \draw[arrow] (optim) -- (aggregate);
+            \draw[arrow] (aggregate) -- (output);
+
+      \end{tikzpicture}
+      \caption{Direct COBRA aggregation workflow}
+      \label{fig:direct_cobra_workflow}
+\end{figure}
+
+Prediction-matrix mode is especially important for integration with the KFC pipeline. In this case, the F-step has already generated a prediction matrix, so the COBRA-based combiner can operate directly on these predictions instead of retraining a new pool of base estimators.
+
+% \subsection{Probability Prediction Limitation}
+
+% Although \textbf{KFCProcedure} defines a \textbf{predict\_proba()} method for classification, the current implementation calls \textbf{FStep.predict\_proba()}, which is not implemented in \textbf{FStep}. Therefore, full probability prediction should not be presented as a completed capability of the current KFC orchestration pipeline. Probability prediction is available in some lower-level components, such as \textbf{CombinedClassifier}, but it is not fully supported through the complete KFC workflow in its current form.
+
+\subsection{Workflow Summary}
+
+The orchestration layer provides a unified entry point for KFC training and inference while also supporting direct COBRA-based aggregation workflows. The \KFCProcedure{} workflow creates divergence-level predictions through clustering and local predictive models, while the COBRA workflow aggregates prediction matrices using distance, kernel, optimization, loss, and aggregation components. Together, these workflows provide a flexible structure for comparing standard supervised learning, clusterwise learning, and COBRA-based aggregation within the same package.
+
+% ============================
 
 \section{Utility Layer}
 \label{sec:utility_layer}
 
-The repository contains two utility areas: the top-level
-\texttt{kfc\_procedure/utils/} package and the COBRA-specific
-\texttt{kfc\_procedure/cobra/utils/} package. These utilities support
-pipeline execution but do not implement the main learning algorithms.
+The utility layer provides supporting functions used by the KFC and COBRA subsystems. These utilities assist with logging, component resolution, data splitting, normalization, estimator management, and distance computation. However, they do not implement the main learning algorithms of the framework.
 
 \subsection{Top-Level KFC Utilities}
 
-The top-level utility package contains:
+The top-level KFC utilities support execution control and configuration resolution within the KFC pipeline. Table~\ref{tab:kfc_top_level_utilities} summarizes the main utility components.
 
-\begin{itemize}
-      \item \texttt{logger.py}: defines a lightweight \texttt{Logger}
-            class with verbosity levels for KFC execution messages. It provides
-            \texttt{info()}, \texttt{debug()}, and \texttt{trace()} methods, as
-            well as a \texttt{timed()} decorator.
+\begin{table}[H]
+      \centering
+      \caption{Top-Level KFC Utility Components}
+      \label{tab:kfc_top_level_utilities}
+      \begin{tabularx}{\textwidth}{
+                  >{\raggedright\arraybackslash}p{3.5cm}
+                  >{\raggedright\arraybackslash}X
+            }
+            \toprule
+            \textbf{Utility Component}    & \textbf{Description}                                                                                                              \\
+            \midrule
+            \textbf{Logger}               &
+            Provides lightweight execution messages with verbosity levels. It supports informational, debugging, and tracing messages, as well as timed execution monitoring. \\
 
-      \item \texttt{resolve.py}: provides helper functions for resolving
-            Bregman clustering configurations into \texttt{BregmanKMeans}
-            objects. This module contains \texttt{resolve\_bregman()} and
-            \texttt{resolve\_kstep()}.
-\end{itemize}
+            \textbf{Resolution Utilities} &
+            Resolve Bregman clustering configurations into clustering objects and construct K-step configurations from user-defined parameters.                               \\
+            \bottomrule
+      \end{tabularx}
+\end{table}
 
-The current top-level utility package does not contain a general
-preprocessing pipeline for missing-value handling, scaling, or encoding.
+The current top-level utility layer does not provide a general preprocessing pipeline for missing-value handling, feature scaling, or categorical encoding. These preprocessing steps are handled externally in the experimental workflow or by the user before the framework is called.
 
 \subsection{COBRA Utilities}
 
-The COBRA utility package contains:
+The COBRA utilities support the construction and execution of COBRA-based aggregation workflows. They are mainly used to prepare training and calibration contexts, fit estimator pools, compute prediction matrices, normalize prediction spaces, and resolve factory-based components. Table~\ref{tab:cobra_utility_components} summarizes the main COBRA utility components.
 
-\begin{itemize}
-      \item \texttt{preprocessing.py}: implements
-            \texttt{data\_split\_overlap()}, \texttt{compute\_normalization\_constant()},
-            \texttt{clean\_sklearn\_name()}, and
-            \texttt{history\_to\_dataframe()}.
+\begin{table}[H]
+      \centering
+      \caption{COBRA Utility Components}
+      \label{tab:cobra_utility_components}
+      \begin{tabularx}{\textwidth}{
+                  >{\raggedright\arraybackslash}p{3.5cm}
+                  >{\raggedright\arraybackslash}X
+            }
+            \toprule
+            \textbf{Utility Component}       & \textbf{Description}                                                                                                                        \\
+            \midrule
+            \textbf{Preprocessing Utilities} &
+            Provide helper functions for overlapping data splits, normalization constant computation, estimator-name formatting, and conversion of optimization history into tabular form. \\
 
-      \item \texttt{resolve.py}: implements helper functions for resolving
-            estimators, kernels, splitters, losses, distances, aggregators, and
-            training contexts. It also contains \texttt{fit\_estimators()} and
-            \texttt{predict\_estimators()}.
+            \textbf{Resolution Utilities}    &
+            Resolve estimators, kernels, splitters, losses, distances, aggregators, and training contexts. They also support fitting and prediction for estimator pools.                   \\
 
-      \item \texttt{distance.py}: implements a Numba-accelerated Hamming
-            distance matrix function.
-\end{itemize}
-
-These utilities are used mainly by the COBRA model classes to construct
-training/calibration contexts, fit estimator pools, compute prediction
-matrices, normalize prediction spaces, and resolve factory-based
-components.
-
-\subsection{Subsystem Summary}
-
-The utility layer provides lightweight support functions for logging,
-configuration resolution, splitting, normalization constants, and
-estimator management. It should be described as a support layer rather
-than a full preprocessing or configuration-management subsystem.
-
-
-\section{Training and Prediction Workflows}
-\label{sec:training_prediction_workflows}
-
-This section describes the implemented workflows for the two main usage
-patterns in the repository: the KFCProcedure workflow and the direct
-COBRA workflow.
-
-\subsection{KFCProcedure Training Workflow}
-
-The KFC training workflow is implemented in \texttt{KFCProcedure.fit()}.
-The verified sequence is:
-
-\begin{enumerate}
-      \item Receive input features \texttt{X} and target vector \texttt{y}.
-      \item Convert both inputs into NumPy arrays.
-      \item Split the data into \texttt{(X\_k, y\_k)} and
-            \texttt{(X\_l, y\_l)} using a 50/50 split.
-      \item Fit \texttt{KStep} on \texttt{X\_k}.
-      \item Use the fitted K-step to obtain cluster labels for both
-            \texttt{X\_k} and \texttt{X\_l}.
-      \item Fit \texttt{FStep} on \texttt{X\_k}, \texttt{y\_k}, and the
-            K-step training cluster labels.
-      \item Generate the calibration prediction matrix
-            \texttt{P\_l = FStep.predict(X\_l, clusters\_l)}.
-      \item Fit \texttt{CStep} on \texttt{P\_l} and \texttt{y\_l}.
-\end{enumerate}
-
-The C-step may use a simple combiner, a stacking combiner, or a
-COBRA-based combiner, depending on the selected configuration.
-
-\subsection{KFCProcedure Prediction Workflow}
-
-The prediction workflow is implemented in \texttt{KFCProcedure.predict()}:
-
-\begin{enumerate}
-      \item Check that the K-step, F-step, and C-step have been fitted.
-      \item Predict divergence-specific cluster assignments for the new
-            input matrix.
-      \item Route each sample through the corresponding cluster-local model
-            in the F-step.
-      \item Stack the outputs into a prediction matrix with one column per
-            divergence.
-      \item Pass the prediction matrix to the fitted C-step combiner.
-      \item Return the final prediction vector.
-\end{enumerate}
-
-\subsection{Direct COBRA Training Workflow}
-
-The COBRA classes can also be used directly without KFC. In raw-feature
-mode, \texttt{GradientCOBRA}, \texttt{MixCOBRARegressor}, and
-\texttt{CombinedClassifier} use the following general workflow:
-
-\begin{enumerate}
-      \item Resolve a training/calibration context.
-      \item Fit a pool of base estimators on the training subset.
-      \item Predict on the calibration subset to construct a prediction
-            matrix.
-      \item Compute distances in prediction space, or in both input and
-            prediction spaces for MixCOBRA.
-      \item Transform distances using a kernel adapter.
-      \item Apply a kernel function to produce weights.
-      \item Optimize aggregation parameters using cross-validation.
-      \item Store calibration targets and fitted components for
-            prediction.
-\end{enumerate}
-
-\subsection{Prediction-Matrix Mode}
-
-The COBRA classes support \texttt{as\_predictions=True}. In this mode,
-the input matrix is treated as an already computed prediction matrix.
-Base estimator training is skipped, and the model directly performs
-distance computation, kernel weighting, optimization, and aggregation on
-the supplied prediction matrix.
-
-This mode is used by the KFC COBRA-based combiners because the F-step
-already generates a prediction matrix.
-
-\subsection{Workflow Summary}
-
-The framework supports both clusterwise learning and direct
-prediction-space aggregation. KFC creates divergence-level predictions
-through clustering and local models, while COBRA aggregates prediction
-matrices using distance, kernel, optimizer, loss, and aggregator
-components.
-
+            \textbf{Distance Utilities}      &
+            Provide optimized distance-computation support, including a Numba-accelerated Hamming distance matrix function for efficient comparison of prediction vectors.                 \\
+            \bottomrule
+      \end{tabularx}
+\end{table}
 
 \section{Testing and Validation}
 \label{sec:testing_validation}
 
-The repository includes an automated test suite under \texttt{tests/}.
-The verified tests currently focus on the COBRA core components. No
-automated KFC subsystem tests were found in the repository at the time
-of this audit.
+The project includes an automated test suite under \textbf{tests/}. In the current implementation, the automated tests mainly cover the COBRA core components. Separate automated tests for the \KFCProcedure{} subsystem and the full end-to-end \KFCProcedure{} workflow are not yet included.
+
+
 
 \subsection{Test Suite Structure}
 
 The test suite is organized as follows:
 
-\begin{verbatim}
-tests/
-└── cobra/
-    ├── test_p01_splitters.py
-    ├── test_p02_estimators.py
-    ├── test_p03_normalizers.py
-    ├── test_p04_distances.py
-    ├── test_p05_kernel_adapters.py
-    ├── test_p06_kernels.py
-    ├── test_p07_losses.py
-    ├── test_p08_cv.py
-    ├── test_p09_optimizers.py
-    └── test_p10_aggregators.py
-\end{verbatim}
+\begin{figure}[H]
+      \centering
+      \begin{minipage}{0.85\textwidth}
+            \begin{Verbatim}[fontsize=\footnotesize, baselinestretch=0.9]
+                  tests/
+                  └── cobra/
+                  ├── test_p01_splitters.py
+                  ├── test_p02_estimators.py
+                  ├── test_p03_normalizers.py
+                  ├── test_p04_distances.py
+                  ├── test_p05_kernel_adapters.py
+                  ├── test_p06_kernels.py
+                  ├── test_p07_losses.py
+                  ├── test_p08_cv.py
+                  ├── test_p09_optimizers.py
+                  └── test_p10_aggregators.py
+            \end{Verbatim}
+      \end{minipage}
+      \caption{Test suite structure for COBRA components}
+      \label{fig:cobra_test_suite_structure}
+\end{figure}
 
 \subsection{Covered Components}
 
-The automated tests cover the following COBRA components:
+The automated tests cover several COBRA components, as summarized in Table~\ref{tab:covered_cobra_test_components}.
 
-\begin{itemize}
-      \item \textbf{Splitters:} holdout splitting, overlap splitting,
-            reproducibility, factory creation, and parameter validation.
+\begin{table}[H]
+      \centering
+      \caption{COBRA Components Covered by Automated Tests}
+      \label{tab:covered_cobra_test_components}
+      \renewcommand{\arraystretch}{1.2}
+      \begin{tabularx}{\textwidth}{
+                  >{\raggedright\arraybackslash}p{3.2cm}
+                  >{\raggedright\arraybackslash}X
+            }
+            \toprule
+            \textbf{Component}        & \textbf{Test Coverage}                                                                                                  \\
+            \midrule
+            \textbf{Splitters}        &
+            Holdout splitting, overlap splitting, reproducibility, factory creation, and parameter validation.                                                  \\
 
-      \item \textbf{Estimators:} mean regressor behavior, scikit-learn
-            wrapper behavior, factory creation, and interface contract checks.
+            \textbf{Estimators}       &
+            Mean regressor behavior, scikit-learn wrapper behavior, factory creation, and interface contract checks.                                            \\
 
-      \item \textbf{Normalizers:} standard normalization, min-max
-            normalization, constant-feature handling, and factory resolution.
+            \textbf{Normalizers}      &
+            Standard normalization, min--max normalization, constant-feature handling, and factory resolution.                                                  \\
 
-      \item \textbf{Distances:} Euclidean, Manhattan, Minkowski, Cosine,
-            and Hamming distance behavior.
+            \textbf{Distances}        &
+            Euclidean, Manhattan, Minkowski, Cosine, and Hamming distance behavior.                                                                             \\
 
-      \item \textbf{Kernel adapters:} one-parameter scaling,
-            two-parameter distance combination, parameter updates, and input
-            validation.
+            \textbf{Kernel Adapters}  &
+            One-parameter scaling, two-parameter distance combination, parameter updates, and input validation.                                                 \\
 
-      \item \textbf{Kernels:} factory aliases and behavior of radial,
-            exponential, reverse-cosh, Cauchy, Epanechnikov, biweight,
-            triweight, triangular, naive, and COBRA kernels.
+            \textbf{Kernels}          &
+            Factory aliases and behavior of radial, exponential, reverse-cosh, Cauchy, Epanechnikov, biweight, triweight, triangular, naive, and COBRA kernels. \\
 
-      \item \textbf{Losses:} MSE, MAE, Huber, log loss, hinge, and
-            quantile loss.
+            \textbf{Losses}           &
+            MSE, MAE, Huber, log loss, hinge loss, and quantile loss.                                                                                           \\
 
-      \item \textbf{Cross-validation:} K-fold fold counts, disjoint
-            validation sets, full coverage, no train/validation leakage, and
-            reproducibility.
+            \textbf{Cross-validation} &
+            K-fold counts, disjoint validation sets, full sample coverage, leakage prevention between training and validation sets, and reproducibility.        \\
 
-      \item \textbf{Optimizers:} gradient descent, Momentum, Adam, grid
-            search, optimizer factories, and optimization history.
+            \textbf{Optimizers}       &
+            Gradient descent, momentum, Adam, grid search, optimizer factories, and optimization history.                                                       \\
 
-      \item \textbf{Aggregators:} weighted mean, weighted vote, fallback
-            behavior, NaN handling, batch aggregation, and empty-value checks.
-\end{itemize}
+            \textbf{Aggregators}      &
+            Weighted mean, weighted vote, fallback behavior, NaN handling, batch aggregation, and empty-value checks.                                           \\
+            \bottomrule
+      \end{tabularx}
+\end{table}
 
 \subsection{Current Testing Gaps}
 
-The current repository does not contain separate automated tests for:
+Although the automated tests cover several COBRA core components, some parts of the full framework are not yet covered by separate automated tests. Table~\ref{tab:current_testing_gaps} summarizes the main testing gaps in the current repository.
 
-\begin{itemize}
-      \item \texttt{BregmanKMeans} and divergence-specific clustering;
-      \item \texttt{KStep}, \texttt{FStep}, and \texttt{CStep};
-      \item full \texttt{KFCProcedure} training and prediction workflows;
-      \item KFC regression and classification wrappers;
-      \item notebook execution as an automated validation pipeline.
-\end{itemize}
+\begin{table}[H]
+      \centering
+      \caption{Current Testing Gaps}
+      \label{tab:current_testing_gaps}
+      \renewcommand{\arraystretch}{1.2}
+      \begin{tabularx}{\textwidth}{
+                  >{\raggedright\arraybackslash}p{4.2cm}
+                  >{\raggedright\arraybackslash}X
+            }
+            \toprule
+            \textbf{Scope}                            & \textbf{Missing Test Coverage}                                                 \\
+            \midrule
+            BregmanKMeans, divergence, and clustering &
+            Separate automated tests for Bregman K-Means behavior and clustering under each supported divergence are not yet included. \\
 
-Therefore, the chapter should not claim complete system-level testing
-unless additional tests are added later.
+            KStep, FStep, and CStep                   &
+            The individual KFC pipeline steps are not yet covered by independent component-level tests.                                \\
+
+            Full KFCProcedure workflow                &
+            End-to-end tests for complete KFCProcedure training and prediction are not yet included.                                   \\
+
+            Regression and classification wrappers    &
+            Dedicated automated tests for KFCRegressor and KFCClassifier are not yet included.                                         \\
+
+            Notebook execution                        &
+            Experimental notebooks are not yet executed as part of an automated validation pipeline.                                   \\
+            \bottomrule
+      \end{tabularx}
+\end{table}
+
+
+Therefore, the current testing coverage should be described as partial rather than complete. The repository includes automated tests for several COBRA core components, but it should not be presented as having full system-level testing unless additional end-to-end KFC tests are added in future work.
+
 
 \subsection{Validation Through Notebooks}
 
-The repository also includes experiment notebooks under
-\texttt{notebooks/}. These notebooks demonstrate regression and
-classification experiments using baseline models, COBRA models, and KFC
-configurations. However, notebook execution is not currently integrated
-into the automated pytest suite or CI workflow.
+The project also uses experiment notebooks as a practical validation mechanism. These notebooks demonstrate regression and classification experiments using baseline models, COBRA-based models, and KFC configurations. However, notebook execution is not currently integrated into the automated pytest suite or continuous integration workflow.
+
 
 \subsection{Testing Summary}
 
-The implemented automated tests provide good coverage for the COBRA
-core component layer. The KFC subsystem and full orchestration workflow
-are demonstrated in notebooks but are not yet covered by automated unit
-or integration tests in the repository.
+The implemented automated tests provide coverage for the COBRA core component layer. The KFC subsystem and full orchestration workflow are demonstrated in notebooks but are not yet covered by automated unit or integration tests in the repository.
+
+% ============================
 
 \section{Documentation and CI/CD Pipeline}
 \label{sec:documentation_cicd}
 
-This section describes the documentation and automation infrastructure
-that is verified in the repository. The project includes README-level
-documentation, inline docstrings, package metadata, pytest configuration,
-and a GitHub Actions workflow for package testing, building, and PyPI
-publishing.
+This section describes the documentation and automation infrastructure included in the project. The project provides README-level documentation, inline docstrings, package metadata, pytest configuration, and a GitHub Actions workflow for testing, building, and publishing the package.
 
 \subsection{Documentation Assets}
 
-The verified documentation assets are:
+The project documentation is mainly provided through project-level documentation, inline source documentation, package metadata, and experiment notebooks. Table~\ref{tab:documentation_assets} summarizes the verified documentation assets.
 
-\begin{itemize}
-      \item \texttt{README.md}: provides a project overview, feature list,
-            installation instructions, quick-start examples, and high-level
-            component descriptions.
+\begin{table}[H]
+      \centering
+      \caption{Documentation Assets}
+      \label{tab:documentation_assets}
+      \renewcommand{\arraystretch}{1.2}
+      \begin{tabularx}{\textwidth}{
+                  >{\raggedright\arraybackslash}p{3.8cm}
+                  >{\raggedright\arraybackslash}X
+            }
+            \toprule
+            \textbf{Asset}       & \textbf{Description}                                                                                        \\
+            \midrule
+            README documentation &
+            Provides a project overview, feature list, installation instructions, quick-start examples, and high-level component descriptions. \\
 
-      \item \textbf{Inline docstrings}: many modules and classes include
-            explanatory docstrings describing parameters, workflows, and design
-            intent.
+            Inline docstrings    &
+            Provide explanatory documentation for several modules and classes, including parameters, workflows, and design intent.             \\
 
-      \item \texttt{pyproject.toml}: documents package metadata,
-            dependencies, optional extras, setuptools configuration, and pytest
-            settings.
+            Package metadata     &
+            Defines package information, dependencies, optional extras, build configuration, and pytest settings.                              \\
 
-      \item \texttt{notebooks/}: provides executable examples and
-            experimental usage patterns for regression and classification tasks.
-\end{itemize}
+            Experiment notebooks &
+            Provide executable examples and experimental usage patterns for regression and classification tasks.                               \\
+            \bottomrule
+      \end{tabularx}
+\end{table}
 
-No separate Sphinx, MkDocs, ReadTheDocs, or GitHub Pages documentation
-configuration was found in the repository. Therefore, automated
-documentation generation should not be claimed unless such tooling is
-added.
+No separate Sphinx, MkDocs, ReadTheDocs, or GitHub Pages documentation configuration is currently included. Therefore, automated documentation generation should not be claimed unless such tooling is added in future development.
 
 \subsection{Package Configuration}
 
-The package is configured through \texttt{pyproject.toml}. The verified
-configuration includes:
+The package configuration defines the project metadata, dependency requirements, optional extras, build settings, and testing configuration. Table~\ref{tab:package_configuration_summary} summarizes the verified package configuration.
 
-\begin{itemize}
-      \item package name: \texttt{kfc-procedure};
-      \item package source layout: \texttt{src/};
-      \item Python requirement: \texttt{>=3.11};
-      \item core dependencies such as NumPy, pandas, scikit-learn,
-            matplotlib, and XGBoost;
-      \item optional extras for \texttt{core}, \texttt{cobra},
-            \texttt{dev}, and \texttt{all};
-      \item pytest settings including \texttt{testpaths = ["tests"]}.
-\end{itemize}
+\begin{table}[H]
+      \centering
+      \caption{Package Configuration Summary}
+      \label{tab:package_configuration_summary}
+      \renewcommand{\arraystretch}{1.2}
+      \begin{tabularx}{\textwidth}{
+                  >{\raggedright\arraybackslash}p{4.0cm}
+                  >{\raggedright\arraybackslash}X
+            }
+            \toprule
+            \textbf{Configuration Item} & \textbf{Verified Description}                                                                          \\
+            \midrule
+            Package name                &
+            The package is configured under the name \textbf{kfc-procedure}.                                                                     \\
+
+            Python requirement          &
+            The package requires Python version \textbf{3.11} or higher.                                                                         \\
+
+            Core dependencies           &
+            The package includes core scientific and machine learning dependencies such as NumPy, pandas, scikit-learn, matplotlib, and XGBoost. \\
+
+            Optional extras             &
+            Optional dependency groups are provided for core usage, COBRA functionality, development tools, and full installation.               \\
+
+            Test configuration          &
+            The pytest configuration defines the test directory used for automated test discovery.                                               \\
+            \bottomrule
+      \end{tabularx}
+\end{table}
 
 \subsection{Continuous Integration and Publishing Workflow}
 
-The repository contains one GitHub Actions workflow:
+The project includes a GitHub Actions workflow for package testing, building, and publishing. The workflow is triggered by Git version tags that follow a semantic versioning pattern. Table~\ref{tab:cicd_workflow_steps} summarizes the verified workflow steps.
 
-\begin{verbatim}
-.github/workflows/ci-cd.yml
-\end{verbatim}
+\begin{table}[H]
+      \centering
+      \caption{CI/CD Workflow Steps}
+      \label{tab:cicd_workflow_steps}
+      \renewcommand{\arraystretch}{1.2}
+      \begin{tabularx}{\textwidth}{
+                  >{\raggedright\arraybackslash}p{1.6cm}
+                  >{\raggedright\arraybackslash}X
+            }
+            \toprule
+            \textbf{Step} & \textbf{Description}                                             \\
+            \midrule
+            1             &
+            Check out the repository source code.                                            \\
 
-The workflow is named \texttt{Python Package CI/CD}. It is triggered by
-Git tags matching the pattern:
+            2             &
+            Set up the Python execution environment.                                         \\
 
-\begin{verbatim}
-v*.*.*
-\end{verbatim}
+            3             &
+            Install the package with development and COBRA-related dependencies.             \\
 
-The verified workflow steps are:
+            4             &
+            Run the automated test suite using \textbf{pytest}.                              \\
 
-\begin{enumerate}
-      \item check out the repository;
-      \item set up Python 3.11;
-      \item install dependencies using \texttt{pip install -e .[dev,cobra]};
-      \item run the test suite using \texttt{pytest};
-      \item build the package using \texttt{python -m build};
-      \item upload the built distribution to PyPI using \texttt{twine} and
-            a PyPI API token.
-\end{enumerate}
+            5             &
+            Build the package distribution.                                                  \\
 
-This workflow is a tag-triggered package test/build/publish pipeline.
-It is not configured to run on every push or pull request, and it does
-not include verified linting, static analysis, or documentation
-deployment steps.
+            6             &
+            Upload the built distribution to PyPI using \textbf{twine} and a PyPI API token. \\
+            \bottomrule
+      \end{tabularx}
+\end{table}
+
+This workflow can be described as a tag-triggered test, build, and publishing pipeline. It is not currently configured to run on every push or pull request, and it does not include verified linting, static analysis, or documentation deployment steps.
 
 \subsection{Automation Tools}
 
-The verified automation tools are:
+The verified automation tools are summarized in Table~\ref{tab:automation_tools}.
 
-\begin{itemize}
-      \item \textbf{GitHub Actions}: used for the tag-triggered workflow.
-      \item \textbf{pytest}: used for automated tests.
-      \item \textbf{setuptools}: used through the \texttt{pyproject.toml}
-            package configuration.
-      \item \textbf{build}: used to generate package distributions.
-      \item \textbf{twine}: used to upload distributions to PyPI.
-\end{itemize}
+\begin{table}[H]
+      \centering
+      \caption{Automation Tools Used in the Project}
+      \label{tab:automation_tools}
+      \renewcommand{\arraystretch}{1.2}
+      \begin{tabularx}{\textwidth}{
+                  >{\raggedright\arraybackslash}p{3.2cm}
+                  >{\raggedright\arraybackslash}X
+            }
+            \toprule
+            \textbf{Tool}  & \textbf{Role}                                                        \\
+            \midrule
+            GitHub Actions &
+            Provides the tag-triggered automation workflow for testing, building, and publishing. \\
 
-Although \texttt{.pylintrc} exists, the GitHub Actions workflow does not
-currently run pylint, flake8, ruff, or another linter.
+            pytest         &
+            Runs the automated test suite.                                                        \\
+
+            setuptools     &
+            Supports package configuration and packaging through the project metadata.            \\
+
+            build          &
+            Generates the package distribution files.                                             \\
+
+            twine          &
+            Uploads the built distribution to PyPI.                                               \\
+            \bottomrule
+      \end{tabularx}
+\end{table}
+
+Although a pylint configuration is present, the current GitHub Actions workflow does not run pylint, flake8, ruff, or another linter. Therefore, linting and static code quality checks should not be presented as verified parts of the current CI/CD pipeline.
 
 \subsection{Summary}
 
-The repository includes a functional package configuration and a
-tag-triggered CI/CD workflow for testing, building, and publishing the
-package. Documentation is currently provided through the README,
-docstrings, notebooks, and package metadata. More advanced documentation
-deployment and broader CI checks would require additional workflow and
-documentation configuration.
+The project includes functional package configuration and a tag-triggered CI/CD workflow for testing, building, and publishing the package. Documentation is currently provided through README-level documentation, inline docstrings, experiment notebooks, and package metadata. More advanced documentation deployment, broader CI checks, and automated linting would require additional configuration in future development.
 
 \section{Chapter Summary}
 \label{sec:chapter_summary}
 
-This chapter presented the implementation of the \texttt{kfc\_procedure}
-framework as a modular Python research library. The repository combines
-two related subsystems: the KFC clusterwise learning subsystem and the
-COBRA prediction-space aggregation subsystem.
+This chapter presented the implementation of the \textbf{kfc\_procedure} framework as a modular Python research library. The package combines two related subsystems: the \KFCProcedure{} clusterwise learning subsystem and the \GradientCOBRA{} prediction-space aggregation subsystem.
 
-The KFC subsystem is implemented under \texttt{core/}. It includes
-Bregman K-Means clustering, registered Bregman divergences, local model
-wrappers, K-step/F-step/C-step workflow classes, and task-specific
-combiner strategies. The COBRA subsystem is implemented under
-\texttt{cobra/}. It includes \texttt{GradientCOBRA},
-\texttt{MixCOBRARegressor}, \texttt{CombinedClassifier},
-\texttt{SuperLearner}, and reusable core components for splitters,
-estimators, distances, kernels, adapters, losses, optimizers,
-normalizers, cross-validation, and aggregators.
+The KFC subsystem provides the main clusterwise learning pipeline. It includes Bregman K-Means clustering, registered Bregman divergences, local model wrappers, K-step/F-step/C-step workflow classes, and task-specific combiner strategies. The COBRA subsystem provides complementary aggregation models, including \textbf{GradientCOBRA}, \textbf{MixCOBRARegressor}, \textbf{CombinedClassifier}, and reusable components for splitting, estimator management, distance computation, kernel weighting, optimization, normalization, loss evaluation, cross-validation, and aggregation.
 
-The orchestration layer in \texttt{kfc.py} coordinates the KFC workflow
-through \texttt{KFCProcedure}, \texttt{KFCRegressor}, and
-\texttt{KFCClassifier}. During training, the implementation splits the
-data into a K/F training subset and a C-step calibration subset, fits
-divergence-specific clustering models, trains local models per cluster,
-constructs a divergence-level prediction matrix, and fits the selected
-combiner. During prediction, new samples are assigned to clusters,
-routed through local models, and aggregated by the fitted C-step.
+The orchestration layer coordinates the KFC workflow through \textbf{KFCProcedure}, \textbf{KFCRegressor}, and \textbf{KFCClassifier}. During training, the implementation separates the data into a K/F training subset and a C-step calibration subset, fits divergence-specific clustering models, trains cluster-specific local models, constructs a divergence-level prediction matrix, and fits the selected combiner. During prediction, new samples are assigned to clusters, routed through local models, and aggregated by the fitted C-step.
 
-The repository applies modular software engineering principles through
-factory registries, component-level abstractions, scikit-learn-style
-interfaces, and clear separation between clustering, local modeling,
-aggregation, optimization, and utility functions. The current automated
-test suite focuses on COBRA core components, while KFC subsystem and
-full workflow tests remain areas for future extension.
+The implementation applies modular software engineering principles through factory registries, component-level abstractions, scikit-learn-style interfaces, composition-based workflow construction, strategy-based aggregation selection, and separation between clustering, local modeling, aggregation, optimization, and utility functions. The current automated test suite focuses mainly on COBRA core components, while full KFC subsystem and end-to-end workflow tests remain areas for future extension.
 
-Finally, the project includes package metadata, README documentation,
-experiment notebooks, and a GitHub Actions workflow that runs tests,
-builds the package, and publishes to PyPI when a version tag is pushed.
-Overall, the implementation translates the methodology from
-Chapter~\ref{ch:methodology} into a reusable and extensible Python
-framework while leaving room for additional automated testing and
-documentation improvements.
+Finally, the project includes package metadata, README-level documentation, experiment notebooks, and a tag-triggered GitHub Actions workflow for testing, building, and publishing the package. Overall, the implementation translates the methodology from Chapter~\ref{ch:methodology} into a reusable and extensible Python framework, while leaving room for further improvements in automated testing, documentation, and continuous integration coverage.
+
