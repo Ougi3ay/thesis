@@ -397,51 +397,6 @@
     }%
 }
 
-% =====================================================
-% Appendix setup command using section-based appendices
-% =====================================================
-
-\newcommand{\StartAppendices}{%
-    \clearpage
-
-    % Main appendix heading
-    \chapter*{APPENDICES}
-    \addcontentsline{toc}{chapter}{APPENDICES}
-
-    % Reset appendix counters
-    \setcounter{section}{0}
-    \setcounter{figure}{0}
-    \setcounter{table}{0}
-
-    % Use letters for appendix sections
-    \renewcommand{\thesection}{\Alph{section}}
-
-    % Number figures and tables by appendix
-    % Example: Figure A.1, Table A.1
-    \renewcommand{\thefigure}{\thesection.\arabic{figure}}
-    \renewcommand{\thetable}{\thesection.\arabic{table}}
-}
-
-% Appendix section command
-\newcommand{\AppendixSection}[1]{%
-    \clearpage
-    \refstepcounter{section}
-
-    % Reset figure and table counters for each appendix
-    \setcounter{figure}{0}
-    \setcounter{table}{0}
-
-    % Add full appendix title to TOC
-    \addcontentsline{toc}{section}{APPENDIX \thesection\ : #1}
-
-    % Print appendix title in document
-    \section*{APPENDIX \thesection\ : #1}
-}
-
-% Appendix reference command
-\providecommand{\appref}[1]{Appendix~\ref{#1}}
-
-
 % Horizontal spacing helper
 \providecommand{\hs}{\hspace*{1.25cm}}
 
