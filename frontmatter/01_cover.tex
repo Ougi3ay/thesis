@@ -1,84 +1,161 @@
 \begin{titlepage}
     \thispagestyle{empty}
-
-    \begingroup
-    \singlespacing
     \setlength{\parindent}{0pt}
+    \setlength{\parskip}{0pt}
 
-    \begin{mdframed}[linewidth=1.5pt, roundcorner=5pt]
+    \begin{mdframed}[
+        linewidth=1.5pt,
+        roundcorner=5pt
+    ]
+
+        % =========================
         % Khmer Header
+        % =========================
         \noindent
-        \begin{minipage}[c]{0.18\linewidth}
+        \begin{minipage}[c][3.2cm][c]{0.18\linewidth}
             \centering
-            \includegraphics[width=0.85\linewidth]{figures/schools/moey.png}
-        \end{minipage}
+            \includegraphics[height=2.8cm, keepaspectratio]{figures/schools/moey.png}
+        \end{minipage}%
         \hfill
-        \begin{minipage}[c]{0.58\linewidth}
+        \begin{minipage}[c][3.2cm][c]{0.60\linewidth}
             \centering
-            {\khmoul\fontsize{16pt}{20pt}\selectfont \MinistryKH\par}
-            \vspace{0.15cm}
-            {\khmoul\fontsize{15pt}{19pt}\selectfont \InstituteKH\par}
-        \end{minipage}
+            {\khmoul\fontsize{18pt}{24pt}\selectfont\KHMinistry\par}
+            \vspace{0.45cm}
+            {\khmoul\fontsize{18pt}{24pt}\selectfont\KHInstitute\par}
+        \end{minipage}%
         \hfill
-        \begin{minipage}[c]{0.18\linewidth}
+        \begin{minipage}[c][3.2cm][c]{0.18\linewidth}
             \centering
-            \includegraphics[width=0.85\linewidth]{figures/schools/itc.png}
-        \end{minipage}
+            \includegraphics[height=2.8cm, keepaspectratio]{figures/schools/itc.png}
+        \end{minipage}%
 
-        \vspace{0.35cm}
+        \par\vspace{0.4cm}
 
-        \begin{center}
-            {\khmoul\fontsize{12pt}{16pt}\selectfont \DepartmentKH\par}
-            \vspace{0.25cm}
-            {\khmoul\fontsize{15pt}{19pt}\selectfont \DegreeProjectKH\par}
-        \end{center}
-
-        \vspace{0.25cm}
-
-        {\khmoul\fontsize{11.5pt}{15pt}\selectfont
-            \begin{tabularx}{\linewidth}{@{}p{3.4cm}X@{}}
-                \TopicLabelKH   & : \ThesisTitleKH  \\
-                \StudentLabelKH & : \StudentNameKH  \\
-                \MajorLabelKH   & : \MajorKH        \\
-                \AdvisorLabelKH & : \AdvisorNameKH  \\
-                \YearLabelKH    & : \AcademicYearKH \\
-            \end{tabularx}
+        % =========================
+        % Khmer Department
+        % =========================
+        \noindent\makebox[\linewidth][c]{%
+            \begin{minipage}{\dimexpr\linewidth-0.2cm\relax}
+                \centering
+                {\khmoul\fontsize{14pt}{22pt}\selectfont\KHDepartment\par}
+            \end{minipage}%
         }
 
-        \vspace{0.3cm}
+        \par\vspace{0.45cm}
 
-        \noindent\makebox[\textwidth][c]{\rule{1.05\textwidth}{0.5pt}}
+        % =========================
+        % Khmer Degree
+        % =========================
+        \noindent\makebox[\linewidth][c]{%
+            \begin{minipage}{\dimexpr\linewidth-0.2cm\relax}
+                \centering
+                {\khmoul\fontsize{18pt}{24pt}\selectfont\KHDegreeProject\par}
+            \end{minipage}%
+        }
 
-        \vspace{0.3cm}
+        \par\vspace{0.45cm}
 
-        % French Section
-        \begin{center}
-            {\fontsize{14pt}{17pt}\selectfont\textbf{\MinistryFR}\par}
-            \vspace{0.2cm}
+        % =========================
+        % Khmer Information Table
+        % =========================
+        \noindent\makebox[\linewidth][c]{%
+            \begin{minipage}{\dimexpr\linewidth-0.2cm\relax}
+                \vspace{0.15cm}
+                \hspace{0.2cm}%
+                {\khmoul\fontsize{12pt}{16pt}\selectfont
+                    \renewcommand{\arraystretch}{1.25}
+                    \begin{tabularx}{\dimexpr\linewidth-0.4cm\relax}
+                        {@{}p{3.2cm}@{\hspace{0.15cm}:\hspace{0.25cm}}>{\raggedright\arraybackslash}X@{}}
+                        ប្រធានបទ       & \KHThesisTitle  \\
+                        និស្សិត         & \KHStudentName  \\
+                        ឯកទេស          & \KHMajor        \\
+                        គ្រូទទួលបន្ទុក & \KHAdvisorName  \\
+                        ឆ្នាំសិក្សា      & \KHAcademicYear \\
+                    \end{tabularx}
+                }
+                \vspace{0.15cm}
+            \end{minipage}%
+        }
 
-            {\fontsize{14pt}{17pt}\selectfont\textbf{\InstituteFR}\par}
-            \vspace{0.2cm}
+        \par\vspace{0.45cm}
 
-            {\fontsize{12pt}{15pt}\selectfont\textbf{\DepartmentFR}\par}
-            \vspace{0.2cm}
+        % =========================
+        % Separator Line
+        % =========================
+        \noindent\makebox[\textwidth][c]{\rule{1.05\textwidth}{1.5pt}}
 
-            {\fontsize{13pt}{16pt}\selectfont\textbf{\DegreeProjectFR}\par}
-        \end{center}
+        \par\vspace{0.45cm}
 
-        \vspace{0.25cm}
+        % =========================
+        % French Ministry
+        % =========================
+        \noindent\makebox[\linewidth][c]{%
+            \begin{minipage}{\dimexpr\linewidth-0.2cm\relax}
+                \centering
+                {\bfseries\fontsize{14pt}{22pt}\selectfont\FRMinistry\par}
+            \end{minipage}%
+        }
 
-        {\fontsize{11.5pt}{15pt}\selectfont
-            \begin{tabularx}{\linewidth}{@{}p{3.6cm}X@{}}
-                \textbf{\TitleLabelFR}   & \textbf{: \ThesisTitleFR}  \\
-                \textbf{\StudentLabelFR} & \textbf{: \StudentNameFR}  \\
-                \textbf{\MajorLabelFR}   & \textbf{: \MajorFR}        \\
-                \textbf{\AdvisorLabelFR} & \textbf{: \AdvisorNameFR}  \\
-                \textbf{\YearLabelFR}    & \textbf{: \AcademicYearFR} \\
-            \end{tabularx}
+        \par\vspace{0.6cm}
+
+        % =========================
+        % French Institute
+        % =========================
+        \noindent\makebox[\linewidth][c]{%
+            \begin{minipage}{\dimexpr\linewidth-0.2cm\relax}
+                \centering
+                {\bfseries\fontsize{14pt}{22pt}\selectfont\FRInstitute\par}
+            \end{minipage}%
+        }
+
+        \par\vspace{0.6cm}
+
+        % =========================
+        % French Department
+        % =========================
+        \noindent\makebox[\linewidth][c]{%
+            \begin{minipage}{\dimexpr\linewidth-0.2cm\relax}
+                \centering
+                {\bfseries\fontsize{14pt}{22pt}\selectfont\FRDepartment\par}
+            \end{minipage}%
+        }
+
+        \par\vspace{0.35cm}
+
+        % =========================
+        % French Degree
+        % =========================
+        \noindent\makebox[\linewidth][c]{%
+            \begin{minipage}{\dimexpr\linewidth-0.2cm\relax}
+                \centering
+                {\bfseries\fontsize{18pt}{24pt}\selectfont\FRDegreeProject\par}
+            \end{minipage}%
+        }
+
+        \par\vspace{0.4cm}
+
+        % =========================
+        % French Information Table
+        % =========================
+        \noindent\makebox[\linewidth][c]{%
+            \begin{minipage}{\dimexpr\linewidth-0.2cm\relax}
+                \vspace{0.15cm}
+                \hspace{0.2cm}%
+                {\bfseries\fontsize{12pt}{16pt}\selectfont
+                    \renewcommand{\arraystretch}{1.25}
+                    \begin{tabularx}{\dimexpr\linewidth-0.4cm\relax}
+                        {@{}p{3.2cm}@{\hspace{0.15cm}:\hspace{0.25cm}}>{\raggedright\arraybackslash}X@{}}
+                        Titre           & \FRThesisTitle  \\
+                        Étudiante       & \FRStudentName  \\
+                        Spécialité      & \FRMajor        \\
+                        Tuteur de stage & \FRAdvisorName  \\
+                        Année scolaire  & \FRAcademicYear \\
+                    \end{tabularx}
+                }
+                \vspace{0.15cm}
+            \end{minipage}%
         }
 
     \end{mdframed}
-
-    \endgroup
 
 \end{titlepage}

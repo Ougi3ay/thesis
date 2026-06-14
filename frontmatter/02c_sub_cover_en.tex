@@ -1,120 +1,137 @@
 \begin{titlepage}
     \thispagestyle{empty}
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{0pt}
 
     \Watermark
 
-    % =====================================================
-    % Header: Logos and Institution Names
-    % =====================================================
-    \begin{center}
-        \begin{minipage}[c]{0.20\linewidth}
+    % =========================
+    % Header
+    % =========================
+    \noindent\makebox[\linewidth][c]{%
+        \begin{minipage}[c][2.8cm][c]{0.18\linewidth}
             \centering
-            \includegraphics[width=2.8cm]{figures/schools/moey.png}
+            \includegraphics[height=2.45cm, keepaspectratio]{figures/schools/moey.png}
         \end{minipage}%
         \hfill
-        \begin{minipage}[t]{0.60\linewidth}
+        \begin{minipage}[c][2.8cm][c]{0.58\linewidth}
             \centering
-            \vspace{-0.2cm}
-            {\bfseries\fontsize{16pt}{18pt}\selectfont \MinistryEN\par}
+            {\bfseries\fontsize{14pt}{18pt}\selectfont\ENMinistry\par}
         \end{minipage}%
         \hfill
-        \begin{minipage}[c]{0.20\linewidth}
+        \begin{minipage}[c][2.8cm][c]{0.18\linewidth}
             \centering
-            \includegraphics[width=3.2cm]{figures/schools/itc.png}
-        \end{minipage}
-
-        \vspace{0.5cm}
-        {\bfseries\fontsize{16pt}{18pt}\selectfont \InstituteEN\par}
-    \end{center}
-
-    \vspace{-0.3cm}
-
-    % =====================================================
-    % Department
-    % =====================================================
-    \begin{center}
-        {\bfseries\fontsize{13pt}{15pt}\selectfont \DepartmentEN\par}
-    \end{center}
-
-    \vspace{1.5cm}
-
-    % =====================================================
-    % Main Approval Information
-    % =====================================================
-    \noindent
-    \hspace*{3.5cm}
-    \begin{minipage}{0.70\textwidth}
-        \raggedright
-
-        {\bfseries\fontsize{14pt}{15pt}\selectfont \DegreeProjectEN\par}
-
-        \vspace{0.5cm}
-
-        {\bfseries\fontsize{13pt}{15pt}\selectfont
-            \StudentLabelEN:
-            \emph{\href{mailto:\StudentEmail}{\StudentNameEN}}
-            \par}
-
-        \vspace{0.5cm}
-
-        {\bfseries\fontsize{12pt}{15pt}\selectfont
-            \DefenseDateLabelEN: \DefenseDateEN
-            \par}
-
-        \vspace{0.5cm}
-
-        {\bfseries\fontsize{13pt}{15pt}\selectfont
-            \ApprovalLabelEN
-            \par}
-
-        \vspace{1cm}
-
-        {\bfseries\fontsize{13pt}{15pt}\selectfont
-            \DirectorLabelEN: \underline{\hspace{6.5cm}}
-            \par}
-
-        \vspace{1cm}
-
-        {\bfseries\fontsize{12pt}{15pt}\selectfont
-            \AcademicCityEN, \ApprovalDateEN
-            \par}
-
-    \end{minipage}
+            \includegraphics[height=2.45cm, keepaspectratio]{figures/schools/itc.png}
+        \end{minipage}%
+    }
 
     \vspace{0.6cm}
 
-    % =====================================================
-    % Thesis Details
-    % =====================================================
-    \noindent
-    {
-        \renewcommand{\arraystretch}{1.5}
-        \begin{tabularx}{\textwidth}{@{}p{5.3cm}@{\hspace{0.2cm}: \hspace{0.2cm}}X@{}}
-                        {\bfseries\fontsize{13pt}{15pt}\selectfont \TopicLabelEN}           &
-                        {\bfseries\fontsize{13pt}{15pt}\selectfont \ThesisTitleEN}                            \\
+    \noindent\makebox[\linewidth][c]{%
+        \begin{minipage}{\dimexpr\linewidth-0.2cm\relax}
+            \centering
+            {\bfseries\fontsize{14pt}{18pt}\selectfont\ENInstitute\par}
+        \end{minipage}%
+    }
 
-                        {\bfseries\fontsize{13pt}{15pt}\selectfont \EnterpriseLabelEN}           &
-                        {\bfseries\fontsize{13pt}{15pt}\selectfont \EnterpriseEN}                             \\
+    \vspace{0.6cm}
 
-                        {\bfseries\fontsize{13pt}{15pt}\selectfont \DepartmentHeadLabelEN}       &
-                        {\bfseries\fontsize{13pt}{15pt}\selectfont \DepartmentHeadEN}                         \\
+    % =========================
+    % Department
+    % =========================
+    \noindent\makebox[\linewidth][c]{%
+        \begin{minipage}{\linewidth}
+            \centering
+            {\bfseries\fontsize{14pt}{18pt}\selectfont\ENDepartment\par}
+        \end{minipage}%
+    }
 
-                        {\bfseries\fontsize{13pt}{15pt}\selectfont \SupervisorLabelEN}           &
-                        {\bfseries\fontsize{13pt}{15pt}\selectfont \SupervisorEN}                             \\
+    \vspace{2.5cm}
 
-                        {\bfseries\fontsize{13pt}{15pt}\selectfont \EnterpriseSupervisorLabelEN} &
-                        {\bfseries\fontsize{13pt}{15pt}\selectfont \EnterpriseSupervisorEN}                   \\
-        \end{tabularx}
+    % =========================
+    % English Approval Block
+    % =========================
+    \noindent\makebox[\linewidth][c]{%
+        \begin{minipage}{0.72\textwidth}
+            \centering
+
+            {\bfseries\fontsize{16pt}{22pt}\selectfont
+                \ENDegreeProject\par
+                \vspace{0.25cm}
+                BY \ENStudentName\par
+            }
+
+            \vspace{0.45cm}
+
+            {\bfseries\fontsize{16pt}{22pt}\selectfont
+                \ENDefenseDateLabel: \ENDefenseDate\par
+            }
+
+            \vspace{0.35cm}
+
+            {\bfseries\fontsize{16pt}{22pt}\selectfont
+                \ENApprovalLabel\par
+            }
+
+            \vspace{0.65cm}
+
+            {\bfseries\fontsize{16pt}{22pt}\selectfont
+                \ENDirectorLabel: \underline{\hspace{4.2cm}}\par
+            }
+
+            \vspace{0.55cm}
+
+            {\bfseries\fontsize{12pt}{16pt}\selectfont
+                \ENAcademicCity, \ENApprovalDate\par
+            }
+        \end{minipage}%
+    }
+
+    \vspace{1.5cm}
+
+    % =========================
+    % Block 1: Topic and Enterprise
+    % =========================
+    \noindent\makebox[\linewidth][c]{%
+        \begin{minipage}{\dimexpr\linewidth-0.2cm\relax}
+            \vspace{0.12cm}
+            \hspace{0.25cm}%
+            {\bfseries\fontsize{12pt}{16pt}\selectfont
+                \renewcommand{\arraystretch}{1.20}
+                \begin{tabularx}{\dimexpr\linewidth-0.7cm\relax}
+                    {@{}l@{\hspace{0.15cm}:\hspace{0.25cm}}>{\raggedright\arraybackslash}X@{}}
+                    \ENTopicLabel      & \ENThesisTitle \\
+                \end{tabularx}
+            }
+        \end{minipage}%
+    }
+
+    % =========================
+    % Block 2: Supervisors
+    % =========================
+    \noindent\makebox[\linewidth][c]{%
+        \begin{minipage}{\dimexpr\linewidth-0.2cm\relax}
+            \vspace{0.12cm}
+            \hspace{0.25cm}%
+            {\bfseries\fontsize{12pt}{16pt}\selectfont
+                \renewcommand{\arraystretch}{1.20}
+                \begin{tabularx}{\dimexpr\linewidth-0.3cm\relax}
+                    {@{}l@{\hspace{0.15cm}:\hspace{0.25cm}}>{\raggedright\arraybackslash}X@{}}
+                    \ENEnterpriseLabel & \ENEnterprise  \\
+                    \ENDepartmentHeadLabel       & \ENDepartmentHeadName       \\
+                    \ENAcademicSupervisorLabel   & \ENAcademicSupervisorName   \\
+                    \ENEnterpriseSupervisorLabel & \ENEnterpriseSupervisorName \\
+                \end{tabularx}
+            }
+            \vspace{0.12cm}
+        \end{minipage}%
     }
 
     \vfill
 
-    % =====================================================
-    % Bottom Location and Year
-    % =====================================================
     \begin{center}
-        {\bfseries\fontsize{13pt}{15pt}\selectfont
-            \AcademicCityEN, \AcademicYearEN
+        {\bfseries\fontsize{12pt}{16pt}\selectfont
+            \ENAcademicCity, \ENAcademicYear
             \par}
     \end{center}
 

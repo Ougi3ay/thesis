@@ -1,153 +1,305 @@
+% % =====================================================
+% % Thesis Metadata
+% % =====================================================
+% % Keep all editable thesis information here.
+% % This file is grouped by language and purpose to make changes easier.
+
+% % =====================================================
+% % 1. Shared / General Information
+% % =====================================================
+
+% % Student information
+% \newcommand{\StudentEmail}{e20201146@itc.edu.kh}
+
+% % Academic year
+% \newcommand{\AcademicYearKH}{២០២៥-២០២៦}
+% \newcommand{\AcademicYearEN}{2025--2026}
+% \newcommand{\AcademicYearFR}{2025--2026}
+
+% % Academic city
+% \newcommand{\AcademicCityKH}{រាជធានីភ្នំពេញ}
+% \newcommand{\AcademicCityEN}{Phnom Penh}
+% \newcommand{\AcademicCityFR}{Phnom Penh}
+
+% % Defense and approval dates
+% \newcommand{\DefenseDateKH}{ថ្ងៃទី ៣០ ខែកក្កដា ឆ្នាំ ២០២៦}
+% \newcommand{\ApprovalDateKH}{ថ្ងៃទី ០៩ ខែ កក្កដា ឆ្នាំ ២០២៦}
+
+% \newcommand{\DefenseDateEN}{July 09, 2026}
+% \newcommand{\ApprovalDateEN}{July 09, 2026}
+
+% \newcommand{\DefenseDateFR}{le 09 juillet 2026}
+% \newcommand{\ApprovalDateFR}{le 09 juillet 2026}
+
+% % =====================================================
+% % 2. Khmer Metadata
+% % =====================================================
+
+% % Institution information
+% \newcommand{\MinistryKH}{ក្រសួងអប់រំ យុវជន និងកីឡា}
+% \newcommand{\InstituteKH}{វិទ្យាស្ថានបច្ចេកវិទ្យាកម្ពុជា}
+% \newcommand{\DepartmentKH}{ដេប៉ាតឺម៉ង់គណិតវិទ្យាអនុវត្តន៍ និងស្ថិតិ}
+% \newcommand{\DegreeProjectKH}{គម្រោងសញ្ញាប័ត្រវិស្វករ}
+
+% % Khmer labels
+% \newcommand{\TopicLabelKH}{ប្រធានបទ}
+% \newcommand{\StudentLabelKH}{និស្សិត}
+% \newcommand{\MajorLabelKH}{ឯកទេស}
+% \newcommand{\AdvisorLabelKH}{គ្រូទទួលបន្ទុក}
+% \newcommand{\YearLabelKH}{ឆ្នាំសិក្សា}
+% \newcommand{\DefenseDateLabelKH}{កាលបរិច្ឆេទការពារគម្រោង}
+% \newcommand{\ApprovalLabelKH}{ការអនុញ្ញាតឱ្យការពារគម្រោង}
+% \newcommand{\DirectorLabelKH}{នាយកវិទ្យាស្ថាន}
+% \newcommand{\EnterpriseLabelKH}{សហគ្រាស}
+% \newcommand{\DepartmentHeadLabelKH}{ប្រធានដេប៉ាតឺម៉ង់}
+% \newcommand{\SupervisorLabelKH}{គ្រូទទួលបន្ទុក}
+% \newcommand{\EnterpriseSupervisorLabelKH}{អ្នកទទួលខុសត្រូវក្នុងសហគ្រាស}
+
+% % Khmer values
+% \newcommand{\ThesisTitleKH}{បណ្ណាល័យ Python សម្រាប់គំរូព្យាករណ៍ជាចង្កោម KFCProcedure និង GradientCOBRA}
+% \newcommand{\StudentNameKH}{ពៅ អ៊ូជី}
+% \newcommand{\MajorKH}{វិស្វកម្មវិទ្យាសាស្រ្តទិន្នន័យ}
+% \newcommand{\EnterpriseKH}{មន្ទីរពិសោធន៍ស្រាវជ្រាវ និងវិភាគទិន្នន័យ}
+
+% % Khmer people
+% \newcommand{\AdvisorNameKH}{បណ្ឌិត ហាស់ សុធា}
+% \newcommand{\DepartmentHeadKH}{បណ្ឌិត ភោគ សុខខី}
+% \newcommand{\SupervisorKH}{បណ្ឌិត ហាស់ សុធា}
+% \newcommand{\EnterpriseSupervisorKH}{បណ្ឌិត ភោគ សុខខី}
+
+% % =====================================================
+% % 3. English Metadata
+% % =====================================================
+
+% % Institution information
+% \newcommand{\MinistryEN}{MINISTRY OF EDUCATION,\\ YOUTH AND SPORT}
+% \newcommand{\InstituteEN}{INSTITUTE OF TECHNOLOGY OF CAMBODIA}
+% \newcommand{\UniversityEN}{Institute of Technology of Cambodia}
+% \newcommand{\DepartmentEN}{DEPARTMENT OF APPLIED MATHEMATICS AND STATISTICS}
+% \newcommand{\DegreeProjectEN}{ENGINEERING DEGREE PROJECT}
+
+% % English labels
+% \newcommand{\TopicLabelEN}{Topic}
+% \newcommand{\TitleLabelEN}{Title}
+% \newcommand{\StudentLabelEN}{Student}
+% \newcommand{\MajorLabelEN}{Specialty}
+% \newcommand{\AdvisorLabelEN}{Advisor}
+% \newcommand{\YearLabelEN}{Academic Year}
+% \newcommand{\DefenseDateLabelEN}{Date of Defence}
+% \newcommand{\ApprovalLabelEN}{<< Authorizes the defense of the thesis >>}
+% \newcommand{\DirectorLabelEN}{Director of Institute}
+% \newcommand{\EnterpriseLabelEN}{Internship company}
+% \newcommand{\DepartmentHeadLabelEN}{Head of department}
+% \newcommand{\SupervisorLabelEN}{Advisor}
+% \newcommand{\EnterpriseSupervisorLabelEN}{Company supervisor}
+
+% % English values
+% \newcommand{\ThesisTitleEN}{Python Libraries for Clusterwise Predictive Models KFCProcedure and GradientCOBRA}
+% \newcommand{\StudentNameEN}{MR. POV Ougi}
+% \newcommand{\MajorEN}{Data Science}
+% \newcommand{\EnterpriseEN}{Research and Data Analytics Laboratory}
+
+% % English people
+% \newcommand{\AdvisorNameEN}{Dr. HAS Sothea}
+% \newcommand{\DepartmentHeadEN}{Dr. PHAUK Sokkhey}
+% \newcommand{\SupervisorEN}{Dr. HAS Sothea}
+% \newcommand{\EnterpriseSupervisorEN}{Dr. PHAUK Sokkhey}
+
+% % =====================================================
+% % 4. French Metadata
+% % =====================================================
+
+% % Institution information
+% \newcommand{\MinistryFR}{MINISTÈRE DE L'ÉDUCATION,\\ DE LA JEUNESSE ET DES SPORTS}
+% \newcommand{\InstituteFR}{INSTITUT DE TECHNOLOGIE DU CAMBODGE}
+% \newcommand{\DepartmentFR}{DÉPARTEMENT DE MATHÉMATIQUES APPLIQUÉES \\ET STATISTIQUES}
+% \newcommand{\DegreeProjectFR}{MEMOIRE DE FIN D’ETUDES}
+
+% % French labels
+% \newcommand{\TopicLabelFR}{Titre}
+% \newcommand{\TitleLabelFR}{Titre}
+% \newcommand{\StudentLabelFR}{Étudiante}
+% \newcommand{\MajorLabelFR}{Spécialité}
+% \newcommand{\AdvisorLabelFR}{Tuteur de stage}
+% \newcommand{\YearLabelFR}{Année scolaire}
+% \newcommand{\DefenseDateLabelFR}{Date de soutenance}
+% \newcommand{\ApprovalLabelFR}{<< Autorise la soutenance du mémoire >>}
+% \newcommand{\DirectorLabelFR}{Directeur de l'Institut}
+% \newcommand{\EnterpriseLabelFR}{Etablissement du stage}
+% \newcommand{\DepartmentHeadLabelFR}{Chef du département}
+% \newcommand{\SupervisorLabelFR}{Encadrant académique}
+% \newcommand{\EnterpriseSupervisorLabelFR}{Responsable en entreprise}
+
+% % French values
+% \newcommand{\ThesisTitleFR}{Bibliothèques Python pour les modèles prédictifs par clusters KFCProcedure et GradientCOBRA}
+% \newcommand{\StudentNameFR}{POV Ougi}
+% \newcommand{\MajorFR}{Science des Données}
+% \newcommand{\EnterpriseFR}{Laboratoire de Recherche et d'Analyse des Données}
+
+% % French people
+% \newcommand{\AdvisorNameFR}{Dr. HAS Sothea}
+% \newcommand{\DepartmentHeadFR}{Dr. PHAUK Sokkhey}
+% \newcommand{\SupervisorFR}{Dr. HAS Sothea}
+% \newcommand{\EnterpriseSupervisorFR}{Dr. PHAUK Sokkhey}
+
+% % =====================================================
+% % 5. Short Aliases for PDF Metadata
+% % =====================================================
+% % These can be used in \hypersetup or document metadata.
+
+% \newcommand{\PDFTitle}{\ThesisTitleEN}
+% \newcommand{\PDFAuthor}{\StudentNameEN}
+% \newcommand{\PDFUniversity}{\UniversityEN}
+% \newcommand{\PDFDepartment}{\DepartmentEN}
+
 % =====================================================
 % Thesis Metadata
 % =====================================================
-% Keep all editable thesis information here.
-% This file is grouped by language and purpose to make changes easier.
 
 % =====================================================
 % 1. Shared / General Information
 % =====================================================
 
-% Student information
+% Student contact
 \newcommand{\StudentEmail}{e20201146@itc.edu.kh}
 
 % Academic year
-\newcommand{\AcademicYearKH}{២០២៥-២០២៦}
-\newcommand{\AcademicYearEN}{2025--2026}
-\newcommand{\AcademicYearFR}{2025--2026}
+\newcommand{\KHAcademicYear}{២០២៥-២០២៦}
+\newcommand{\ENAcademicYear}{2025--2026}
+\newcommand{\FRAcademicYear}{2025--2026}
 
 % Academic city
-\newcommand{\AcademicCityKH}{រាជធានីភ្នំពេញ}
-\newcommand{\AcademicCityEN}{Phnom Penh}
-\newcommand{\AcademicCityFR}{Phnom Penh}
+\newcommand{\KHAcademicCity}{រាជធានីភ្នំពេញ}
+\newcommand{\ENAcademicCity}{Phnom Penh}
+\newcommand{\FRAcademicCity}{Phnom Penh}
 
-% Defense and approval dates
-\newcommand{\DefenseDateKH}{ថ្ងៃទី ៣០ ខែកក្កដា ឆ្នាំ ២០២៦}
-\newcommand{\ApprovalDateKH}{ថ្ងៃទី ០៩ ខែ កក្កដា ឆ្នាំ ២០២៦}
+% Defense date
+\newcommand{\KHDefenseDate}{ថ្ងៃទី ៣០ ខែកក្កដា ឆ្នាំ ២០២៦}
+\newcommand{\ENDefenseDate}{July 9, 2026}
+\newcommand{\FRDefenseDate}{le 9 juillet 2026}
 
-\newcommand{\DefenseDateEN}{July 30, 2026}
-\newcommand{\ApprovalDateEN}{July 09, 2026}
+% Approval date
+\newcommand{\KHApprovalDate}{ថ្ងៃទី ០៩ ខែ កក្កដា ឆ្នាំ ២០២៦}
+\newcommand{\ENApprovalDate}{July 09, 2026}
+\newcommand{\FRApprovalDate}{le 09 juillet 2026}
 
-\newcommand{\DefenseDateFR}{30 juillet 2026}
-\newcommand{\ApprovalDateFR}{09 juillet 2026}
 
 % =====================================================
 % 2. Khmer Metadata
 % =====================================================
 
-% Institution information
-\newcommand{\MinistryKH}{ក្រសួងអប់រំ យុវជន និងកីឡា}
-\newcommand{\InstituteKH}{វិទ្យាស្ថានបច្ចេកវិទ្យាកម្ពុជា}
-\newcommand{\DepartmentKH}{ដេប៉ាតឺម៉ង់គណិតវិទ្យាអនុវត្តន៍ និងស្ថិតិ}
-\newcommand{\DegreeProjectKH}{គម្រោងសញ្ញាប័ត្រវិស្វករ}
+% Institution
+\newcommand{\KHMinistry}{ក្រសួងអប់រំ យុវជន និងកីឡា}
+\newcommand{\KHInstitute}{វិទ្យាស្ថានបច្ចេកវិទ្យាកម្ពុជា}
+\newcommand{\KHDepartment}{ដេប៉ាតឺម៉ង់គណិតវិទ្យាអនុវត្តន៍ និងស្ថិតិ}
+\newcommand{\KHDegreeProject}{គម្រោងសញ្ញាប័ត្រវិស្វករ}
 
-% Khmer labels
-\newcommand{\TopicLabelKH}{ប្រធានបទ}
-\newcommand{\StudentLabelKH}{និស្សិត}
-\newcommand{\MajorLabelKH}{ឯកទេស}
-\newcommand{\AdvisorLabelKH}{គ្រូទទួលបន្ទុក}
-\newcommand{\YearLabelKH}{ឆ្នាំសិក្សា}
-\newcommand{\DefenseDateLabelKH}{កាលបរិច្ឆេទការពារគម្រោង}
-\newcommand{\ApprovalLabelKH}{ការអនុញ្ញាតឱ្យការពារគម្រោង}
-\newcommand{\DirectorLabelKH}{នាយកវិទ្យាស្ថាន}
-\newcommand{\EnterpriseLabelKH}{សហគ្រាស}
-\newcommand{\DepartmentHeadLabelKH}{ប្រធានដេប៉ាតឺម៉ង់}
-\newcommand{\SupervisorLabelKH}{គ្រូណែនាំផ្នែកសិក្សា}
-\newcommand{\EnterpriseSupervisorLabelKH}{គ្រូណែនាំនៅសហគ្រាស}
+% Main thesis information
+\newcommand{\KHThesisTitle}{កញ្ចប់កម្មវិធី Python សម្រាប់គម្រូព្យារកណ៍ KFCProcedure និង GradientCOBRA}
+\newcommand{\KHStudentName}{ពៅ អ៊ូជី}
+\newcommand{\KHMajor}{វិស្វកម្មវិទ្យាសាស្រ្តទិន្នន័យ}
+\newcommand{\KHEnterprise}{មន្ទីរពិសោធន៍ស្រាវជ្រាវ និងវិភាគទិន្នន័យ}
 
-% Khmer values
-\newcommand{\ThesisTitleKH}{កញ្ចប់កូដសម្រាប់គំរូព្យាករណ៍}
-\newcommand{\StudentNameKH}{ពៅ អ៊ូជី}
-\newcommand{\MajorKH}{វិស្វកម្មវិទ្យាសាស្រ្តទិន្នន័យ}
-\newcommand{\EnterpriseKH}{មន្ទីរពិសោធន៍ស្រាវជ្រាវ និងវិភាគទិន្នន័យ}
+% People
+\newcommand{\KHDepartmentHeadName}{បណ្ឌិត ភោគ សុខខី}
+\newcommand{\KHAcademicSupervisorName}{បណ្ឌិត ហាស់ សុធា}
+\newcommand{\KHEnterpriseSupervisorName}{បណ្ឌិត ភោគ សុខខី}
+\newcommand{\KHAdvisorName}{បណ្ឌិត ហាស់ សុធា}
 
-% Khmer people
-\newcommand{\AdvisorNameKH}{បណ្ឌិត ហាស់ សុធា}
-\newcommand{\DepartmentHeadKH}{បណ្ឌិត ភោគ សុខខី}
-\newcommand{\SupervisorKH}{បណ្ឌិត ហាស់ សុធា}
-\newcommand{\EnterpriseSupervisorKH}{បណ្ឌិត ភោគ សុខខី}
+% Labels
+\newcommand{\KHTopicLabel}{ប្រធានបទ}
+\newcommand{\KHStudentLabel}{និស្សិត}
+\newcommand{\KHMajorLabel}{ឯកទេស}
+\newcommand{\KHYearLabel}{ឆ្នាំសិក្សា}
+\newcommand{\KHEnterpriseLabel}{សហគ្រាស}
+\newcommand{\KHDepartmentHeadLabel}{ប្រធានដេប៉ាតឺម៉ង់}
+\newcommand{\KHAcademicSupervisorLabel}{គ្រូទទួលបន្ទុក}
+\newcommand{\KHEnterpriseSupervisorLabel}{អ្នកទទួលខុសត្រូវក្នុងសហគ្រាស}
+\newcommand{\KHDefenseDateLabel}{កាលបរិច្ឆេទការពារគម្រោង}
+\newcommand{\KHApprovalLabel}{ការអនុញ្ញាតឱ្យការពារគម្រោង}
+\newcommand{\KHDirectorLabel}{នាយកវិទ្យាស្ថាន}
+
 
 % =====================================================
 % 3. English Metadata
 % =====================================================
 
-% Institution information
-\newcommand{\MinistryEN}{MINISTRY OF EDUCATION,\\ YOUTH AND SPORT}
-\newcommand{\InstituteEN}{INSTITUTE OF TECHNOLOGY OF CAMBODIA}
-\newcommand{\UniversityEN}{Institute of Technology of Cambodia}
-\newcommand{\DepartmentEN}{DEPARTMENT OF APPLIED MATHEMATICS AND STATISTICS}
-\newcommand{\DegreeProjectEN}{ENGINEERING DEGREE PROJECT}
+% Institution
+\newcommand{\ENMinistry}{MINISTRY OF EDUCATION,\\ YOUTH AND SPORT}
+\newcommand{\ENInstitute}{INSTITUTE OF TECHNOLOGY OF CAMBODIA}
+\newcommand{\ENUniversity}{Institute of Technology of Cambodia}
+\newcommand{\ENDepartment}{DEPARTMENT OF APPLIED MATHEMATICS AND STATISTICS}
+\newcommand{\ENDegreeProject}{ENGINEERING DEGREE PROJECT}
 
-% English labels
-\newcommand{\TopicLabelEN}{Topic}
-\newcommand{\TitleLabelEN}{Title}
-\newcommand{\StudentLabelEN}{Student}
-\newcommand{\MajorLabelEN}{Specialty}
-\newcommand{\AdvisorLabelEN}{Advisor}
-\newcommand{\YearLabelEN}{Academic Year}
-\newcommand{\DefenseDateLabelEN}{Thesis Defense Date}
-\newcommand{\ApprovalLabelEN}{Permission to Defend the Project}
-\newcommand{\DirectorLabelEN}{Director of Institute}
-\newcommand{\EnterpriseLabelEN}{Enterprise}
-\newcommand{\DepartmentHeadLabelEN}{Head of Department}
-\newcommand{\SupervisorLabelEN}{Academic Supervisor}
-\newcommand{\EnterpriseSupervisorLabelEN}{Enterprise Supervisor}
+% Main thesis information
+\newcommand{\ENThesisTitle}{Python Libraries for Clusterwise Predictive Models KFCProcedure and GradientCOBRA}
+\newcommand{\ENStudentName}{POV Ougi}
+\newcommand{\ENMajor}{Data Science}
+\newcommand{\ENEnterprise}{Research and Data Analytics Laboratory}
 
-% English values
-\newcommand{\ThesisTitleEN}{Code Package for Prediction Models}
-\newcommand{\StudentNameEN}{POV Ougi}
-\newcommand{\MajorEN}{Data Science}
-\newcommand{\EnterpriseEN}{Research and Data Analytics Laboratory}
+% People
+\newcommand{\ENDepartmentHeadName}{Dr. PHAUK Sokkhey}
+\newcommand{\ENAcademicSupervisorName}{Dr. HAS Sothea}
+\newcommand{\ENEnterpriseSupervisorName}{Dr. PHAUK Sokkhey}
+\newcommand{\ENAdvisorName}{Dr. HAS Sothea}
 
-% English people
-\newcommand{\AdvisorNameEN}{Dr. HAS Sothea}
-\newcommand{\DepartmentHeadEN}{Dr. PHAUK Sokkhey}
-\newcommand{\SupervisorEN}{Dr. HAS Sothea}
-\newcommand{\EnterpriseSupervisorEN}{Dr. PHAUK Sokkhey}
+% Labels
+\newcommand{\ENTopicLabel}{Topic}
+\newcommand{\ENTitleLabel}{Title}
+\newcommand{\ENStudentLabel}{Student}
+\newcommand{\ENMajorLabel}{Specialty}
+\newcommand{\ENYearLabel}{Academic Year}
+\newcommand{\ENEnterpriseLabel}{Enterprise}
+\newcommand{\ENDepartmentHeadLabel}{Head of Department}
+\newcommand{\ENAcademicSupervisorLabel}{Academic Supervisor}
+\newcommand{\ENEnterpriseSupervisorLabel}{Enterprise Supervisor}
+\newcommand{\ENDefenseDateLabel}{Thesis Defense Date}
+\newcommand{\ENApprovalLabel}{Permission to Defend the Project}
+\newcommand{\ENDirectorLabel}{Director of Institute}
+
 
 % =====================================================
 % 4. French Metadata
 % =====================================================
 
-% Institution information
-\newcommand{\MinistryFR}{MINISTÈRE DE L'ÉDUCATION,\\ DE LA JEUNESSE ET DES SPORTS}
-\newcommand{\InstituteFR}{INSTITUT DE TECHNOLOGIE DU CAMBODGE}
-\newcommand{\DepartmentFR}{DÉPARTEMENT DE MATHÉMATIQUES APPLIQUÉES ET STATISTIQUES}
-\newcommand{\DegreeProjectFR}{MEMOIRE DE FIN D’ETUDES}
+% Institution
+\newcommand{\FRMinistry}{MINISTÈRE DE L'ÉDUCATION,\\ DE LA JEUNESSE ET DES SPORTS}
+\newcommand{\FRInstitute}{INSTITUT DE TECHNOLOGIE DU CAMBODGE}
+\newcommand{\FRDepartment}{DÉPARTEMENT DE MATHÉMATIQUES APPLIQUÉES \\ET STATISTIQUES}
+\newcommand{\FRDegreeProject}{MÉMOIRE DE FIN D’ÉTUDES}
 
-% French labels
-\newcommand{\TopicLabelFR}{Titre}
-\newcommand{\TitleLabelFR}{Titre}
-\newcommand{\StudentLabelFR}{Étudiante}
-\newcommand{\MajorLabelFR}{Spécialité}
-\newcommand{\AdvisorLabelFR}{Tuteur de stage}
-\newcommand{\YearLabelFR}{Année scolaire}
-\newcommand{\DefenseDateLabelFR}{Date de soutenance}
-\newcommand{\ApprovalLabelFR}{Autorisation de soutenance du projet}
-\newcommand{\DirectorLabelFR}{Directeur de l'Institut}
-\newcommand{\EnterpriseLabelFR}{Entreprise}
-\newcommand{\DepartmentHeadLabelFR}{Chef du Département}
-\newcommand{\SupervisorLabelFR}{Encadrant académique}
-\newcommand{\EnterpriseSupervisorLabelFR}{Responsable en entreprise}
+% Main thesis information
+\newcommand{\FRThesisTitle}{Bibliothèques Python pour les modèles prédictifs par clusters KFCProcedure et GradientCOBRA}
+\newcommand{\FRStudentName}{POV Ougi}
+\newcommand{\FRMajor}{Science des Données}
+\newcommand{\FREnterprise}{Laboratoire de Recherche et d'Analyse des Données}
 
-% French values
-\newcommand{\ThesisTitleFR}{Package de Code pour les Modèles Prédictifs}
-\newcommand{\StudentNameFR}{POV Ougi}
-\newcommand{\MajorFR}{Science des Données}
-\newcommand{\EnterpriseFR}{Laboratoire de Recherche et d'Analyse des Données}
+% People
+\newcommand{\FRDepartmentHeadName}{Dr. PHAUK Sokkhey}
+\newcommand{\FRAcademicSupervisorName}{Dr. HAS Sothea}
+\newcommand{\FREnterpriseSupervisorName}{Dr. PHAUK Sokkhey}
+\newcommand{\FRAdvisorName}{Dr. HAS Sothea}
 
-% French people
-\newcommand{\AdvisorNameFR}{Dr. HAS Sothea}
-\newcommand{\DepartmentHeadFR}{Dr. PHAUK Sokkhey}
-\newcommand{\SupervisorFR}{Dr. HAS Sothea}
-\newcommand{\EnterpriseSupervisorFR}{Dr. PHAUK Sokkhey}
+% Labels
+\newcommand{\FRTopicLabel}{Titre}
+\newcommand{\FRTitleLabel}{Titre}
+\newcommand{\FRStudentLabel}{Étudiante}
+\newcommand{\FRMajorLabel}{Spécialité}
+\newcommand{\FRYearLabel}{Année scolaire}
+\newcommand{\FREnterpriseLabel}{Établissement du stage}
+\newcommand{\FRDepartmentHeadLabel}{Chef du département}
+\newcommand{\FRAcademicSupervisorLabel}{Encadrant académique}
+\newcommand{\FREnterpriseSupervisorLabel}{Responsable en entreprise}
+\newcommand{\FRDefenseDateLabel}{Date de soutenance}
+\newcommand{\FRApprovalLabel}{« Autorise la soutenance du mémoire »}
+\newcommand{\FRDirectorLabel}{Directeur de l'Institut}
+
 
 % =====================================================
-% 5. Short Aliases for PDF Metadata
+% 5. PDF Metadata
 % =====================================================
-% These can be used in \hypersetup or document metadata.
 
-\newcommand{\PDFTitle}{\ThesisTitleEN}
-\newcommand{\PDFAuthor}{\StudentNameEN}
-\newcommand{\PDFUniversity}{\UniversityEN}
-\newcommand{\PDFDepartment}{\DepartmentEN}
+\newcommand{\PDFTitle}{\ENThesisTitle}
+\newcommand{\PDFAuthor}{\ENStudentName}
+\newcommand{\PDFUniversity}{\ENUniversity}
+\newcommand{\PDFDepartment}{\ENDepartment}

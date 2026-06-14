@@ -1,120 +1,120 @@
 \begin{titlepage}
     \thispagestyle{empty}
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{0pt}
 
     \Watermark
 
-    % =====================================================
-    % Header: Logos and Institution Names
-    % =====================================================
-    \begin{center}
-        \begin{minipage}[c]{0.20\linewidth}
+    % =========================
+    % Header
+    % =========================
+    \noindent\makebox[\linewidth][c]{%
+        \begin{minipage}[c][2.8cm][c]{0.18\linewidth}
             \centering
-            \includegraphics[width=2.8cm]{figures/schools/moey.png}
+            \includegraphics[height=2.45cm, keepaspectratio]{figures/schools/moey.png}
         \end{minipage}%
         \hfill
-        \begin{minipage}[c]{0.60\linewidth}
+        \begin{minipage}[c][2.8cm][c]{0.58\linewidth}
             \centering
-            \vspace{-0.2cm}
-            {\khmoul\fontsize{18pt}{15pt}\selectfont \MinistryKH\par}
-            \vspace{0.5cm}
-            {\khmoul\fontsize{17pt}{15pt}\selectfont \InstituteKH\par}
+            {\khmoul\fontsize{17pt}{22pt}\selectfont\KHMinistry\par}
+            \vspace{0.30cm}
+            {\khmoul\fontsize{17pt}{22pt}\selectfont\KHInstitute\par}
         \end{minipage}%
         \hfill
-        \begin{minipage}[c]{0.20\linewidth}
+        \begin{minipage}[c][2.8cm][c]{0.18\linewidth}
             \centering
-            \includegraphics[width=3.2cm]{figures/schools/itc.png}
-        \end{minipage}
-    \end{center}
+            \includegraphics[height=2.45cm, keepaspectratio]{figures/schools/itc.png}
+        \end{minipage}%
+    }
 
-    \vspace{-0.3cm}
+    \vspace{2.0cm}
 
-    % =====================================================
+    % =========================
     % Department
-    % =====================================================
-    \begin{center}
-        {\khmoul\fontsize{14pt}{15pt}\selectfont \DepartmentKH\par}
-    \end{center}
+    % =========================
+    \noindent\makebox[\linewidth][c]{%
+        \begin{minipage}{\dimexpr\linewidth-0.2cm\relax}
+            \centering
+            {\khmoul\fontsize{14pt}{20pt}\selectfont\KHDepartment\par}
+        \end{minipage}%
+    }
+
+    \vspace{2.5cm}
+    \hspace*{1.4cm}
+    % =========================
+    % Khmer Approval Block
+    % =========================
+    \noindent\makebox[\linewidth][c]{%
+        \begin{minipage}{0.72\textwidth}
+            \raggedright
+            {\khmoul\fontsize{17pt}{21pt}\selectfont \KHDegreeProject\par}
+
+            \vspace{0.35cm}
+            {\khmoul\fontsize{11pt}{15pt}\selectfont
+                របស់និស្សិត: \KHStudentName\par}
+
+            \vspace{0.35cm}
+            {\khmoul\fontsize{11pt}{15pt}\selectfont
+                \KHDefenseDateLabel: \KHDefenseDate\par}
+
+            \vspace{0.35cm}
+            {\khmoul\fontsize{11pt}{15pt}\selectfont
+                \KHApprovalLabel\par}
+
+            \vspace{0.65cm}
+            {\khmoul\fontsize{16pt}{20pt}\selectfont
+                \KHDirectorLabel: \underline{\hspace{4.2cm}}\par}
+
+            \vspace{0.55cm}
+            {\khmoul\fontsize{11pt}{15pt}\selectfont
+                \KHAcademicCity, \KHApprovalDate\par}
+        \end{minipage}%
+    }
 
     \vspace{1.5cm}
+    % =========================
+    % Block 1: Topic and Enterprise
+    % =========================
+    \noindent\makebox[\linewidth][c]{%
+        \begin{minipage}{\dimexpr\linewidth-0.2cm\relax}
+            \vspace{0.12cm}
+            \hspace{0.25cm}%
+            {\khmoul\fontsize{11pt}{15pt}\selectfont
+                \renewcommand{\arraystretch}{1.20}
+                \begin{tabularx}{\dimexpr\linewidth-0.3cm\relax}
+                    {@{}l@{\hspace{0.1cm}:\hspace{0.25cm}}>{\raggedright\arraybackslash}X@{}}
+                    \KHTopicLabel      & \KHThesisTitle \\
+                \end{tabularx}
+            }
+        \end{minipage}%
+    }
 
-    % =====================================================
-    % Main Approval Information
-    % =====================================================
-    \noindent
-    \hspace*{3.5cm}
-    \begin{minipage}{0.70\textwidth}
-        \raggedright
-
-        {\khmoul\fontsize{14pt}{15pt}\selectfont \DegreeProjectKH\par}
-
-        \vspace{0.5cm}
-
-        {\khmoul\fontsize{14pt}{15pt}\selectfont
-            របស់និស្សិត:
-            \emph{\href{mailto:\StudentEmail}{\StudentNameKH}}
-            \par}
-
-        \vspace{0.5cm}
-
-        {\khmoul\fontsize{12pt}{15pt}\selectfont
-            កាលបរិច្ឆេទការពារនិក្ខេបបទ: \DefenseDateKH
-            \par}
-
-        \vspace{0.5cm}
-
-        {\khmoul\fontsize{14pt}{15pt}\selectfont
-            អនុញ្ញាតឲ្យការពារគម្រោង
-            \par}
-
-        \vspace{1cm}
-
-        {\khmoul\fontsize{14pt}{15pt}\selectfont
-            នាយកវិទ្យាស្ថាន: \underline{\hspace{6.5cm}}
-            \par}
-
-        \vspace{1cm}
-
-        {\khmoul\fontsize{13pt}{15pt}\selectfont
-            \AcademicCityKH, \ApprovalDateKH
-            \par}
-
-    \end{minipage}
-
-    \vspace{0.6cm}
-
-    % =====================================================
-    % Thesis Details
-    % =====================================================
-    \noindent
-    {
-        \renewcommand{\arraystretch}{1.5}
-        \begin{tabularx}{\textwidth}{@{}p{5.3cm}@{\hspace{0.2cm}: \hspace{0.2cm}}X@{}}
-
-                        {\khmoul\fontsize{13pt}{15pt}\selectfont ប្រធានបទ} &
-                        {\khmoul\fontsize{13pt}{15pt}\selectfont \ThesisTitleKH}                      \\
-
-                        {\khmoul\fontsize{13pt}{15pt}\selectfont សហគ្រាស}                &
-                        {\khmoul\fontsize{13pt}{15pt}\selectfont \EnterpriseKH}                       \\
-
-                        {\khmoul\fontsize{13pt}{15pt}\selectfont ប្រធានដេប៉ាតឺម៉ង់}            &
-                        {\khmoul\fontsize{13pt}{15pt}\selectfont \DepartmentHeadKH}                   \\
-
-                        {\khmoul\fontsize{13pt}{15pt}\selectfont សាស្ត្រាចារ្យណែនាំ}            &
-                        {\khmoul\fontsize{13pt}{15pt}\selectfont \SupervisorKH}                       \\
-
-                        {\khmoul\fontsize{13pt}{15pt}\selectfont អ្នកទទួលខុសត្រូវក្នុងសហគ្រាស}  &
-                        {\khmoul\fontsize{13pt}{15pt}\selectfont \EnterpriseSupervisorKH}             \\
-        \end{tabularx}
+    % =========================
+    % Block 2: Supervisors
+    % =========================
+    \noindent\makebox[\linewidth][c]{%
+        \begin{minipage}{\dimexpr\linewidth-0.2cm\relax}
+            \vspace{0.12cm}
+            \hspace{0.25cm}%
+            {\khmoul\fontsize{11pt}{15pt}\selectfont
+                \renewcommand{\arraystretch}{1.20}
+                \begin{tabularx}{\dimexpr\linewidth-0.7cm\relax}
+                    {@{}l@{\hspace{0.1cm}:\hspace{0.25cm}}>{\raggedright\arraybackslash}X@{}}
+                    \KHEnterpriseLabel & \KHEnterprise  \\
+                    \KHDepartmentHeadLabel       & \KHDepartmentHeadName       \\
+                    \KHAcademicSupervisorLabel   & \KHAcademicSupervisorName   \\
+                    \KHEnterpriseSupervisorLabel & \KHEnterpriseSupervisorName \\
+                \end{tabularx}
+            }
+            \vspace{0.12cm}
+        \end{minipage}%
     }
 
     \vfill
 
-    % =====================================================
-    % Bottom Location and Year
-    % =====================================================
     \begin{center}
-        {\khmoul\fontsize{13pt}{15pt}\selectfont
-            \AcademicCityKH, \AcademicYearKH
+        {\khmoul\fontsize{13pt}{16pt}\selectfont
+            \KHAcademicCity, \KHAcademicYear
             \par}
     \end{center}
 

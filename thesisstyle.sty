@@ -17,7 +17,7 @@
 
 % Khmer fonts
 \newfontfamily\khmerfont{Khmer OS Battambang}
-\newfontfamily\khmoul[    
+\newfontfamily\khmoul[        
     BoldFont = Khmer OS Muol Light
 ]{Khmer OS Muol Light}
 \newfontfamily\khsr{Khmer OS Siemreap}
@@ -36,7 +36,7 @@
 % 2. PAGE LAYOUT
 % =====================================================
 
-\RequirePackage[    
+\RequirePackage[        
     a4paper,
     top=2.5cm,
     bottom=2.5cm,
@@ -89,7 +89,7 @@
 
 % TikZ diagrams
 \RequirePackage{tikz}
-\usetikzlibrary{    
+\usetikzlibrary{        
     positioning,
     arrows.meta,
     shapes.geometric,
@@ -114,14 +114,14 @@
 \providecommand{\filepath}[1]{\texttt{\seqsplit{#1}}}
 
 % Safer enumerate formatting
-\setlist[enumerate]{    
+\setlist[enumerate]{        
     leftmargin=1.25cm,
     itemsep=0.35em,
     topsep=0.5em
 }
 
 % Safer itemize formatting
-\setlist[itemize]{    
+\setlist[itemize]{        
     leftmargin=1.25cm,
     itemsep=0.35em,
     topsep=0.5em
@@ -244,14 +244,14 @@
 \DeclareCaptionLabelSeparator{colonspace}{:\quad}
 
 % Caption format in document
-\captionsetup[figure]{    
+\captionsetup[figure]{        
     name=Figure,
     labelfont=bf,
     labelsep=colonspace,
     skip=8pt
 }
 
-\captionsetup[table]{    
+\captionsetup[table]{        
     name=Table,
     labelfont=bf,
     labelsep=colonspace,
@@ -356,7 +356,7 @@
 % 9. CITATIONS, REFERENCES, AND HYPERLINKS
 % =====================================================
 
-\RequirePackage[    
+\RequirePackage[        
     backend=biber,
     style=ieee,
     sorting=none
@@ -370,7 +370,7 @@
 \RequirePackage{hyperref}
 \RequirePackage{bookmark}
 
-\hypersetup{    
+\hypersetup{        
     colorlinks=true,
     linkcolor=black,
     citecolor=black,
@@ -386,11 +386,12 @@
     \AddToShipoutPictureBG*{%
         \begin{tikzpicture}[remember picture, overlay]
             \node[    
-                opacity=0.2,
+                opacity=0.18,
                 anchor=center
-            ] at (current page.center) {%
+            ] at ([xshift=0cm,yshift=-1.5cm]current page.center) {%
                 \includegraphics[    
-                    width=0.55\paperwidth
+                    width=0.75\paperwidth,
+                    keepaspectratio
                 ]{figures/schools/watermark.png}%
             };
         \end{tikzpicture}%
