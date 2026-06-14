@@ -10,17 +10,17 @@ This internship project focuses on the modular design and implementation of aggr
 
 The proposed system is designed as a modular framework in which prediction is performed through a sequence of processing stages. It consists of two main components:
 
-\begin{itemize}
-\item \textbf{KFC Procedure}, which organizes the clusterwise learning workflow into three main steps:
-\begin{itemize}
-\item \textbf{K-Step:} detection of latent cluster structures in the dataset using clustering methods.
-\item \textbf{F-Step:} training of cluster-specific predictive models within the identified clusters.
-\item \textbf{C-Step:} combination of the predictions produced by the cluster-specific models.
-\end{itemize}
-
-
-\item \textbf{GradientCOBRA}, which is a kernel-based aggregation method based on a distance-weighted consensus strategy. It combines multiple model outputs by measuring similarity in the prediction space and supports both internally trained and externally fitted predictive models.
-
+\begin{itemize}    
+    \item \textbf{KFC Procedure}, which organizes the clusterwise learning workflow into three main steps:
+          \begin{enumerate}    
+              \item \textbf{K-Step:} detection of latent cluster structures in the dataset using clustering methods.
+              \item \textbf{F-Step:} training of cluster-specific predictive models within the identified clusters.
+              \item \textbf{C-Step:} combination of the predictions produced by the cluster-specific models.
+          \end{enumerate}
+          
+          
+    \item \textbf{GradientCOBRA}, which is a kernel-based aggregation method based on a distance-weighted consensus strategy. It combines multiple model outputs by measuring similarity in the prediction space and supports both internally trained and externally fitted predictive models.
+          
 \end{itemize}
 
 Overall, the project aims to provide a unified and extensible framework for studying, implementing, and evaluating clusterwise learning and aggregation-based predictive modeling methods. The framework is designed to support consistent benchmarking, reusable software components, and seamless integration of diverse aggregation strategies.
@@ -29,21 +29,21 @@ Overall, the project aims to provide a unified and extensible framework for stud
 
 The implementation and experimentation of aggregation methods and clusterwise predictive modeling techniques are often constrained by manual implementation and the lack of reusable, modular, and extensible software frameworks. This project addresses the following key problems:
 
-\begin{itemize}
-\item \textbf{Lack of Unified Architecture for Aggregation Methods:}
-Existing aggregation methods often share similar computational principles, such as prediction aggregation, distance computation, kernel weighting, optimization, and consensus strategies. However, they are commonly implemented as separate systems. The absence of a unified architecture makes it difficult to compare, extend, and integrate multiple aggregation techniques within the same framework.
-
-
-\item \textbf{Limited Modularity and Extensibility:} 
-Existing implementations of aggregation-based methods may not provide sufficient modularity and flexibility for deeper experimentation. When core components are tightly coupled, researchers may face difficulties in replacing base estimators, distance functions, normalization techniques, optimization procedures, or kernel functions. As a result, extending the framework to support new aggregation approaches or externally trained predictive models can require significant modification of the original implementation.
-
-\item \textbf{Complexity of Kernel-Based Consensus Aggregation:} 
-Kernel-based aggregation methods involve several interrelated processing stages, including data splitting, estimator training, prediction normalization, distance computation, kernel weighting, bandwidth optimization, loss evaluation, and final aggregation. Without a well-organized modular pipeline, managing these stages within a reusable and maintainable software structure becomes complex.
-
-\item \textbf{Difficulty in Handling Heterogeneous Data Distributions:} 
-A single traditional predictive model may be unable to adequately represent the latent structures, local patterns, or heterogeneous distributions commonly present in real-world datasets. Clusterwise learning techniques, such as the KFC Procedure, address this limitation by combining clustering, local model fitting, and prediction aggregation. However, implementing such workflows within a reusable and extensible framework remains challenging.
-
-
+\begin{itemize}    
+    \item \textbf{Lack of Unified Architecture for Aggregation Methods:}
+          Existing aggregation methods often share similar computational principles, such as prediction aggregation, distance computation, kernel weighting, optimization, and consensus strategies. However, they are commonly implemented as separate systems. The absence of a unified architecture makes it difficult to compare, extend, and integrate multiple aggregation techniques within the same framework.
+          
+          
+    \item \textbf{Limited Modularity and Extensibility:} 
+          Existing implementations of aggregation-based methods may not provide sufficient modularity and flexibility for deeper experimentation. When core components are tightly coupled, researchers may face difficulties in replacing base estimators, distance functions, normalization techniques, optimization procedures, or kernel functions. As a result, extending the framework to support new aggregation approaches or externally trained predictive models can require significant modification of the original implementation.
+          
+    \item \textbf{Complexity of Kernel-Based Consensus Aggregation:} 
+          Kernel-based aggregation methods involve several interrelated processing stages, including data splitting, estimator training, prediction normalization, distance computation, kernel weighting, bandwidth optimization, loss evaluation, and final aggregation. Without a well-organized modular pipeline, managing these stages within a reusable and maintainable software structure becomes complex.
+          
+    \item \textbf{Difficulty in Handling Heterogeneous Data Distributions:} 
+          A single traditional predictive model may be unable to adequately represent the latent structures, local patterns, or heterogeneous distributions commonly present in real-world datasets. Clusterwise learning techniques, such as the KFC Procedure, address this limitation by combining clustering, local model fitting, and prediction aggregation. However, implementing such workflows within a reusable and extensible framework remains challenging.
+          
+          
 \end{itemize}
 
 To address these problems, this project focuses on packaging GradientCOBRA and KFCProcedure using a unified architecture that supports flexible experimentation, reusable components, maintainable implementation, and future extension.
@@ -54,12 +54,12 @@ The primary objective of this project is to design and develop modular Python li
 
 The project specifically aims to achieve the following objectives:
 
-\begin{itemize}
-\item \textbf{Study} and understand the theoretical concepts related to Combined Classifier, MixCOBRA, GradientCOBRA, and KFCProcedure.
-\item \textbf{Redesign} existing implementations into a unified architecture with reusable pipeline components for data splitting, base estimators, normalization, distance functions, kernel functions, optimization procedures, and aggregation strategies.
-\item \textbf{Implement} the GradientCOBRA and KFCProcedure frameworks while improving extensibility, maintainability, and reusability.
-\item \textbf{Evaluate} the models from each library on regression and classification tasks using simulated and real-world datasets.
-\item \textbf{Provide} practical examples, clear documentation, and a well-structured API design suitable for researchers and practitioners.
+\begin{itemize}    
+    \item \textbf{Study} and understand the theoretical concepts related to Combined Classifier, MixCOBRA, GradientCOBRA, and KFCProcedure.
+    \item \textbf{Redesign} existing implementations into a unified architecture with reusable pipeline components for data splitting, base estimators, normalization, distance functions, kernel functions, optimization procedures, and aggregation strategies.
+    \item \textbf{Implement} the GradientCOBRA and KFCProcedure frameworks while improving extensibility, maintainability, and reusability.
+    \item \textbf{Evaluate} the models from each library on regression and classification tasks using simulated and real-world datasets.
+    \item \textbf{Provide} practical examples, clear documentation, and a well-structured API design suitable for researchers and practitioners.
 \end{itemize}
 
 \section{Planning of Project}
@@ -67,9 +67,9 @@ The project specifically aims to achieve the following objectives:
 To complete the project within the internship period, I followed a structured planning approach. The project was divided into four main phases, with each phase focusing on a specific part of the development process. This planning helped maintain a clear workflow, manage time effectively, and track progress throughout the internship. The overall project schedule is illustrated in Figure~\ref{fig:timeline}, which presents the timeline of activities across the different phases.
 
 \begin{figure}[H]
-\centering
-\includegraphics[width=1\textwidth]{figures/timeline.png}
-\caption{Project implementation timeline}
-\label{fig:timeline}
+    \centering
+    \includegraphics[width=1\textwidth]{figures/timeline.png}
+    \caption{Project implementation timeline}
+    \label{fig:timeline}
 \end{figure}
 

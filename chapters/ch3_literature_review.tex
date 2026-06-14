@@ -13,21 +13,13 @@ Early foundational work includes Bagging, which applies bootstrap sampling to co
 
 Subsequent studies further formalized ensemble behavior. Ali et al. emphasized the role of diversity in determining ensemble effectiveness \cite{ali2015}, while Wood et al. provided a unified theoretical framework linking ensemble error to joint error distributions \cite{wood2023}. Extensions to deep learning settings and automated ensemble construction were investigated in \cite{yang2023,cagnini2023}.
 
-\subsubsection*{Synthesis}
-
-Ensemble learning establishes a general framework for improving predictive performance through aggregation. However, early formulations remain largely conceptual and do not explicitly define systematic mechanisms for constructing or controlling model diversity. This limitation motivates structured ensemble designs, particularly homogeneous ensemble models.
-
 \subsection{Homogeneous Ensemble Models}
 
 Homogeneous ensemble models construct multiple base learners using a single learning algorithm while introducing diversity through variations in the training data. This design enables controlled exploration of model instability without altering the underlying hypothesis class.
 
 Bagging reduces variance by training independent models on bootstrap-resampled datasets and aggregating their predictions through averaging or voting \cite{breiman1996}. Key architectural components, such as out-of-bag estimation, provide built-in validation metrics during this parallel training workflow. This parallel strategy improves stability and effectively reduces overfitting, making it highly effective for high-variance base learners. However, Bagging offers limited improvement for high-bias models, demands increased memory footprint due to storage of multiple model replicas, and results in reduced overall interpretability.
 
-In contrast, Boosting constructs models sequentially, where each learner is trained to correct the errors of its predecessors by applying adaptive reweighting to misclassified observations under frameworks like exponential loss optimization \cite{freund1997}. This additive modeling process, regulated by learning rate control, converts weak learners into strong models and yields high predictive accuracy by effectively reducing bias. Despite its strengths, Boosting remains highly sensitive to noise and outliers, its strict sequential training flow limits parallelization capability, and it carries a higher risk of overfitting if hyperparameter tuning is sub-optimal.
-
-\subsubsection*{Synthesis}
-
-Homogeneous ensembles demonstrate that structured perturbation of data or training emphasis can improve predictive performance within a fixed hypothesis class. However, their reliance on a single model family limits flexibility in combining heterogeneous learning behaviors. This limitation motivates prediction-based aggregation methods, which operate directly in the prediction space to enable integration of diverse model types.
+In contrast, Boosting constructs models sequentially, where each learner is trained to correct the errors of its predecessors by applying adaptive reweighting to misclassified observations under frameworks like exponential loss optimization \cite{freund1997}. This additive modeling process, regulated by learning rate control, converts weak learners into strong models and yields high predictive accuracy by effectively reducing bias. Despite its strengths, Boosting remains highly sensitive to noise and outliers, its strict sequential training flow limits parallelization capability, and it carries a higher risk of overfitting if hyperparameter tuning is suboptimal.
 
 \subsection{Prediction-Based Aggregation}
 
@@ -39,9 +31,7 @@ This paradigm is closely related to stacking and meta-learning, where a higher-l
 
 While these strategies offer remarkable empirical performance and simple implementations, prediction-based aggregation typically relies on global combination rules that assume uniform model reliability across the entire input space. Consequently, they remain highly sensitive to correlated errors among base models and strictly require separate validation data to train stacking meta-learners without data leakage.
 
-\subsubsection*{Synthesis}
-
-Prediction-based aggregation extends ensemble learning to heterogeneous model spaces by operating on output representations rather than internal parameters. However, its reliance on global combination strategies restricts adaptability in non-stationary or locally varying data distributions. This limitation motivates consensus-based aggregation methods, which incorporate local agreement structures to enable adaptive, instance-level combination.
+In conclusion, prediction-based aggregation extends ensemble learning to heterogeneous model spaces by operating on output representations rather than internal parameters. However, its reliance on global combination strategies restricts adaptability in non-stationary or locally varying data distributions. This limitation motivates consensus-based aggregation methods, which incorporate local agreement structures to enable adaptive, instance-level combination.
 
 \section{Consensus-Based Aggregation Methods}
 
@@ -59,10 +49,6 @@ Prediction is then obtained via majority voting over the corresponding matched v
 
 This model-agnostic, theoretically consistent approach is unique in its ability to capture non-linear interactions within the prediction space. However, this formulation becomes impractical as the number of classifiers increases. Because of the strict unanimity constraint, the probability of exact agreement decreases exponentially, leading to sparse or empty consensus sets, severe instability in high dimensions, and a high vulnerability to weak individual models within the pool.
 
-\subsubsection*{Synthesis}
-
-This approach establishes the principle of prediction agreement as a selection criterion but lacks scalability in high-dimensional model spaces.
-
 % ---------------------------------------------------------
 \subsection{COBRA}
 
@@ -73,10 +59,6 @@ COBRA extends consensus learning to regression by replacing exact matching with 
 \]
 
 This non-parametric formulation preserves theoretical consistency and remains entirely flexible and model-independent. However, this relaxation introduces an acute sensitivity to the choice of $\varepsilon$, which directly controls the trade-off between bias and variance. Improper selection risks creating empty neighborhoods or overly broad matches, while the brute-force scanning of the prediction space makes it computationally expensive at inference time.
-
-\subsubsection*{Synthesis}
-
-COBRA generalizes discrete consensus into a non-parametric regression framework but remains dependent on rigid threshold selection in prediction space.
 
 % ---------------------------------------------------------
 \subsection{MixCOBRA}
@@ -125,9 +107,6 @@ where:
 
 By simultaneously considering proximity in both spaces, MixCOBRA improves robustness against poorly performing base estimators and enhances prediction stability in heterogeneous datasets. The additional input-space constraint reduces the risk of selecting observations that are prediction-consistent but structurally dissimilar. However, these benefits come at the cost of increased computational complexity and a larger hyperparameter search space, requiring careful tuning of multiple bandwidth parameters to achieve optimal performance.
 
-\subsubsection*{Synthesis}
-
-MixCOBRA improves adaptability by integrating dual-space information but remains constrained by manual threshold tuning and discontinuous neighborhood selection.
 
 % ---------------------------------------------------------
 \subsection{GradientCOBRA}
@@ -148,14 +127,7 @@ The weight vector $\mathbf{w}$ is optimized directly via gradient descent, enabl
 
 This differentiable aggregation yields smooth prediction boundaries, provides automatic parameter tuning, and drastically improves stability and adaptability over static variants. However, because it relies on exhaustive kernel evaluations over the full validation set, its inference-time computational cost increases significantly. Furthermore, performance remains highly sensitive to the base kernel configuration, and the non-convex optimization surface poses a risk of trapping gradient descent in local minima.
 
-\subsubsection*{Synthesis}
-
-GradientCOBRA replaces discrete consensus structures with differentiable weighting mechanisms, improving smoothness and adaptability. However, its computational cost increases significantly due to kernel evaluations over the full validation set.
-
-% =========================================================
-\subsubsection{Overall Synthesis}
-
-Consensus-based aggregation methods progressively refine the notion of agreement from exact matching to threshold-based selection and finally to continuous kernel weighting. This evolution reflects a transition from rigid neighborhood definitions to fully differentiable consensus models. Despite these improvements, all methods remain fundamentally dependent on post-hoc aggregation of fixed base estimators, motivating approaches that instead learn structured partitions of the input space prior to model fitting.
+The existing literature shows that consensus-based aggregation methods progressively refine the notion of agreement from exact matching to threshold-based selection and finally to continuous kernel weighting. This evolution reflects a transition from rigid neighborhood definitions to fully differentiable consensus models. Despite these improvements, all methods remain fundamentally dependent on post-hoc aggregation of fixed base estimators, motivating approaches that instead learn structured partitions of the input space prior to model fitting.
 
 \section{Clusterwise Supervised Learning}
 
@@ -171,9 +143,8 @@ Clusterwise learning mitigates these limitations by replacing instance-level ada
 
 This decomposition reduces global complexity by transforming a single learning task into multiple simpler subproblems. However, the use of hard cluster boundaries introduces discontinuities in the prediction function, particularly near decision borders where small perturbations in input may lead to different cluster assignments.
 
-\subsubsection*{Synthesis}
 
-Clusterwise learning improves modeling of heterogeneous data by introducing structured partitioning of the input space. However, classical approaches lack a unified mechanism for coordinating clustering, model training, and inference routing within a single optimized framework.
+In general, clusterwise learning improves modeling of heterogeneous data by introducing structured partitioning of the input space. However, classical approaches lack a unified mechanism for coordinating clustering, model training, and inference routing within a single optimized framework.
 
 % ---------------------------------------------------------
 \subsection{KFC Procedure}
@@ -198,14 +169,7 @@ Alternatively, soft routing strategies may assign weights to multiple clusters b
 
 The KFC framework handles highly heterogeneous data effectively and improves interpretability by explicitly linking predictions to localized regions of the input space. Nevertheless, its performance depends heavily on initial clustering quality, requires manual selection of the hyperparameter $K$, and hard-assignment boundaries still introduce predictive discontinuities at cluster edges.
 
-\subsubsection*{Synthesis}
-
-The KFC Procedure provides a structured implementation of clusterwise supervised learning by unifying clustering and local prediction within a single framework. Nevertheless, its effectiveness is constrained by sensitivity to clustering quality and the absence of a standardized software architecture for reusable implementation.
-
-% =========================================================
-\subsubsection{Overall Synthesis}
-
-Clusterwise supervised learning represents a paradigm shift from output-space consensus learning to input-space partitioning. While consensus-based methods adapt predictions dynamically using similarity in model outputs, clusterwise methods predefine structural regions in the feature space and learn specialized models within each region. Despite their effectiveness in handling heterogeneous data, these methods remain algorithmically fragmented, motivating the need for standardized, production-ready software implementations.
+Based on the reviewed literature, clusterwise supervised learning represents a paradigm shift from output-space consensus learning to input-space partitioning. While consensus-based methods adapt predictions dynamically using similarity in model outputs, clusterwise methods predefine structural regions in the feature space and learn specialized models within each region. Despite their effectiveness in handling heterogeneous data, these methods remain algorithmically fragmented, motivating the need for standardized, production-ready software implementations.
 
 \section{Software Engineering for Python Libraries}
 
@@ -223,9 +187,7 @@ Similarly, GradientCOBRA requires an architecture capable of handling validation
 
 Despite these requirements, existing implementations of advanced aggregation methods remain fragmented and lack standardized software design patterns. This limitation restricts reproducibility and prevents seamless integration into widely used machine learning pipelines.
 
-\subsubsection*{Synthesis}
-
-Effective implementation of advanced ensemble and clusterwise learning methods requires adherence to structured software engineering principles. However, the absence of unified, production-grade Python libraries for methods such as KFC and GradientCOBRA highlights a significant gap between theoretical development and practical deployment, motivating the need for standardized implementations.
+In conclusion, effective implementation of advanced ensemble and clusterwise learning methods requires adherence to structured software engineering principles. However, the absence of unified, production-grade Python libraries for methods such as KFC and GradientCOBRA highlights a significant gap between theoretical development and practical deployment, motivating the need for standardized implementations.
 
 
 
@@ -366,8 +328,6 @@ The key research gaps identified in this study are summarized as follows:
 
 
 \end{itemize}
-
-\subsubsection*{Synthesis}
 
 These gaps highlight a clear disconnect between theoretical advancements in localized ensemble learning and their practical deployment in software systems. This thesis addresses these limitations by developing standardized, modular, and production-ready Python libraries for GradientCOBRA and the KFC Procedure, enabling reproducibility, scalability, and integration into modern machine learning workflows.
 
