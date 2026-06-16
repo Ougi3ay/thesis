@@ -4,6 +4,10 @@
   // =========================================================
   "latex-workshop.latex.autoBuild.run": "onSave",
   "latex-workshop.latex.outDir": "%DIR%/build",
+
+  // Rebuild also when .sty files are saved
+  "latex-workshop.latex.autoBuild.onSave.files.ignore": [],
+
   // =========================================================
   // RECIPES  (ordered: fast dev → full publish)
   // =========================================================

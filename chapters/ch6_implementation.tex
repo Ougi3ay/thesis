@@ -123,21 +123,21 @@ The clusterwise learning subsystem forms the KFC core of the framework. It is re
                   >{\raggedright\arraybackslash}X
             }
             \toprule
-            \textbf{Component}       & \textbf{Role}                                                              \\
+            \textbf{Component} & \textbf{Role}                                                                    \\
             \midrule
-            Clustering     &
+            Clustering         &
             Implements divergence-based clustering using Bregman K-Means and registered divergence functions.     \\
 
-            Local learning &
+            Local learning     &
             Provides local predictive models and adapters for training cluster-specific models during the F-step. \\
 
-            Workflow step  &
+            Workflow step      &
             Defines the K-step, F-step, and C-step execution logic used in the clusterwise learning pipeline.     \\
 
-            Combiner       &
+            Combiner           &
             Implements final aggregation strategies for combining divergence-level prediction outputs.            \\
 
-            Factory        &
+            Factory            &
             Resolves divergences, local models, and combiners through registered component names.                 \\
             \bottomrule
       \end{tabularx}
@@ -160,16 +160,16 @@ The COBRA aggregation subsystem provides models and reusable components for pred
                   >{\raggedright\arraybackslash}X
             }
             \toprule
-            \textbf{Component}        & \textbf{Role}\\
+            \textbf{Component}        & \textbf{Role}                                                                                                                  \\
             \midrule
             GradientCOBRA             &
-            Provides regression aggregation based on prediction-space distances and kernel-weighted calibration targets. \\
+            Provides regression aggregation based on prediction-space distances and kernel-weighted calibration targets.                                               \\
 
             MixCOBRARegressor         &
-            Combines input-space and prediction-space distance information for regression aggregation.\\
+            Combines input-space and prediction-space distance information for regression aggregation.                                                                 \\
 
             CombinedClassifier        &
-            Provides classification aggregation by combining the predictions of multiple classification models.\\
+            Provides classification aggregation by combining the predictions of multiple classification models.                                                        \\
 
             Reusable COBRA components &
             Provide shared infrastructure for distances, kernels, losses, optimizers, splitters, normalizers, adapters, cross-validation, estimators, and aggregators. \\
@@ -1270,16 +1270,15 @@ The COBRA utilities support the construction and execution of COBRA-based aggreg
       \end{tabularx}
 \end{table}
 
+
 \section{Testing and Validation}
 \label{sec:testing_validation}
 
 The project includes an automated test suite under \textbf{tests/}. In the current implementation, the automated tests mainly cover the COBRA core components. Separate automated tests for the \KFCProcedure{} subsystem and the full end-to-end \KFCProcedure{} workflow are not yet included.
 
-
-
 \subsection{Test Suite Structure}
 
-The test suite is organized as follows:
+The test suite is organized as shown in Figure~\ref{fig:cobra_test_suite_structure}.
 
 \begin{figure}[H]
       \centering
@@ -1302,6 +1301,8 @@ The test suite is organized as follows:
       \caption{Test suite structure for COBRA components}
       \label{fig:cobra_test_suite_structure}
 \end{figure}
+
+Figure~\ref{fig:cobra_test_suite_structure} shows that the current automated test suite is organized around the COBRA module. The tests are separated by component type, including splitters, estimators, normalizers, distances, kernel adapters, kernels, losses, cross-validation, optimizers, and aggregators.
 
 \subsection{Covered Components}
 
@@ -1350,7 +1351,10 @@ The automated tests cover several COBRA components, as summarized in Table~\ref{
             Weighted mean, weighted vote, fallback behavior, NaN handling, batch aggregation, and empty-value checks.                                           \\
             \bottomrule
       \end{tabularx}
+
 \end{table}
+
+Table~\ref{tab:covered_cobra_test_components} shows that the current automated tests focus on the internal behavior of COBRA-related components. These tests help verify that the main building blocks used in the aggregation layer behave as expected.
 
 \subsection{Current Testing Gaps}
 
@@ -1370,36 +1374,31 @@ Although the automated tests cover several COBRA core components, some parts of 
             \midrule
             BregmanKMeans, divergence, and clustering &
             Separate automated tests for Bregman K-Means behavior and clustering under each supported divergence are not yet included. \\
-
             KStep, FStep, and CStep                   &
-            The individual KFC pipeline steps are not yet covered by independent component-level tests.                                \\
+            The individual KFC pipeline steps are not yet covered by independent component-level tests.                                  \\
 
             Full KFCProcedure workflow                &
-            End-to-end tests for complete KFCProcedure training and prediction are not yet included.                                   \\
+            End-to-end tests for complete KFCProcedure training and prediction are not yet included.                                     \\
 
             Regression and classification wrappers    &
-            Dedicated automated tests for KFCRegressor and KFCClassifier are not yet included.                                         \\
+            Dedicated automated tests for KFCRegressor and KFCClassifier are not yet included.                                           \\
 
             Notebook execution                        &
-            Experimental notebooks are not yet executed as part of an automated validation pipeline.                                   \\
+            Experimental notebooks are not yet executed as part of an automated validation pipeline.                                     \\
             \bottomrule
       \end{tabularx}
+
 \end{table}
 
-
-Therefore, the current testing coverage should be described as partial rather than complete. The repository includes automated tests for several COBRA core components, but it should not be presented as having full system-level testing unless additional end-to-end KFC tests are added in future work.
-
+Table~\ref{tab:current_testing_gaps} indicates that the current testing coverage should be described as partial rather than complete. The repository includes automated tests for several COBRA core components, but it should not be presented as having full system-level testing unless additional end-to-end KFC tests are added in future work.
 
 \subsection{Validation Through Notebooks}
 
 The project also uses experiment notebooks as a practical validation mechanism. These notebooks demonstrate regression and classification experiments using baseline models, COBRA-based models, and KFC configurations. However, notebook execution is not currently integrated into the automated pytest suite or continuous integration workflow.
 
-
 \subsection{Testing Summary}
 
-The implemented automated tests provide coverage for the COBRA core component layer. The KFC subsystem and full orchestration workflow are demonstrated in notebooks but are not yet covered by automated unit or integration tests in the repository.
-
-% ============================
+The implemented automated tests provide coverage for the COBRA core component layer, as shown in Figure~\ref{fig:cobra_test_suite_structure} and summarized in Table~\ref{tab:covered_cobra_test_components}. The KFC subsystem and full orchestration workflow are demonstrated in notebooks, but they are not yet covered by automated unit or integration tests in the repository, as summarized in Table~\ref{tab:current_testing_gaps}.
 
 \section{Documentation and CI/CD Pipeline}
 \label{sec:documentation_cicd}

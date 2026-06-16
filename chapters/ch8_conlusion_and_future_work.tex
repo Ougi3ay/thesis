@@ -46,6 +46,11 @@ The main contributions of this project are summarized as follows.
 
 Several limitations remain in the current work. These limitations are important because they define the scope of the empirical findings and guide future improvement of the package.
 
+\subsection{Dependence on Latent Cluster Structure}
+
+The performance of KFCProcedure depends on whether the dataset actually contains meaningful latent clusters and whether different clusters benefit from different local predictive models. If the data are relatively homogeneous or can already be modeled well by a single global estimator, the advantage of the clusterwise approach may be limited.
+
+
 \subsection{Limited Hyperparameter Exploration}
 
 The experiments use fixed divergence sets, fixed local models, and fixed numbers of clusters for \KFCProcedure{}. They do not conduct a systematic search over the number of clusters, divergence combinations, local learners, or aggregation methods. Therefore, the reported results represent the tested configurations only and should not be interpreted as the optimal performance of the framework.

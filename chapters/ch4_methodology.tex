@@ -511,7 +511,8 @@ where $D_X$ is the input-space distance, $D_Y$ is the prediction-space distance,
 \section{Design of the \KFCProcedure{} Clusterwise Framework}
 \label{sec:kfc_design}
 
-The \KFCProcedure{} library implements a clusterwise supervised learning framework. Its objective is to improve predictive modeling under heterogeneous data distributions by combining three methodological stages: divergence-based clustering, cluster-local model training, and final prediction aggregation.
+The \KFCProcedure{} framework is expected to be particularly suitable for datasets that satisfy two main assumptions. First, the input feature space should contain more than one latent cluster or subgroup, although the exact number of clusters is not assumed to be known in advance. Second, the predictive relationship within each cluster does not necessarily have to follow the same underlying model. In other words, different regions of the input space may be better represented by different local predictive functions. Under these conditions, a single global model may be insufficient, while a clusterwise learning strategy can decompose the problem into several local learning tasks and then combine their predictions through the C-step.
+
 
 The overall architecture of the framework is illustrated in Figure~\ref{fig:kfc_architecture}, which presents the interaction between clustering, local modeling, and combiner components.
 
@@ -797,7 +798,7 @@ Although detailed implementation is discussed in Chapter~\ref{ch:implementation}
 
 \subsection{Architectural Pattern Mapping}
 
-The frameworks are organized around interchangeable methodological components. Distances, kernels, losses, optimizers, divergences, local models, and combiners are treated as replaceable strategies. This design allows experiments to change one methodological component without changing the whole pipeline.
+The frameworks are organized around interchangeable methodological components. Distances, kernels, losses, optimizers, divergences, local models, and combiners are treated as replaceable strategies. This design allows experiments to change one methodological component without changing the whole pipeline. Table~\ref{tab:pattern_mapping} summarizes how the main software engineering design principles are connected to the machine learning objectives of the proposed frameworks.
 
 \begin{table}[H]
     \centering
@@ -847,12 +848,12 @@ The experiments are divided into two main task groups: classification and regres
 
 The experimental implementation was conducted using Python in a notebook-based environment. The datasets were retrieved using \textbf{kagglehub}, while data processing and numerical computation were performed using \textbf{pandas} and \textbf{numpy}. Exploratory analysis and visualization were supported by \textbf{matplotlib} and \textbf{seaborn}. Standard preprocessing tools, baseline models, data splitting functions, and evaluation metrics were provided by \textbf{scikit-learn}.
 
-The main framework components imported from the developed package were \textbf{KFCProcedure}, \textbf{KFCClassifier}, \textbf{KFCRegressor}, \textbf{GradientCOBRA}, \textbf{MixCOBRARegressor}, and \textbf{CombinedClassifier}. The experiment was designed to use the same evaluation logic across datasets in order to reduce repetition and improve reproducibility.
+The main framework components imported from the developed package were \textbf{KFCProcedure}, \textbf{KFCClassifier}, \textbf{KFCRegressor}, \textbf{GradientCOBRA}, \textbf{MixCOBRARegressor}, and \textbf{CombinedClassifier}. The experiment was designed to use the same evaluation logic across datasets in order to reduce repetition and improve reproducibility. Table~\ref{tab:software_environment_used_in_the_experiment} summarizes the main software environment used in the experiment.
 
 \begin{table}[H]
     \centering
     \caption{Software Environment Used in the Experiment}
-    \label{tab}
+    \label{tab:software_environment_used_in_the_experiment}
     \small
     \begin{tabular}{ll}
         \toprule
@@ -869,7 +870,7 @@ The main framework components imported from the developed package were \textbf{K
 
 \subsection{Benchmark Datasets}
 
-The experiment evaluates seven benchmark datasets: four classification datasets and three regression datasets. The datasets were selected to cover different prediction settings, including medical classification, financial decision classification, cyber security classification, biological regression, housing price regression, and wind turbine power prediction.
+The experiment evaluates seven benchmark datasets: four classification datasets and three regression datasets. The datasets were selected to cover different prediction settings, including medical classification, financial decision classification, cyber security classification, biological regression, housing price regression, and wind turbine power prediction. Table~\ref{tab:datasets_experiment} summarizes the datasets used in the experiment, including the task type, original dataset size, number of rows used, and number of features.
 
 \begin{table}[H]
     \centering
