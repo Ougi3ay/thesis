@@ -256,7 +256,7 @@ Recommended image usage:
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.8\textwidth]{figures/architectures/kfc.png}
-    \caption{KFC Procedure Architecture}
+    \caption{KFCProcedure Architecture}
     \label{fig:kfc_architecture}
 \end{figure}
 ```

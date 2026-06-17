@@ -11,7 +11,7 @@ This internship project focuses on the modular design and implementation of aggr
 The proposed system is designed as a modular framework in which prediction is performed through a sequence of processing stages. It consists of two main components:
 
 \begin{itemize}        
-    \item \textbf{KFC Procedure}, which organizes the clusterwise learning workflow into three main steps:
+    \item \textbf{KFCProcedure}, which organizes the clusterwise learning workflow into three main steps:
           \begin{enumerate}        
               \item \textbf{K-Step:} detection of latent cluster structures in the dataset using clustering methods.
               \item \textbf{F-Step:} training of cluster-specific predictive models within the identified clusters.
@@ -41,7 +41,7 @@ The implementation and experimentation of aggregation methods and clusterwise pr
           Kernel-based aggregation methods involve several interrelated processing stages, including data splitting, estimator training, prediction normalization, distance computation, kernel weighting, bandwidth optimization, loss evaluation, and final aggregation. Without a well-organized modular pipeline, managing these stages within a reusable and maintainable software structure becomes complex.
           
     \item \textbf{Difficulty in Handling Heterogeneous Data Distributions:} 
-          A single traditional predictive model may be unable to adequately represent the latent structures, local patterns, or heterogeneous distributions commonly present in real-world datasets. Clusterwise learning techniques, such as the KFC Procedure, address this limitation by combining clustering, local model fitting, and prediction aggregation. However, implementing such workflows within a reusable and extensible framework remains challenging. This motivates the use of KFCProcedure, which is particularly suitable for situations where the input feature space contains unknown latent clusters and where the underlying predictive model may differ from one cluster to another.
+          A single traditional predictive model may be unable to adequately represent the latent structures, local patterns, or heterogeneous distributions commonly present in real-world datasets. Clusterwise learning techniques, such as the KFCProcedure, address this limitation by combining clustering, local model fitting, and prediction aggregation. However, implementing such workflows within a reusable and extensible framework remains challenging. This motivates the use of KFCProcedure, which is particularly suitable for situations where the input feature space contains unknown latent clusters and where the underlying predictive model may differ from one cluster to another.
           
 \end{itemize}
 

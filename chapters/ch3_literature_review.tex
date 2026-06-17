@@ -147,7 +147,7 @@ This decomposition reduces global complexity by transforming a single learning t
 In general, clusterwise learning improves modeling of heterogeneous data by introducing structured partitioning of the input space. However, classical approaches lack a unified mechanism for coordinating clustering, model training, and inference routing within a single optimized framework.
 
 % ---------------------------------------------------------
-\subsection{KFC Procedure}
+\subsection{KFCProcedure}
 
 The KFC (K-Means Fitted Clusterwise) Procedure formalizes clusterwise supervised learning by integrating clustering and local modeling into a unified pipeline \cite{has2021kfc}. The method first applies $K$-means clustering to partition the input space into $K$ disjoint regions based on Euclidean distance:
 
@@ -181,7 +181,7 @@ To support complex ensemble and clusterwise learning systems, a modular architec
 
 Design principles such as encapsulation and the Open/Closed Principle further ensure that implementations remain stable while allowing extensibility. In particular, new base estimators, distance functions, or aggregation strategies can be integrated without altering existing system behavior.
 
-For clusterwise learning frameworks such as the KFC Procedure, software design must manage the interaction between unsupervised clustering and supervised local models. This requires internal routing mechanisms that assign query points to appropriate local estimators while preserving a consistent external interface.
+For clusterwise learning frameworks such as the KFCProcedure, software design must manage the interaction between unsupervised clustering and supervised local models. This requires internal routing mechanisms that assign query points to appropriate local estimators while preserving a consistent external interface.
 
 Similarly, GradientCOBRA requires an architecture capable of handling validation-based kernel computations and gradient-based optimization. Efficient implementation demands vectorized operations and structured memory management to reduce computational overhead during inference.
 
@@ -322,14 +322,14 @@ The key research gaps identified in this study are summarized as follows:
           
     \item \textbf{Lack of automated parameter optimization frameworks:} Threshold-based approaches, such as COBRA and MixCOBRA, require manual tuning of hyperparameters, which is computationally expensive and sensitive to dataset characteristics.
           
-    \item \textbf{Absence of standardized clusterwise learning libraries:} Although the KFC Procedure provides a structured clusterwise learning framework, there is no widely adopted production-grade implementation supporting reusable local expert modeling and routing mechanisms.
+    \item \textbf{Absence of standardized clusterwise learning libraries:} Although the KFCProcedure provides a structured clusterwise learning framework, there is no widely adopted production-grade implementation supporting reusable local expert modeling and routing mechanisms.
           
     \item \textbf{Limited practical deployment of GradientCOBRA:} Despite its continuous and differentiable formulation, GradientCOBRA lacks optimized implementations that support scalable kernel computation and efficient gradient-based optimization in large datasets.
           
           
 \end{itemize}
 
-These gaps highlight a clear disconnect between theoretical advancements in localized ensemble learning and their practical deployment in software systems. This thesis addresses these limitations by developing standardized, modular, and production-ready Python libraries for GradientCOBRA and the KFC Procedure, enabling reproducibility, scalability, and integration into modern machine learning workflows.
+These gaps highlight a clear disconnect between theoretical advancements in localized ensemble learning and their practical deployment in software systems. This thesis addresses these limitations by developing standardized, modular, and production-ready Python libraries for GradientCOBRA and the KFCProcedure, enabling reproducibility, scalability, and integration into modern machine learning workflows.
 
 % =========================================================
 \section{Chapter Summary}
@@ -338,7 +338,7 @@ This chapter reviewed the evolution of ensemble learning and clusterwise predict
 
 Subsequently, prediction-based aggregation extended ensemble learning to heterogeneous model spaces by operating in the prediction domain, while consensus-based methods introduced localized agreement mechanisms to improve adaptability. This progression led to kernel-based and continuous formulations such as COBRA, MixCOBRA, and GradientCOBRA, which refine consensus learning through increasingly flexible distance and weighting strategies.
 
-Finally, clusterwise supervised learning was examined as an alternative paradigm that partitions the input space prior to model training, with the KFC Procedure providing a structured implementation of this concept. The chapter also discussed the importance of software engineering principles in transforming theoretical machine learning methods into reusable, modular, and extensible Python libraries.
+Finally, clusterwise supervised learning was examined as an alternative paradigm that partitions the input space prior to model training, with the KFCProcedure providing a structured implementation of this concept. The chapter also discussed the importance of software engineering principles in transforming theoretical machine learning methods into reusable, modular, and extensible Python libraries.
 
 Overall, the reviewed literature shows that although ensemble aggregation and clusterwise learning methods have advanced significantly, their practical implementation remains limited by fragmented codebases, computational cost, parameter sensitivity, and lack of standardized software design. These limitations motivate the development of unified, production-ready Python libraries for advanced aggregation and clusterwise learning methods.
 
