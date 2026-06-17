@@ -1,74 +1,102 @@
 # Thesis LaTeX Project
 
-This repository contains the LaTeX source files for a thesis report. The project is organized into separate folders for front matter, chapters, figures, metadata, references, style configuration, and Docker-based development.
+## Python Libraries for Clusterwise Predictive Models: KFCProcedure and GradientCOBRA
 
-The thesis should be compiled from `main.tex`.
+This repository contains the LaTeX source code for the engineering degree thesis titled:
+
+**Python Libraries for Clusterwise Predictive Models: KFCProcedure and GradientCOBRA**
+
+The thesis presents the design, implementation, and experimental evaluation of a Python-based machine learning framework for clusterwise supervised learning and COBRA-based ensemble aggregation.
+
+The project was developed as part of an internship at the **Research and Data Analytics Laboratory (ReDA Lab)**, Department of Applied Mathematics and Statistics, Institute of Technology of Cambodia.
 
 ---
 
-## Project Structure
+## Purpose of This Repository
+
+This repository is mainly prepared for readers, advisors, committee members, and future students who want to understand, review, or compile the thesis document.
+
+It contains:
+
+* The complete LaTeX source code of the thesis.
+* Front matter pages, including cover pages, acknowledgement, abstracts, and abbreviations.
+* Eight main thesis chapters.
+* Figures used in the thesis.
+* Bibliography entries.
+* Custom thesis style configuration.
+* A compiled PDF output inside the build folder.
+
+The main document should be compiled from:
 
 ```text
-.
-├── .devcontainer
-│   ├── Dockerfile
-│   └── devcontainer.json
-├── .gitignore
-├── .vscode
-│   └── settings.json
+main.tex
+```
+
+---
+
+## Audience
+
+This README is intended for:
+
+* Thesis advisors and reviewers who want to inspect the LaTeX source.
+* Committee members who want to understand the structure of the thesis.
+* Students who want to learn how the thesis document is organized.
+* Future maintainers who may update the thesis content, figures, references, or formatting.
+
+---
+
+## Thesis Overview
+
+The thesis focuses on two connected machine learning components:
+
+### 1. KFCProcedure
+
+KFCProcedure is a clusterwise supervised learning framework. It follows three main steps:
+
+* **K-step:** Detects cluster structures in the input data using divergence-based clustering.
+* **F-step:** Trains local predictive models inside each cluster.
+* **C-step:** Combines the predictions from different divergence-based configurations.
+
+### 2. GradientCOBRA Subsystem
+
+The GradientCOBRA subsystem provides COBRA-based aggregation methods, including:
+
+* **GradientCOBRA** for regression aggregation.
+* **MixCOBRARegressor** for mixed input-space and prediction-space regression aggregation.
+* **CombinedClassifier** for classification aggregation.
+
+Together, these components form a reusable and modular Python framework for studying clusterwise learning and prediction aggregation.
+
+---
+
+## Thesis Chapter Structure
+
+The thesis is organized into eight chapters.
+
+| Chapter   | Title                               | Purpose                                                                                        |
+| --------- | ----------------------------------- | ---------------------------------------------------------------------------------------------- |
+| Chapter 1 | Introduction                        | Presents the internship, organization, and project context.                                    |
+| Chapter 2 | Presentation of Project             | Describes the project problem, objectives, and planning.                                       |
+| Chapter 3 | Literature Review                   | Reviews ensemble learning, COBRA methods, GradientCOBRA, and KFCProcedure.                     |
+| Chapter 4 | Methodology                         | Explains the research methodology, system design, and experimental design.                     |
+| Chapter 5 | Tools and Technologies              | Presents the programming tools, libraries, and platforms used in the project.                  |
+| Chapter 6 | Implementation                      | Describes the source-code architecture, modules, software design, testing, and CI/CD workflow. |
+| Chapter 7 | Experimental Results and Discussion | Reports classification and regression experiment results.                                      |
+| Chapter 8 | Conclusion and Future Work          | Summarizes the work, limitations, contributions, and future improvements.                      |
+
+---
+
+## Repository Structure
+
+```text
+thesis/
+├── main.tex
+├── thesisstyle.sty
+├── references.bib
 ├── README.md
-├── build
-│   ├── chapters
-│   ├── frontmatter
-│   ├── main.aux
-│   ├── main.bbl
-│   ├── main.bcf
-│   ├── main.blg
-│   ├── main.lof
-│   ├── main.log
-│   ├── main.lot
-│   ├── main.pdf
-│   ├── main.run.xml
-│   ├── main.synctex.gz
-│   ├── main.toc
-│   └── settings
-├── chapters
-│   ├── ch1_introduction.tex
-│   ├── ch2_presentation_of_the_project.tex
-│   ├── ch3_literature_review.tex
-│   ├── ch4_methodology.tex
-│   ├── ch5_tool_and_technology.tex
-│   ├── ch6_implementation.tex
-│   ├── ch7_result_and_discussion.tex
-│   └── ch8_coulusion_and_future_work.tex
-├── figures
-│   ├── architectures
-│   │   ├── gradientcobra.png
-│   │   ├── hybrid.png
-│   │   └── kfc.png
-│   ├── schools
-│   │   ├── ams.png
-│   │   ├── itc.png
-│   │   ├── kasegro.png
-│   │   ├── moey.png
-│   │   ├── reda-logo.png
-│   │   ├── reda-organization.png
-│   │   ├── schedule.png
-│   │   └── watermark.png
-│   ├── timeline.png
-│   └── tools
-│       ├── Jupyter.png
-│       ├── git.png
-│       ├── joblib.png
-│       ├── logo.png
-│       ├── matplotlib.png
-│       ├── numpy.png
-│       ├── python.png
-│       ├── scipy.png
-│       ├── seaborn.png
-│       ├── sklearn.png
-│       └── vscode.png
-├── frontmatter
+├── settings/
+│   └── metadata.tex
+├── frontmatter/
 │   ├── 01_cover.tex
 │   ├── 02a_sub_cover_kh.tex
 │   ├── 02b_sub_cover_fr.tex
@@ -77,77 +105,71 @@ The thesis should be compiled from `main.tex`.
 │   ├── 04a_abstract_kh.tex
 │   ├── 04b_abstract_en.tex
 │   └── 05_abreviation.tex
-├── indent.log
-├── main.tex
-├── references.bib
-├── settings
-│   └── metadata.tex
-└── thesisstyle.sty
+├── chapters/
+│   ├── ch1_introduction.tex
+│   ├── ch2_presentation_of_the_project.tex
+│   ├── ch3_literature_review.tex
+│   ├── ch4_methodology.tex
+│   ├── ch5_tool_and_technology.tex
+│   ├── ch6_implementation.tex
+│   ├── ch7_experimental_and_discussion.tex
+│   └── ch8_conlusion_and_future_work.tex
+├── appendices/
+│   └── appendix_a.tex
+├── figures/
+│   ├── architectures/
+│   ├── schools/
+│   ├── tools/
+│   └── timeline.png
+├── build/
+│   └── main.pdf
+├── .vscode/
+└── .devcontainer/
 ```
 
 ---
 
-## Main Files
+## Main Files Explained
 
 ### `main.tex`
 
-This is the main entry point of the thesis. It loads the thesis style, metadata, references, front matter, chapters, table of contents, list of figures, list of tables, and bibliography.
+This is the main entry point of the thesis. It loads the style file, metadata, front matter, chapters, references, and appendices.
 
-Compile this file only:
-
-```bash
-xelatex main.tex
-```
-
-Do not compile chapter files directly.
+Compile only this file. Do not compile individual chapter files directly.
 
 ---
 
 ### `thesisstyle.sty`
 
-This file controls the formatting of the thesis, including:
+This file controls the thesis formatting, including:
 
-* Fonts
-* Khmer language support
-* Page margins
-* Line spacing
-* Paragraph indentation
-* Chapter and section title styles
-* Table of contents formatting
-* Figure and table numbering
-* Bibliography style
-* Hyperlinks
-* Watermark
-* Safe text wrapping commands
-* List formatting
+* Page margins.
+* Fonts.
+* Khmer language support.
+* Chapter and section styles.
+* Table of contents style.
+* Figure and table numbering.
+* Bibliography formatting.
+* Hyperlink formatting.
+* Watermark and page layout.
 
-Do not write thesis content in this file. Only formatting and style settings should be placed here.
+Content should not be written directly inside this file unless it is related to formatting.
 
 ---
 
 ### `settings/metadata.tex`
 
-This file stores reusable thesis information such as:
+This file stores reusable thesis information, such as:
 
-* Student name
-* Student email
-* Thesis title
-* Academic year
-* Department name
-* Supervisor name
-* Advisor name
-* Enterprise name
-* Khmer, English, and French cover text
+* Student name.
+* Thesis title.
+* Academic year.
+* Department name.
+* Advisor name.
+* Enterprise name.
+* Cover-page text in Khmer, English, and French.
 
-Use this file for values that appear in multiple cover pages.
-
-Example:
-
-```latex
-\newcommand{\StudentNameEN}{POV Ougi}
-\newcommand{\StudentNameKH}{ពៅ អ៊ូជី}
-\newcommand{\StudentEmail}{e20201146@itc.edu.kh}
-```
+When the title, name, date, or advisor information needs to be updated, this file should be checked first.
 
 ---
 
@@ -155,18 +177,7 @@ Example:
 
 This file stores all bibliography entries in BibTeX format.
 
-Example citation entry:
-
-```bibtex
-@article{breiman1996,
-  author  = {Breiman, Leo},
-  title   = {Bagging Predictors},
-  journal = {Machine Learning},
-  year    = {1996}
-}
-```
-
-Use the citation key in the thesis:
+Citations in the thesis should use citation keys from this file, for example:
 
 ```latex
 \cite{breiman1996}
@@ -176,227 +187,90 @@ Use the citation key in the thesis:
 
 ## Front Matter
 
-The `frontmatter/` folder contains pages before Chapter 1.
+The `frontmatter/` folder contains all pages before Chapter 1.
 
-| File                     | Purpose               |
-| ------------------------ | --------------------- |
-| `01_cover.tex`           | Main cover page       |
-| `02a_sub_cover_kh.tex`   | Khmer sub-cover       |
-| `02b_sub_cover_fr.tex`   | French sub-cover      |
-| `02c_sub_cover_en.tex`   | English sub-cover     |
-| `03_acknowledgement.tex` | Acknowledgement       |
-| `04a_abstract_kh.tex`    | Khmer abstract        |
-| `04b_abstract_en.tex`    | English abstract      |
-| `05_abreviation.tex`     | List of abbreviations |
-
-For unnumbered front matter chapters, use this structure:
-
-```latex
-\clearpage
-\phantomsection
-\chapter*{ACKNOWLEDGEMENT}
-\addcontentsline{toc}{chapter}{ACKNOWLEDGEMENT}
-```
-
-For Khmer titles, use:
-
-```latex
-\clearpage
-\phantomsection
-\chapter*{\texorpdfstring{{\khmoul អត្ថបទសង្ខេប}}{អត្ថបទសង្ខេប}}
-\addcontentsline{toc}{chapter}{អត្ថបទសង្ខេប}
-```
-
-The command `\texorpdfstring` prevents PDF bookmark errors when using custom Khmer fonts.
-
----
-
-## Chapters
-
-The `chapters/` folder contains the main thesis chapters.
-
-| File                                  | Chapter                                |
-| ------------------------------------- | -------------------------------------- |
-| `ch1_introduction.tex`                | Chapter 1: Introduction                |
-| `ch2_presentation_of_the_project.tex` | Chapter 2: Presentation of the Project |
-| `ch3_literature_review.tex`           | Chapter 3: Literature Review           |
-| `ch4_methodology.tex`                 | Chapter 4: Methodology                 |
-| `ch5_tool_and_technology.tex`         | Chapter 5: Tools and Technology        |
-| `ch6_implementation.tex`              | Chapter 6: Implementation              |
-| `ch7_result_and_discussion.tex`       | Chapter 7: Results and Discussion      |
-| `ch8_coulusion_and_future_work.tex`   | Chapter 8: Conclusion and Future Work  |
-
-Recommended correction:
-
-```text
-ch8_coulusion_and_future_work.tex
-```
-
-should be renamed to:
-
-```text
-ch8_conclusion_and_future_work.tex
-```
-
-If renamed, update the corresponding line in `main.tex`:
-
-```latex
-\input{chapters/ch8_conclusion_and_future_work}
-```
+| File                     | Description            |
+| ------------------------ | ---------------------- |
+| `01_cover.tex`           | Main cover page        |
+| `02a_sub_cover_kh.tex`   | Khmer sub-cover page   |
+| `02b_sub_cover_fr.tex`   | French sub-cover page  |
+| `02c_sub_cover_en.tex`   | English sub-cover page |
+| `03_acknowledgement.tex` | Acknowledgement        |
+| `04a_abstract_kh.tex`    | Khmer abstract         |
+| `04b_abstract_en.tex`    | English abstract       |
+| `05_abreviation.tex`     | List of abbreviations  |
 
 ---
 
 ## Figures
 
-All images should be stored inside the `figures/` folder.
+All figures are stored in the `figures/` folder.
 
-Recommended image usage:
+The figure folders are organized by purpose:
+
+```text
+figures/
+├── architectures/
+├── schools/
+├── tools/
+└── timeline.png
+```
+
+Use the following LaTeX pattern to insert a figure:
 
 ```latex
-\begin{figure}[htbp]
+\begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{figures/architectures/kfc.png}
-    \caption{KFCProcedure Architecture}
+    \includegraphics[width=0.75\textwidth]{figures/architectures/kfc.png}
+    \caption{KFCProcedure Clusterwise Framework Architecture}
     \label{fig:kfc_architecture}
 \end{figure}
 ```
 
-Use clear labels:
+When referring to the figure in the thesis text, use:
 
 ```latex
-\label{fig:kfc_architecture}
-\label{fig:gradientcobra_architecture}
-\label{tab:classification_summary}
-\label{ch:methodology}
-```
-
-Refer to them using:
-
-```latex
-Figure~\ref{fig:kfc_architecture}
-Table~\ref{tab:classification_summary}
-Chapter~\ref{ch:methodology}
-```
-
-After adding or changing labels, compile at least two times.
-
----
-
-## Khmer Text
-
-This project uses XeLaTeX with `polyglossia` and Khmer fonts.
-
-Use this environment for Khmer paragraphs:
-
-```latex
-\begin{khmer}
-អត្ថបទជាភាសាខ្មែរ...
-\end{khmer}
-```
-
-Use `\khmoul` for Khmer Moul titles:
-
-```latex
-{\khmoul អត្ថបទសង្ខេប}
-```
-
-Avoid using `\emph{}` with Khmer Moul text because Khmer OS Muol Light may not support italic style.
-
-Instead of:
-
-```latex
-\emph{{\khmoul ឈ្មោះ}}
-```
-
-use:
-
-```latex
-{\khmoul ឈ្មោះ}
+As shown in Figure~\ref{fig:kfc_architecture}, ...
 ```
 
 ---
 
-## Safe Code and Technical Names
+## Tables
 
-For long technical names, class names, function names, package names, and file paths, use the safe commands defined in `thesisstyle.sty`.
+Tables should be written using clear captions and labels.
 
-Use:
+Example:
 
 ```latex
-\code{KFCProcedure}
-\code{GradientCOBRA}
-\code{MixCOBRARegressor}
-\code{CombinedClassifier}
-\code{WeightedMeanAggregator}
-\code{register_all_sklearn_models()}
-\filepath{kfc_procedure/core/kfc.py}
+\begin{table}[H]
+    \centering
+    \caption{Software Environment Used in the Experiment}
+    \label{tab:software_environment}
+    \begin{tabular}{ll}
+        \toprule
+        Component & Version \\
+        \midrule
+        Python & 3.12.13 \\
+        NumPy & 2.0.2 \\
+        Scikit-learn & 1.6.1 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
 ```
 
-Avoid writing long technical names directly inside `\texttt{...}` too often, because long code words may overflow outside the page margin.
-
-Recommended:
+When referring to the table in the thesis text, use:
 
 ```latex
-The repository implements the \code{KFCProcedure} framework.
-```
-
-Not recommended:
-
-```latex
-The repository implements the \texttt{KFCProcedure} framework.
+Table~\ref{tab:software_environment} summarizes the software environment.
 ```
 
 ---
 
-## Bibliography
+## How to Compile the Thesis
 
-This project uses `biblatex` with `biber`.
+This thesis uses custom fonts and Khmer text support, so it should be compiled with **XeLaTeX**.
 
-The bibliography configuration should be placed in `thesisstyle.sty`:
-
-```latex
-\RequirePackage[
-    backend=biber,
-    style=ieee,
-    sorting=none
-]{biblatex}
-
-\DefineBibliographyStrings{english}{%
-    bibliography = {REFERENCES},
-    references = {REFERENCES},
-}
-```
-
-The bibliography file is loaded in `main.tex`:
-
-```latex
-\addbibresource{references.bib}
-```
-
-At the end of `main.tex`, print the bibliography using:
-
-```latex
-\clearpage
-\phantomsection
-\printbibliography[heading=bibintoc]
-```
-
-Do not use old BibTeX commands:
-
-```latex
-\bibliographystyle{plain}
-\bibliography{references}
-```
-
-Those commands are not valid when using `biblatex`.
-
----
-
-## Build Instructions
-
-This thesis should be compiled with XeLaTeX and Biber.
-
-Recommended build sequence:
+From the thesis folder, run:
 
 ```bash
 xelatex main.tex
@@ -405,9 +279,19 @@ xelatex main.tex
 xelatex main.tex
 ```
 
-The first XeLaTeX pass creates auxiliary files. Biber generates the bibliography. The final XeLaTeX passes update citations, references, table of contents, list of figures, and list of tables.
+Alternatively, if `latexmk` is installed, run:
 
-The generated PDF will be created in the `build/` folder if using the configured VS Code LaTeX Workshop setup:
+```bash
+latexmk -xelatex main.tex
+```
+
+The final PDF will be generated as:
+
+```text
+main.pdf
+```
+
+In this project, a compiled version is also available inside:
 
 ```text
 build/main.pdf
@@ -415,505 +299,99 @@ build/main.pdf
 
 ---
 
-## Run with Docker Dev Container
+## Recommended Editing Workflow
 
-This project includes a Docker Dev Container setup under:
+For normal thesis editing, follow this workflow:
 
-```text
-.devcontainer/
-├── Dockerfile
-└── devcontainer.json
-```
+1. Edit only the relevant chapter file inside `chapters/`.
+2. Update figures inside `figures/` if needed.
+3. Add or update references in `references.bib`.
+4. Compile from `main.tex`.
+5. Check the generated PDF.
+6. Verify the table of contents, list of figures, list of tables, and references.
 
-The Dev Container provides a consistent LaTeX environment for building the thesis. It is useful when working across different computers or when avoiding local LaTeX installation problems.
-
----
-
-### Requirements
-
-Before using the Dev Container, install:
-
-* Docker Desktop
-* Visual Studio Code
-* VS Code extension: Dev Containers
-* VS Code extension: LaTeX Workshop
+Avoid editing the `build/` folder manually because it contains generated files.
 
 ---
 
-### Open the Project in Dev Container
+## Citation and Reference Notes
 
-1. Open the thesis folder in VS Code.
-2. Press:
+All academic sources should be added to `references.bib`.
 
-```text
-Ctrl + Shift + P
-```
-
-On macOS:
-
-```text
-Cmd + Shift + P
-```
-
-3. Search for:
-
-```text
-Dev Containers: Reopen in Container
-```
-
-4. Wait for Docker to build the container.
-5. After the container opens, compile `main.tex`.
-
----
-
-### Build the Thesis inside the Container
-
-Run:
-
-```bash
-xelatex -interaction=nonstopmode -synctex=1 -shell-escape -output-directory=build main.tex
-biber --input-directory=build --output-directory=build main
-xelatex -interaction=nonstopmode -synctex=1 -shell-escape -output-directory=build main.tex
-xelatex -interaction=nonstopmode -synctex=1 -shell-escape -output-directory=build main.tex
-```
-
-The final PDF will be generated at:
-
-```text
-build/main.pdf
-```
-
----
-
-### Clean Build inside the Container
-
-If the table of contents, list of figures, list of tables, or references are not updating correctly, do a clean rebuild:
-
-```bash
-rm -rf build
-mkdir build
-
-xelatex -interaction=nonstopmode -synctex=1 -shell-escape -output-directory=build main.tex
-biber --input-directory=build --output-directory=build main
-xelatex -interaction=nonstopmode -synctex=1 -shell-escape -output-directory=build main.tex
-xelatex -interaction=nonstopmode -synctex=1 -shell-escape -output-directory=build main.tex
-```
-
----
-
-## VS Code LaTeX Workshop Recipe
-
-Recommended `.vscode/settings.json`:
-
-```json
-{
-  "latex-workshop.latex.autoBuild.run": "onSave",
-  "latex-workshop.latex.outDir": "%DIR%/build",
-
-  "latex-workshop.latex.recipe.default": "xelatex + biber + xelatex x2",
-
-  "latex-workshop.latex.recipes": [
-    {
-      "name": "xelatex + biber + xelatex x2",
-      "tools": [
-        "xelatex",
-        "biber",
-        "xelatex",
-        "xelatex"
-      ]
-    },
-    {
-      "name": "xelatex fast",
-      "tools": [
-        "xelatex"
-      ]
-    }
-  ],
-
-  "latex-workshop.latex.tools": [
-    {
-      "name": "xelatex",
-      "command": "xelatex",
-      "args": [
-        "-interaction=nonstopmode",
-        "-synctex=1",
-        "-shell-escape",
-        "-output-directory=%OUTDIR%",
-        "%DOC%"
-      ],
-      "env": {}
-    },
-    {
-      "name": "biber",
-      "command": "biber",
-      "args": [
-        "--input-directory=%OUTDIR%",
-        "--output-directory=%OUTDIR%",
-        "%DOCFILE%"
-      ],
-      "env": {}
-    }
-  ],
-
-  "latex-workshop.view.pdf.viewer": "tab",
-  "latex-workshop.synctex.afterBuild.enabled": true,
-
-  "latex-workshop.latex.autoClean.run": "never",
-
-  "latex-workshop.intellisense.package.enabled": true,
-  "latex-workshop.latex.autoBuild.interval": 1000,
-
-  "[latex]": {
-    "editor.formatOnSave": false,
-    "editor.wordWrap": "on",
-    "editor.rulers": [100]
-  }
-}
-```
-
----
-
-## Important Build Notes
-
-Do not automatically delete these files during normal writing:
-
-```text
-main.aux
-main.toc
-main.lof
-main.lot
-main.bbl
-main.bcf
-```
-
-They are needed for:
-
-* Table of contents
-* List of figures
-* List of tables
-* Cross-references
-* Citations
-* Bibliography
-
-If the table of contents or references are missing, compile the thesis two or three times.
-
----
-
-## Recommended `.gitignore`
-
-Use `.gitignore` to avoid committing generated LaTeX build files.
-
-Recommended:
-
-```gitignore
-# Build output
-build/
-
-# LaTeX temporary files
-*.aux
-*.bbl
-*.bcf
-*.blg
-*.fdb_latexmk
-*.fls
-*.lof
-*.log
-*.lot
-*.out
-*.run.xml
-*.synctex.gz
-*.toc
-*.xdv
-*.nav
-*.snm
-*.vrb
-
-# Latexindent
-indent.log
-
-# OS files
-.DS_Store
-Thumbs.db
-```
-
-If you want to keep the final generated PDF in Git, do not ignore:
-
-```text
-build/main.pdf
-```
-
-Otherwise, it is cleaner to generate the PDF locally and keep `build/` ignored.
-
----
-
-## Common Problems and Fixes
-
-### Table of contents is empty
-
-Compile multiple times:
-
-```bash
-xelatex main.tex
-biber main
-xelatex main.tex
-xelatex main.tex
-```
-
-Also make sure the build process is not deleting:
-
-```text
-main.toc
-main.lof
-main.lot
-main.aux
-main.bbl
-```
-
----
-
-### Citation is undefined
-
-Check that the citation key exists in `references.bib`.
-
-Example:
+Use citation commands such as:
 
 ```latex
-\cite{breiman1996}
+\cite{key}
 ```
 
-The key `breiman1996` must exist in `references.bib`.
+or
 
-Then compile using the full XeLaTeX and Biber recipe.
+```latex
+\parencite{key}
+```
+
+depending on the citation style configured in the thesis style file.
+
+After adding new references, run `biber` and compile the thesis again.
 
 ---
 
-### `\bibliographystyle` invalid for `biblatex`
+## Notes for Reviewers
 
-This error happens when old BibTeX commands are used with `biblatex`.
+This LaTeX project is organized so that thesis content and formatting are separated.
 
-Remove:
+* Thesis content is mainly in `frontmatter/`, `chapters/`, and `appendices/`.
+* Formatting is mainly controlled by `thesisstyle.sty`.
+* Reusable metadata is stored in `settings/metadata.tex`.
+* References are stored in `references.bib`.
+* Figures are stored in `figures/`.
 
-```latex
-\bibliographystyle{plain}
-\bibliography{references}
-```
-
-Use:
-
-```latex
-\printbibliography[heading=bibintoc]
-```
+This structure makes it easier to review, update, and maintain the thesis document.
 
 ---
 
-### Figure reference is undefined
+## Notes for Future Students
 
-Make sure the figure has a label:
+This project can be used as a reference structure for organizing a thesis in LaTeX. The main idea is to keep each part of the thesis in a separate file instead of writing everything in one long document.
 
-```latex
-\label{fig:schedule}
-```
+A good practice is to keep:
 
-Then refer to it using:
+* One main file for compilation.
+* One style file for formatting.
+* One metadata file for repeated information.
+* One folder for front matter.
+* One folder for chapters.
+* One folder for figures.
+* One bibliography file for references.
 
-```latex
-Figure~\ref{fig:schedule}
-```
-
-Compile at least twice.
-
----
-
-### Chapter reference is undefined
-
-Make sure the chapter has a label:
-
-```latex
-\chapter{METHODOLOGY}
-\label{ch:methodology}
-```
-
-Then refer to it using:
-
-```latex
-Chapter~\ref{ch:methodology}
-```
+This makes the thesis easier to edit, review, debug, and compile.
 
 ---
 
-### TikZ error: unknown function `of`
+## Project Information
 
-This happens when TikZ positioning is used without loading the correct library.
-
-Make sure this is included in `thesisstyle.sty` after `\RequirePackage{tikz}`:
-
-```latex
-\usetikzlibrary{
-    positioning,
-    arrows.meta,
-    shapes.geometric,
-    shapes.misc,
-    calc,
-    fit
-}
-```
+**Institution:** Institute of Technology of Cambodia
+**Department:** Department of Applied Mathematics and Statistics
+**Laboratory:** Research and Data Analytics Laboratory
+**Thesis Topic:** Python Libraries for Clusterwise Predictive Models KFCProcedure and GradientCOBRA
+**Specialty:** Data Science
+**Academic Year:** 2025–2026
 
 ---
 
-### Text overflows outside the page margin
+## Final Output
 
-Use the safe code command:
+The expected final output of this repository is a complete thesis PDF containing:
 
-```latex
-\code{VeryLongTechnicalClassName}
-```
+* Cover pages in Khmer, French, and English.
+* Acknowledgement.
+* Khmer and English abstracts.
+* Table of contents.
+* List of figures.
+* List of tables.
+* List of abbreviations.
+* Eight main chapters.
+* References.
+* Appendices.
 
-For file paths:
-
-```latex
-\filepath{kfc_procedure/core/kfc.py}
-```
-
-Also check for accidental characters such as:
-
-```text
-““
-```
-
-or unnecessary manual quotation marks.
-
----
-
-### Cover page goes to a second page
-
-The cover content is too tall. Use `\singlespacing` inside the cover page and reduce large vertical spacing.
-
-Example:
-
-```latex
-\begingroup
-\singlespacing
-
-% cover content here
-
-\endgroup
-```
-
-Avoid too many large spacing commands such as:
-
-```latex
-\vspace{1cm}
-```
-
-Use smaller spacing:
-
-```latex
-\vspace{0.25cm}
-\vspace{0.35cm}
-```
-
----
-
-### Khmer font error
-
-If you see an error saying the main font does not contain Khmer script, make sure `\khmerfont` is defined in `thesisstyle.sty`:
-
-```latex
-\newfontfamily\khmerfont[
-    Script=Khmer,
-    Scale=1.0
-]{Khmer OS Battambang}
-```
-
-Then Khmer paragraphs can use:
-
-```latex
-\begin{khmer}
-អត្ថបទជាភាសាខ្មែរ...
-\end{khmer}
-```
-
----
-
-### Khmer Moul italic warning
-
-If you see:
-
-```text
-Font shape KhmerOSMuolLight italic undefined
-```
-
-remove `\emph{}` from Khmer Moul text.
-
-Instead of:
-
-```latex
-\emph{{\khmoul ឈ្មោះ}}
-```
-
-use:
-
-```latex
-{\khmoul ឈ្មោះ}
-```
-
----
-
-## Writing Guidelines
-
-Use clear academic writing throughout the thesis.
-
-Recommended paragraph structure:
-
-1. Start with the main idea.
-2. Explain the evidence, implementation, or result.
-3. Link the idea back to the thesis objective.
-
-Avoid unsupported claims. If something is not visible in the repository, source code, notebooks, or experiment results, state it clearly.
-
-Use:
-
-```text
-Not observable from the provided materials.
-```
-
-instead of guessing.
-
----
-
-## Suggested Writing Workflow
-
-1. Edit one chapter at a time.
-2. Compile using the fast XeLaTeX recipe for quick layout checks.
-3. Use the full XeLaTeX + Biber recipe before final review.
-4. Check the generated PDF for:
-
-   * Page overflow
-   * Figure placement
-   * Missing references
-   * Missing citations
-   * Table of contents entries
-   * List of figures
-   * List of tables
-5. Before submission, delete the old `build/` folder and run a full clean build.
-
----
-
-## Final Submission Checklist
-
-Before submitting the thesis, check:
-
-* [ ] Cover pages are correct in Khmer, French, and English.
-* [ ] Student name is correct.
-* [ ] Supervisor and advisor names are correct.
-* [ ] Academic year is correct.
-* [ ] Table of contents is complete.
-* [ ] List of figures is complete.
-* [ ] List of tables is complete.
-* [ ] All figures have captions and labels.
-* [ ] All tables have captions and labels.
-* [ ] All citations appear correctly.
-* [ ] References section appears as `REFERENCES`.
-* [ ] No important LaTeX errors remain.
-* [ ] PDF is generated from a clean full build.
-* [ ] Final PDF is reviewed page by page before submission.
+The PDF should be checked carefully before submission to ensure that formatting, page numbering, figures, tables, citations, and references are correct.
