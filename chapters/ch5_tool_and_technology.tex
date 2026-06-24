@@ -1,6 +1,6 @@
 \chapter{TOOLS AND TECHNOLOGIES}
 
-This chapter presents the main tools, libraries, and technologies used in the development and implementation of the proposed \KFCProcedure{} and \GradientCOBRA{} frameworks. The system was implemented in Python and relied on several scientific computing, machine learning, visualization, and development tools to support data processing, model training, aggregation, evaluation, experimentation, and reproducibility.
+\hs This chapter presents the main tools, libraries, and technologies used in the development and implementation of the proposed \KFCProcedure{} and \GradientCOBRA{} frameworks. The system was implemented in Python and relied on several scientific computing, machine learning, visualization, and development tools to support data processing, model training, aggregation, evaluation, experimentation, and reproducibility.
 
 \section{Programming Language}
 
@@ -11,11 +11,11 @@ This chapter presents the main tools, libraries, and technologies used in the de
     \label{fig:python}
 \end{figure}
 
-As shown in Figure~\ref{fig:python}, the entire system was implemented using Python, which is widely used in machine learning research due to its simplicity, readability, and extensive ecosystem of scientific libraries. Python provides strong support for numerical computation, data manipulation, and machine learning model development, making it suitable for implementing both the \KFCProcedure{} and \GradientCOBRA{} frameworks.
+\hs As shown in Figure~\ref{fig:python}, the entire system was implemented using Python, which is widely used in machine learning research due to its simplicity, readability, and extensive ecosystem of scientific libraries. Python provides strong support for numerical computation, data manipulation, and machine learning model development, making it suitable for implementing both the \KFCProcedure{} and \GradientCOBRA{} frameworks.
 
 \section{Machine Learning and Scientific Computing Libraries}
 
-The proposed system was implemented using a set of machine learning and scientific computing libraries in Python. These libraries provided the fundamental building blocks for data processing, model development, optimization, and evaluation in both the \KFCProcedure{} and \GradientCOBRA{} frameworks. Each library played a specific role in ensuring computational efficiency, modularity, and scalability of the system.
+\hs The proposed system was implemented using a set of machine learning and scientific computing libraries in Python. These libraries provided the fundamental building blocks for data processing, model development, optimization, and evaluation in both the \KFCProcedure{} and \GradientCOBRA{} frameworks. Each library played a specific role in ensuring computational efficiency, modularity, and scalability of the system.
 
 \subsection{NumPy}
 
@@ -26,7 +26,7 @@ The proposed system was implemented using a set of machine learning and scientif
     \label{fig:numpy}
 \end{figure}
 
-As shown in Figure~\ref{fig:numpy}, NumPy was used as the core numerical computing library in the system. It provides efficient support for multidimensional arrays, linear algebra operations, and vectorized computations. In the proposed frameworks, NumPy was primarily used for handling dataset representations, prediction matrices, distance computations, and mathematical transformations required in both clustering and aggregation processes.
+\hs As shown in Figure~\ref{fig:numpy}, NumPy was used as the core numerical computing library in the system. It provides efficient support for multidimensional arrays, linear algebra operations, and vectorized computations. In the proposed frameworks, NumPy was primarily used for handling dataset representations, prediction matrices, distance computations, and mathematical transformations required in both clustering and aggregation processes.
 
 \subsection{Scikit-learn}
 
@@ -37,7 +37,7 @@ As shown in Figure~\ref{fig:numpy}, NumPy was used as the core numerical computi
     \label{fig:sklearn}
 \end{figure}
 
-As shown in Figure~\ref{fig:sklearn}, Scikit-learn was used as the primary machine learning library for implementing base estimators, preprocessing utilities, and evaluation metrics. It provides a wide range of regression and classification models that can be integrated into both the \KFCProcedure{} and \GradientCOBRA{} frameworks. Additionally, it supports data splitting, scaling, and performance evaluation, which are essential for experimental validation.
+\hs As shown in Figure~\ref{fig:sklearn}, Scikit-learn was used as the primary machine learning library for implementing base estimators, preprocessing utilities, and evaluation metrics. It provides a wide range of regression and classification models that can be integrated into both the \KFCProcedure{} and \GradientCOBRA{} frameworks. Additionally, it supports data splitting, scaling, and performance evaluation, which are essential for experimental validation.
 
 \subsection{SciPy}
 
@@ -48,7 +48,7 @@ As shown in Figure~\ref{fig:sklearn}, Scikit-learn was used as the primary machi
     \label{fig:scipy}
 \end{figure}
 
-As shown in Figure~\ref{fig:scipy}, SciPy was used for advanced mathematical operations and optimization-related computations. It supports statistical functions, numerical integration, and optimization routines that are useful in the \GradientCOBRA{} framework, particularly in kernel transformations and loss-related computations.
+\hs As shown in Figure~\ref{fig:scipy}, SciPy was used for advanced mathematical operations and optimization-related computations. It supports statistical functions, numerical integration, and optimization routines that are useful in the \GradientCOBRA{} framework, particularly in kernel transformations and loss-related computations.
 
 \subsection{Joblib}
 
@@ -59,15 +59,15 @@ As shown in Figure~\ref{fig:scipy}, SciPy was used for advanced mathematical ope
     \label{fig:joblib}
 \end{figure}
 
-As shown in Figure~\ref{fig:joblib}, Joblib was used for model persistence and efficient computation through parallel processing. In the proposed system, it supported saving trained models and improving execution efficiency when handling multiple estimators or clusterwise models in \KFCProcedure{}.
+\hs As shown in Figure~\ref{fig:joblib}, Joblib was used for model persistence and efficient computation through parallel processing. In the proposed system, it supported saving trained models and improving execution efficiency when handling multiple estimators or clusterwise models in \KFCProcedure{}.
 
 \subsection{Summary of Machine Learning and Scientific Computing Libraries}
 
-Overall, these libraries formed the computational backbone of the proposed system. NumPy provided numerical efficiency, Scikit-learn enabled machine learning modeling, SciPy supported mathematical optimization, and Joblib enhanced performance and scalability. The integration of these libraries ensured that both \KFCProcedure{} and \GradientCOBRA{} could be implemented in a modular, efficient, and reproducible manner.
+\hs Overall, these libraries formed the computational backbone of the proposed system. NumPy provided numerical efficiency, Scikit-learn enabled machine learning modeling, SciPy supported mathematical optimization, and Joblib enhanced performance and scalability. The integration of these libraries ensured that both \KFCProcedure{} and \GradientCOBRA{} could be implemented in a modular, efficient, and reproducible manner.
 
 \section{Development Environment}
 
-The development environment defined the software tools and platforms used to implement, test, and execute the proposed \KFCProcedure{} and \GradientCOBRA{} frameworks. A well-structured development environment was essential for ensuring reproducibility, efficient debugging, and smooth experimentation during model development. In this study, the system was developed using Python-based tools combined with modern code editors and notebook environments.
+\hs The development environment defined the software tools and platforms used to implement, test, and execute the proposed \KFCProcedure{} and \GradientCOBRA{} frameworks. A well-structured development environment was essential for ensuring reproducibility, efficient debugging, and smooth experimentation during model development. In this study, the system was developed using Python-based tools combined with modern code editors and notebook environments.
 
 The primary development environment included an integrated development environment for code writing and debugging, as well as an interactive notebook interface for experimentation and visualization. These tools supported iterative development, allowing rapid testing of clustering methods, predictive models, and optimization strategies. In addition, version control tools were used to manage code changes and maintain project consistency throughout development.
 
@@ -130,11 +130,11 @@ Overall, the development environment provided a practical and flexible setup for
 
 \subsection{Kaggle}
 
-As shown in Figure~\ref{fig:kaggle}, Kaggle was used as the main source of public benchmark datasets for the experimental evaluation. The datasets used in the classification and regression experiments were retrieved from Kaggle and processed within the experimental workflow. In this study, Kaggle supported reproducibility by providing publicly available datasets with clear dataset identifiers. These datasets were used to evaluate the proposed \KFCProcedure{} and \GradientCOBRA{} frameworks across different supervised learning tasks, including binary classification, multiclass classification, and regression.
+\hs As shown in Figure~\ref{fig:kaggle}, Kaggle was used as the main source of public benchmark datasets for the experimental evaluation. The datasets used in the classification and regression experiments were retrieved from Kaggle and processed within the experimental workflow. In this study, Kaggle supported reproducibility by providing publicly available datasets with clear dataset identifiers. These datasets were used to evaluate the proposed \KFCProcedure{} and \GradientCOBRA{} frameworks across different supervised learning tasks, including binary classification, multiclass classification, and regression.
 
 \section{Visualization Tools}
 
-Visualization tools were used in the proposed system to analyze, interpret, and present experimental results in a clear and meaningful way. Since both \KFCProcedure{} and \GradientCOBRA{} generated numerical outputs such as predictions, errors, and performance metrics, visualization was essential for understanding model behavior and comparing results across different configurations.
+\hs Visualization tools were used in the proposed system to analyze, interpret, and present experimental results in a clear and meaningful way. Since both \KFCProcedure{} and \GradientCOBRA{} generated numerical outputs such as predictions, errors, and performance metrics, visualization was essential for understanding model behavior and comparing results across different configurations.
 
 The visualization process mainly focused on displaying model performance, error trends, and comparative analysis between different predictive approaches. These visual representations helped identify patterns such as convergence behavior in optimization, differences between predicted and actual values, and overall model stability. In addition, visualization played a key role in evaluating the effectiveness of clustering and aggregation mechanisms used in the proposed frameworks.
 
@@ -147,7 +147,7 @@ The visualization process mainly focused on displaying model performance, error 
     \label{fig:matplotlib}
 \end{figure}
 
-As shown in Figure~\ref{fig:matplotlib}, Matplotlib was used as the primary visualization library for creating static figures such as line plots, scatter plots, and bar charts. In this study, it supported the visualization of evaluation metrics, prediction results, error trends, and performance comparisons between \KFCProcedure{}, \GradientCOBRA{}, and baseline models.
+\hs As shown in Figure~\ref{fig:matplotlib}, Matplotlib was used as the primary visualization library for creating static figures such as line plots, scatter plots, and bar charts. In this study, it supported the visualization of evaluation metrics, prediction results, error trends, and performance comparisons between \KFCProcedure{}, \GradientCOBRA{}, and baseline models.
 
 \subsection{Seaborn}
 
@@ -158,8 +158,8 @@ As shown in Figure~\ref{fig:matplotlib}, Matplotlib was used as the primary visu
     \label{fig:seaborn}
 \end{figure}
 
-As shown in Figure~\ref{fig:seaborn}, Seaborn was used for statistical data visualization. It provides high-level functions for creating informative plots such as heatmaps, distribution plots, and correlation visualizations. In this study, Seaborn supported the analysis of relationships between variables and helped present model behavior across different experimental settings.
+\hs As shown in Figure~\ref{fig:seaborn}, Seaborn was used for statistical data visualization. It provides high-level functions for creating informative plots such as heatmaps, distribution plots, and correlation visualizations. In this study, Seaborn supported the analysis of relationships between variables and helped present model behavior across different experimental settings.
 
 \subsection{Summary of Visualization Tools}
 
-Overall, visualization tools played an important role in interpreting experimental results and validating the performance of the proposed frameworks. Matplotlib provided flexible plotting capabilities for performance metrics and prediction analysis, while Seaborn enhanced statistical analysis through high-level visualization functions. Together, these tools supported a clear and comprehensive understanding of model behavior and experimental outcomes.
+\hs Overall, visualization tools played an important role in interpreting experimental results and validating the performance of the proposed frameworks. Matplotlib provided flexible plotting capabilities for performance metrics and prediction analysis, while Seaborn enhanced statistical analysis through high-level visualization functions. Together, these tools supported a clear and comprehensive understanding of model behavior and experimental outcomes.

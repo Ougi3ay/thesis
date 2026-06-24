@@ -3,12 +3,12 @@
 \chapter{CONCLUSION AND FUTURE WORK}
 \label{ch:conclusion_future_work}
 
-This chapter concludes the study on \KFCProcedure{} and \GradientCOBRA{} for clusterwise predictive modeling and COBRA-based ensemble aggregation. It summarizes the implemented framework, the empirical findings obtained from the experimental workflow, the main limitations of the current work, and realistic directions for future improvement.
+\hs This chapter concludes the study on \KFCProcedure{} and \GradientCOBRA{} for clusterwise predictive modeling and COBRA-based ensemble aggregation. It summarizes the implemented framework, the empirical findings obtained from the experimental workflow, the main limitations of the current work, and realistic directions for future improvement.
 
 \section{Conclusion}
 \label{sec:conclusion}
 
-This thesis presented the design, implementation, and empirical evaluation of \textbf{kfc\_procedure}, a Python-based machine learning package that integrates clusterwise supervised learning with COBRA-based ensemble aggregation. The framework was developed to support research experiments on heterogeneous datasets, where a single global model may not always be sufficient to represent different underlying data patterns.
+\hs This thesis presented the design, implementation, and empirical evaluation of \textbf{kfc\_procedure}, a Python-based machine learning package that integrates clusterwise supervised learning with COBRA-based ensemble aggregation. The framework was developed to support research experiments on heterogeneous datasets, where a single global model may not always be sufficient to represent different underlying data patterns.
 
 The \KFCProcedure{} component is organized around three main stages. The K-step performs divergence-based clustering using Bregman K-Means under several divergence choices, including Squared Euclidean, Generalized Kullback--Leibler, Itakura--Saito, and Logistic divergences where applicable. The F-step trains local predictive models within the clusters produced by each divergence. The C-step aggregates the divergence-level predictions using configurable combiners, including standard aggregation strategies and COBRA-based aggregation mechanisms.
 
@@ -25,7 +25,7 @@ Overall, the thesis demonstrates the feasibility of implementing a modular resea
 \section{Main Contributions}
 \label{sec:main_contributions}
 
-The main contributions of this project are summarized as follows.
+\hs The main contributions of this project are summarized as follows.
 
 \begin{enumerate}
 \item \textbf{Unified KFCProcedure implementation.} The project implements a configurable KFC pipeline composed of divergence-based clustering, clusterwise local model training, and prediction aggregation.
@@ -44,93 +44,93 @@ The main contributions of this project are summarized as follows.
 \section{Limitations}
 \label{sec:limitations}
 
-Several limitations remain in the current work. These limitations are important because they define the scope of the empirical findings and guide future improvement of the package.
+\hs Several limitations remain in the current work. These limitations are important because they define the scope of the empirical findings and guide future improvement of the package.
 
 \subsection{Dependence on Latent Cluster Structure}
 
-The performance of KFCProcedure depends on whether the dataset actually contains meaningful latent clusters and whether different clusters benefit from different local predictive models. If the data are relatively homogeneous or can already be modeled well by a single global estimator, the advantage of the clusterwise approach may be limited.
+\hs The performance of KFCProcedure depends on whether the dataset actually contains meaningful latent clusters and whether different clusters benefit from different local predictive models. If the data are relatively homogeneous or can already be modeled well by a single global estimator, the advantage of the clusterwise approach may be limited.
 
 
 \subsection{Limited Hyperparameter Exploration}
 
-The experiments use fixed divergence sets, fixed local models, and fixed numbers of clusters for \KFCProcedure{}. They do not conduct a systematic search over the number of clusters, divergence combinations, local learners, or aggregation methods. Therefore, the reported results represent the tested configurations only and should not be interpreted as the optimal performance of the framework.
+\hs The experiments use fixed divergence sets, fixed local models, and fixed numbers of clusters for \KFCProcedure{}. They do not conduct a systematic search over the number of clusters, divergence combinations, local learners, or aggregation methods. Therefore, the reported results represent the tested configurations only and should not be interpreted as the optimal performance of the framework.
 
 \subsection{Absence of Formal Ablation Studies}
 
-The experiments compare complete models but do not isolate the contribution of each individual KFC component. The effect of each divergence, the contribution of clusterwise local modeling, and the influence of each C-step combiner are not separately quantified. A stronger empirical analysis would evaluate these components independently.
+\hs The experiments compare complete models but do not isolate the contribution of each individual KFC component. The effect of each divergence, the contribution of clusterwise local modeling, and the influence of each C-step combiner are not separately quantified. A stronger empirical analysis would evaluate these components independently.
 
 \subsection{Repeated Holdout Rather Than Full Cross-Validation}
 
-The evaluation uses repeated train--test splitting across five random seeds. This provides more stability than a single train--test split, but it is not equivalent to full cross-validation. In addition, no statistical significance tests are reported. As a result, small differences between models should be interpreted descriptively rather than as definitive evidence of superiority.
+\hs The evaluation uses repeated train--test splitting across five random seeds. This provides more stability than a single train--test split, but it is not equivalent to full cross-validation. In addition, no statistical significance tests are reported. As a result, small differences between models should be interpreted descriptively rather than as definitive evidence of superiority.
 
 \subsection{Large-Dataset Sampling Strategy}
 
-For large datasets, the experiment uses the first 5,000 observations to reduce computation time. This strategy is practical for implementation testing, but it may introduce ordering bias if the original dataset has temporal, categorical, or structural ordering. A randomized or stratified sampling strategy would provide a more representative experimental subset.
+\hs For large datasets, the experiment uses the first 5,000 observations to reduce computation time. This strategy is practical for implementation testing, but it may introduce ordering bias if the original dataset has temporal, categorical, or structural ordering. A randomized or stratified sampling strategy would provide a more representative experimental subset.
 
 \subsection{Metric Suitability}
 
-The Wind Turbine regression experiment reports extremely large MAPE values because the target variable contains values near zero. This shows that MAPE is not always appropriate for all regression targets. For this dataset, RMSE and $R^2$ provide more interpretable performance summaries.
+\hs The Wind Turbine regression experiment reports extremely large MAPE values because the target variable contains values near zero. This shows that MAPE is not always appropriate for all regression targets. For this dataset, RMSE and $R^2$ provide more interpretable performance summaries.
 
 \subsection{Scalability and Computational Cost}
 
-The current implementation can be computationally expensive because it may require multiple divergence-specific clustering runs, several local model training processes, and COBRA-based prediction-space distance computations. The experiments demonstrate execution on selected datasets and sampled subsets, but they do not include a formal scalability benchmark.
+\hs The current implementation can be computationally expensive because it may require multiple divergence-specific clustering runs, several local model training processes, and COBRA-based prediction-space distance computations. The experiments demonstrate execution on selected datasets and sampled subsets, but they do not include a formal scalability benchmark.
 
 \subsection{Limited Automated Testing for the Full KFC Pipeline}
 
-The current automated tests mainly cover several COBRA core components. Full end-to-end testing for the \KFCProcedure{} pipeline, including K-step clustering, F-step local model training, C-step aggregation, and complete regression and classification workflows, remains limited. This should be improved to support future package development.
+\hs The current automated tests mainly cover several COBRA core components. Full end-to-end testing for the \KFCProcedure{} pipeline, including K-step clustering, F-step local model training, C-step aggregation, and complete regression and classification workflows, remains limited. This should be improved to support future package development.
 
 \subsection{Incomplete Evaluation of KFC-MixCOBRA Integration}
 
-Although \textbf{MixCOBRARegressor} is implemented and evaluated as a standalone COBRA-based regression model, its full integration as a C-step combiner inside \textbf{KFCRegressor} is not fully evaluated in the final experimental results. The reported KFC regression experiments focus on the \textbf{KFCRegressor-GradientCOBRA} configuration. Therefore, the behavior of \textbf{KFCRegressor-MixCOBRA} remains an open implementation and evaluation task for future work.
+\hs Although \textbf{MixCOBRARegressor} is implemented and evaluated as a standalone COBRA-based regression model, its full integration as a C-step combiner inside \textbf{KFCRegressor} is not fully evaluated in the final experimental results. The reported KFC regression experiments focus on the \textbf{KFCRegressor-GradientCOBRA} configuration. Therefore, the behavior of \textbf{KFCRegressor-MixCOBRA} remains an open implementation and evaluation task for future work.
 
 \section{Future Work}
 \label{sec:future_work}
 
-Future work should focus on practical improvements that extend the current implementation and experimental workflow. Since the present study has already implemented the main \KFCProcedure{} and COBRA-based components, future development should strengthen the existing framework rather than introduce a completely different research direction.
+\hs Future work should focus on practical improvements that extend the current implementation and experimental workflow. Since the present study has already implemented the main \KFCProcedure{} and COBRA-based components, future development should strengthen the existing framework rather than introduce a completely different research direction.
 
 \subsection{Systematic Selection of KFC Configurations}
 
-The current experiments use fixed values for the number of clusters, selected divergences, local learning models, and C-step combiners. Future work should introduce a more systematic configuration-selection process for \KFCProcedure{}. This may include evaluating several values of \textbf{n\_clusters}, comparing different divergence subsets, and testing alternative local models under the same experimental conditions. Such an extension would help determine whether the observed results are caused by the general framework design or by the specific configurations used in the current experiment.
+\hs The current experiments use fixed values for the number of clusters, selected divergences, local learning models, and C-step combiners. Future work should introduce a more systematic configuration-selection process for \KFCProcedure{}. This may include evaluating several values of \textbf{n\_clusters}, comparing different divergence subsets, and testing alternative local models under the same experimental conditions. Such an extension would help determine whether the observed results are caused by the general framework design or by the specific configurations used in the current experiment.
 
 \subsection{Component-Level Ablation Experiments}
 
-A realistic next step is to conduct ablation experiments on the main components of the framework. For example, future experiments could evaluate one divergence at a time, compare global learning against clusterwise local learning, and test different C-step aggregation strategies separately. This would help identify which part of the \KFCProcedure{} pipeline contributes most to the final prediction performance. These ablation studies would also make the interpretation of the framework clearer and more scientifically grounded.
+\hs A realistic next step is to conduct ablation experiments on the main components of the framework. For example, future experiments could evaluate one divergence at a time, compare global learning against clusterwise local learning, and test different C-step aggregation strategies separately. This would help identify which part of the \KFCProcedure{} pipeline contributes most to the final prediction performance. These ablation studies would also make the interpretation of the framework clearer and more scientifically grounded.
 
 \subsection{Improved Evaluation Protocol}
 
-The current evaluation uses repeated train--test splitting over five random seeds. Although this provides more stability than a single split, future work should extend the evaluation protocol by adding cross-validation or repeated cross-validation where computationally feasible. Confidence intervals or statistical significance tests could also be added to determine whether small differences between models are meaningful. This would make the empirical comparison more reliable, especially when model performances are close to one another.
+\hs The current evaluation uses repeated train--test splitting over five random seeds. Although this provides more stability than a single split, future work should extend the evaluation protocol by adding cross-validation or repeated cross-validation where computationally feasible. Confidence intervals or statistical significance tests could also be added to determine whether small differences between models are meaningful. This would make the empirical comparison more reliable, especially when model performances are close to one another.
 
 \subsection{Improved Sampling Strategy for Large Datasets}
 
-For large datasets, the current experiment uses the first 5,000 observations to reduce computational cost. Future work should replace this deterministic selection with randomized sampling or stratified sampling, depending on the task. This would reduce the risk of ordering bias and provide a more representative subset of the original dataset. For regression tasks, sampling could preserve the target distribution, while for classification tasks, stratified sampling could preserve class proportions.
+\hs For large datasets, the current experiment uses the first 5,000 observations to reduce computational cost. Future work should replace this deterministic selection with randomized sampling or stratified sampling, depending on the task. This would reduce the risk of ordering bias and provide a more representative subset of the original dataset. For regression tasks, sampling could preserve the target distribution, while for classification tasks, stratified sampling could preserve class proportions.
 
 \subsection{Dataset-Specific Metric Selection}
 
-The Wind Turbine experiment shows that MAPE can become unstable when the target variable contains values close to zero. Future work should define evaluation metrics based on the characteristics of each dataset instead of applying the same metric set to all regression problems. For example, RMSE and $R^2$ may be more appropriate for targets that include zero or near-zero values, while MAPE may be kept only for datasets where the target values are strictly positive and sufficiently far from zero.
+\hs The Wind Turbine experiment shows that MAPE can become unstable when the target variable contains values close to zero. Future work should define evaluation metrics based on the characteristics of each dataset instead of applying the same metric set to all regression problems. For example, RMSE and $R^2$ may be more appropriate for targets that include zero or near-zero values, while MAPE may be kept only for datasets where the target values are strictly positive and sufficiently far from zero.
 
 \subsection{Computational Efficiency Improvements}
 
-The current framework can be computationally expensive because it may involve multiple divergence-based clustering runs, several local models, and COBRA-based prediction-space distance computations. Future implementation work should therefore focus on efficiency improvements. Practical improvements may include parallel training of divergence-specific local models, caching of intermediate prediction matrices, memory-efficient distance computation, and optional batch-wise prediction for larger datasets. These improvements would make the package more usable for larger experiments without changing the main methodology.
+\hs The current framework can be computationally expensive because it may involve multiple divergence-based clustering runs, several local models, and COBRA-based prediction-space distance computations. Future implementation work should therefore focus on efficiency improvements. Practical improvements may include parallel training of divergence-specific local models, caching of intermediate prediction matrices, memory-efficient distance computation, and optional batch-wise prediction for larger datasets. These improvements would make the package more usable for larger experiments without changing the main methodology.
 
 \subsection{Expanded Automated Testing}
 
-Future work should extend automated testing to the full \KFCProcedure{} pipeline. Additional tests should cover Bregman divergence behavior, K-step clustering, F-step local model training, C-step aggregation, and complete end-to-end regression and classification workflows. This would improve confidence in the package and reduce the risk of errors when new divergences, estimators, or combiners are added.
+\hs Future work should extend automated testing to the full \KFCProcedure{} pipeline. Additional tests should cover Bregman divergence behavior, K-step clustering, F-step local model training, C-step aggregation, and complete end-to-end regression and classification workflows. This would improve confidence in the package and reduce the risk of errors when new divergences, estimators, or combiners are added.
 
 \subsection{Reusable Benchmarking Workflow}
 
-The experimental workflow should be converted into a more reusable benchmarking structure. Instead of keeping all experiments in a single workflow, future work could separate dataset loading, preprocessing, model configuration, training, evaluation, and result-table generation into reusable scripts or modules. This would make it easier to rerun experiments, compare future package versions, and reproduce results under the same settings.
+\hs The experimental workflow should be converted into a more reusable benchmarking structure. Instead of keeping all experiments in a single workflow, future work could separate dataset loading, preprocessing, model configuration, training, evaluation, and result-table generation into reusable scripts or modules. This would make it easier to rerun experiments, compare future package versions, and reproduce results under the same settings.
 
 \subsection{Improved Documentation and Usage Examples}
 
-Future work should also improve the documentation of the package. The current project includes basic documentation and examples, but additional tutorials would make the framework easier to use. Useful documentation improvements include examples for classification, regression, custom divergence selection, custom local models, and COBRA-based combiners. Clear documentation would help future users understand how to configure the framework correctly and how to interpret its outputs.
+\hs Future work should also improve the documentation of the package. The current project includes basic documentation and examples, but additional tutorials would make the framework easier to use. Useful documentation improvements include examples for classification, regression, custom divergence selection, custom local models, and COBRA-based combiners. Clear documentation would help future users understand how to configure the framework correctly and how to interpret its outputs.
 
 \subsection{Completion of KFC-MixCOBRA Integration}
 
-A practical future improvement is to complete and evaluate the integration of \textbf{MixCOBRARegressor} as a C-step combiner inside \textbf{KFCRegressor}. Since MixCOBRA combines input-space and prediction-space information, its integration with the KFC pipeline could provide an additional aggregation strategy beyond \textbf{GradientCOBRA}. Future experiments should implement the \textbf{KFCRegressor-MixCOBRA} configuration consistently across all regression datasets, include it in the repeated evaluation tables, and compare its behavior with standalone \textbf{MixCOBRARegressor}, standalone \textbf{GradientCOBRA}, and \textbf{KFCRegressor-GradientCOBRA}.
+\hs A practical future improvement is to complete and evaluate the integration of \textbf{MixCOBRARegressor} as a C-step combiner inside \textbf{KFCRegressor}. Since MixCOBRA combines input-space and prediction-space information, its integration with the KFC pipeline could provide an additional aggregation strategy beyond \textbf{GradientCOBRA}. Future experiments should implement the \textbf{KFCRegressor-MixCOBRA} configuration consistently across all regression datasets, include it in the repeated evaluation tables, and compare its behavior with standalone \textbf{MixCOBRARegressor}, standalone \textbf{GradientCOBRA}, and \textbf{KFCRegressor-GradientCOBRA}.
 
 \section{Final Remarks}
 \label{sec:final_remarks}
 
-The \textbf{kfc\_procedure} framework provides a modular foundation for studying clusterwise supervised learning and COBRA-based aggregation in a unified Python package. The experimental results confirm that the framework can be executed across multiple classification and regression datasets and that its outputs can be compared with conventional machine learning baselines.
+\hs The \textbf{kfc\_procedure} framework provides a modular foundation for studying clusterwise supervised learning and COBRA-based aggregation in a unified Python package. The experimental results confirm that the framework can be executed across multiple classification and regression datasets and that its outputs can be compared with conventional machine learning baselines.
 
 The current empirical evidence supports the feasibility and flexibility of the framework, while also showing that performance improvements are dataset-dependent and configuration-dependent. Further work is required to optimize the framework, validate it under stronger experimental protocols, and evaluate its behavior on larger and more diverse datasets. Overall, the project provides a practical starting point for future research on configurable clusterwise predictive modeling and prediction-space aggregation.

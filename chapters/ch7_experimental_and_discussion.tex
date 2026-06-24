@@ -1,14 +1,14 @@
 \chapter{EXPERIMENTAL RESULTS AND DISCUSSION}
 \label{ch:experimental_results_and_discussion}
 
-This chapter presents the empirical results obtained from the experimental protocol described in Section~\ref{sec:experimental_design} of Chapter~\ref{ch:methodology}. The results are reported separately for classification and regression tasks. Each table summarizes the mean and standard deviation across five repeated train--test splits using the random seeds defined in the experimental design.
+\hs This chapter presents the empirical results obtained from the experimental protocol described in Section~\ref{sec:experimental_design} of Chapter~\ref{ch:methodology}. The results are reported separately for classification and regression tasks. Each table summarizes the mean and standard deviation across five repeated train--test splits using the random seeds defined in the experimental design.
 
 The objective of this chapter is to report and discuss the observed model behavior without modifying the numerical outputs produced by the experiment. The evaluation includes baseline supervised learning models, COBRA-based aggregation models, and \KFCProcedure{}-based models. Classification experiments compare standard classifiers with \varname{CombinedClassifier} and \varname{KFCClassifier}. Regression experiments compare standard regressors with \varname{GradientCOBRA}, \varname{MixCOBRARegressor}, and \varname{KFCRegressor} configured with a \varname{GradientCOBRA} combiner.
 
 \section{Classification Results}
 \label{sec:classification_results}
 
-The classification results are reported as mean $\pm$ standard deviation over five random seeds. The evaluated datasets include Heart Disease, Diabetes, Loan Prediction, and Cyber Security Attacks. The reported metrics are Accuracy, Precision, Recall, and F1-score.
+\hs The classification results are reported as mean $\pm$ standard deviation over five random seeds. The evaluated datasets include Heart Disease, Diabetes, Loan Prediction, and Cyber Security Attacks. The reported metrics are Accuracy, Precision, Recall, and F1-score.
 
 \subsection{Heart Disease Classification}
 
@@ -34,7 +34,7 @@ The classification results are reported as mean $\pm$ standard deviation over fi
     }
 \end{table}
 
-Table~\ref{tab:heart_aggregated_results} presents the mean classification results for the Heart Disease dataset across five repeated train--test splits. For this dataset, \textbf{KFCClassifier-CombinedClassifier} achieves the highest reported mean performance among the evaluated models, with an Accuracy of $0.819$ and an F1-score of $0.819$. This is slightly higher than Logistic Regression and Random Forest Classifier, which both obtain a mean Accuracy of $0.806$ and an F1-score of $0.805$. The result suggests that the clusterwise classification configuration can provide a useful improvement on this dataset by combining local cluster-based learning with COBRA-style classification aggregation.
+\hs Table~\ref{tab:heart_aggregated_results} presents the mean classification results for the Heart Disease dataset across five repeated train--test splits. For this dataset, \textbf{KFCClassifier-CombinedClassifier} achieves the highest reported mean performance among the evaluated models, with an Accuracy of $0.819$ and an F1-score of $0.819$. This is slightly higher than Logistic Regression and Random Forest Classifier, which both obtain a mean Accuracy of $0.806$ and an F1-score of $0.805$. The result suggests that the clusterwise classification configuration can provide a useful improvement on this dataset by combining local cluster-based learning with COBRA-style classification aggregation.
 
 Compared with the standalone \textbf{CombinedClassifier}, the KFC-based model performs noticeably better, increasing the mean Accuracy from $0.768$ to $0.819$. This indicates that the clustering and local learning stages may provide more informative prediction structures before the final aggregation step. In other words, the Heart Disease dataset may contain local patterns or latent subgroups that benefit from the KFCProcedure workflow.
 
@@ -64,7 +64,7 @@ However, the improvement over the strongest baseline models is relatively small,
     }
 \end{table}
 
-Table~\ref{tab:diabetes_aggregated_results} presents the mean classification results for the Diabetes dataset, Random Forest Classifier achieves the highest reported mean Accuracy and F1-score, with values of $0.761$ and $0.754$, respectively. \textbf{KFCClassifier-CombinedClassifier} obtains the second-highest mean Accuracy of $0.757$ and the same mean Precision as Random Forest Classifier, at $0.755$. This shows that the KFC classification configuration remains competitive on this dataset and performs close to the strongest baseline model in terms of overall classification accuracy.
+\hs Table~\ref{tab:diabetes_aggregated_results} presents the mean classification results for the Diabetes dataset, Random Forest Classifier achieves the highest reported mean Accuracy and F1-score, with values of $0.761$ and $0.754$, respectively. \textbf{KFCClassifier-CombinedClassifier} obtains the second-highest mean Accuracy of $0.757$ and the same mean Precision as Random Forest Classifier, at $0.755$. This shows that the KFC classification configuration remains competitive on this dataset and performs close to the strongest baseline model in terms of overall classification accuracy.
 
 Compared with the standalone \textbf{CombinedClassifier}, the KFC-based model improves the mean Accuracy from $0.751$ to $0.757$ and the F1-score from $0.734$ to $0.741$. This indicates that the clustering and local learning stages provide some additional benefit before the final classification aggregation step. However, the improvement is modest, and the F1-score of the KFC model remains slightly lower than Random Forest Classifier and Logistic Regression.
 
@@ -94,7 +94,7 @@ Therefore, the Diabetes results suggest that KFCProcedure is functional and comp
     }
 \end{table}
 
-Table~\ref{tab:loan_prediction_aggregated_results} presents the mean classification results for the Loan Prediction dataset, Logistic Regression achieves the highest reported mean performance, with an Accuracy of $0.826$, Precision of $0.851$, and F1-score of $0.804$. Linear SVC performs very closely, with an Accuracy of $0.824$ and F1-score of $0.801$. These results indicate that linear models are highly effective for this dataset after preprocessing, suggesting that the relationship between the selected features and the target variable may be captured reasonably well by relatively simple decision boundaries.
+\hs Table~\ref{tab:loan_prediction_aggregated_results} presents the mean classification results for the Loan Prediction dataset, Logistic Regression achieves the highest reported mean performance, with an Accuracy of $0.826$, Precision of $0.851$, and F1-score of $0.804$. Linear SVC performs very closely, with an Accuracy of $0.824$ and F1-score of $0.801$. These results indicate that linear models are highly effective for this dataset after preprocessing, suggesting that the relationship between the selected features and the target variable may be captured reasonably well by relatively simple decision boundaries.
 
 The aggregation-based models also remain competitive. \varname{CombinedClassifier} obtains a mean Accuracy of $0.821$, while \varname{KFCClassifier-CombinedClassifier} obtains a mean Accuracy of $0.820$. These values are close to the best-performing linear baselines, but they do not exceed them. Compared with the standalone \varname{CombinedClassifier}, the KFC-based model shows a very similar result, indicating that the clustering and local learning stages do not provide a clear additional advantage for this dataset under the tested configuration.
 
@@ -124,17 +124,16 @@ Overall, the Loan Prediction results suggest that KFCProcedure is functional and
     }
 \end{table}
 
-Table~\ref{tab:cyber_security_aggregated_results} presents the mean classification results for the Cyber Security Attacks dataset, all evaluated models obtain very close Accuracy values, ranging from approximately $0.331$ to $0.340$. Linear SVC and Logistic Regression achieve the highest reported mean Accuracy, both around $0.340$, while \varname{KFCClassifier-CombinedClassifier} remains very close with a mean Accuracy of $0.339$. This indicates that the KFC-based classification model is competitive in terms of overall Accuracy, but it does not clearly outperform the strongest linear baseline models.
+\hs Table~\ref{tab:cyber_security_aggregated_results} presents the mean classification results for the Cyber Security Attacks dataset, all evaluated models obtain very close Accuracy values, ranging from approximately $0.331$ to $0.340$. Linear SVC and Logistic Regression achieve the highest reported mean Accuracy, both around $0.340$, while \varname{KFCClassifier-CombinedClassifier} remains very close with a mean Accuracy of $0.339$. This indicates that the KFC-based classification model is competitive in terms of overall Accuracy, but it does not clearly outperform the strongest linear baseline models.
 
 Compared with the standalone \varname{CombinedClassifier}, the KFC-based model improves the mean Accuracy from $0.334$ to $0.339$ and improves the F1-score from $0.292$ to $0.327$. This suggests that the clustering and local learning stages provide some additional benefit before the final aggregation step. However, the F1-score of \varname{KFCClassifier-CombinedClassifier} remains lower than Linear SVC, Logistic Regression, and Random Forest Classifier, indicating that the improvement is not consistent across all classification metrics.
 
 Overall, the Cyber Security Attacks results suggest that this dataset is a difficult classification case under the selected preprocessing and feature representation. The small performance differences among models indicate that the current features may not provide strong separation between classes. Therefore, the result does not provide strong evidence of a clear latent cluster structure that benefits the KFCProcedure approach. Additional feature engineering, more specialized cyber security variables, or a different sampling strategy may be required to improve predictive performance on this dataset.
 
-
 \section{Regression Results}
 \label{sec:regression_results}
 
-The regression results are reported as mean $\pm$ standard deviation over five random seeds. The evaluated datasets include Abalone, California Housing Price, and Wind Turbine. The reported metrics are MAPE, RMSE, $R^2$, and the average value of the true target in the test split.
+\hs The regression results are reported as mean $\pm$ standard deviation over five random seeds. The evaluated datasets include Abalone, California Housing Price, and Wind Turbine. The reported metrics are MAPE, RMSE, $R^2$, and the average value of the true target in the test split.
 
 \subsection{Abalone Regression}
 
@@ -163,7 +162,7 @@ The regression results are reported as mean $\pm$ standard deviation over five r
     }
 \end{table}
 
-Table~\ref{tab:abalone_aggregated_results} presents the mean regression results for the Abalone dataset, \varname{KFCRegressor-GradientCOBRA} obtains the highest reported mean $R^2$ value of $0.560$ and the lowest RMSE value of $2.143$ among the evaluated models. \varname{MixCOBRARegressor}, \varname{SVR}, and \varname{GradientCOBRA} also perform competitively, with mean $R^2$ values of $0.555$, $0.551$, and $0.550$, respectively. Although \varname{SVR} achieves the lowest MAPE value, the results based on RMSE and $R^2$ indicate that the clusterwise KFC configuration provides the best overall regression fit under this experimental setting.
+\hs Table~\ref{tab:abalone_aggregated_results} presents the mean regression results for the Abalone dataset, \varname{KFCRegressor-GradientCOBRA} obtains the highest reported mean $R^2$ value of $0.560$ and the lowest RMSE value of $2.143$ among the evaluated models. \varname{MixCOBRARegressor}, \varname{SVR}, and \varname{GradientCOBRA} also perform competitively, with mean $R^2$ values of $0.555$, $0.551$, and $0.550$, respectively. Although \varname{SVR} achieves the lowest MAPE value, the results based on RMSE and $R^2$ indicate that the clusterwise KFC configuration provides the best overall regression fit under this experimental setting.
 
 This result suggests that the Abalone dataset may contain meaningful latent cluster structure, where different regions of the input feature space benefit from local predictive modeling before final aggregation. In this case, the KFCProcedure assumption appears to be relevant because the clusterwise model performs better than the standalone global models and the standalone COBRA-based aggregation models in terms of RMSE and $R^2$. However, this should be interpreted as empirical evidence under the tested configuration rather than as a formal proof of latent clusters.
 
@@ -194,7 +193,7 @@ This result suggests that the Abalone dataset may contain meaningful latent clus
     }
 \end{table}
 
-Table~\ref{tab:housing_price_aggregated_results} presents the mean regression results for the California Housing Price dataset, the target variable is log-transformed before modeling. Therefore, the RMSE and MAPE values in Table~\ref{tab:housing_price_aggregated_results} are reported on the logarithmic target scale rather than on the original house-price scale. Random Forest Regressor achieves the strongest overall performance, with the lowest RMSE value of $0.213$ and the highest mean $R^2$ value of $0.874$. Gradient Boosting Regressor and SVR also perform strongly, with mean $R^2$ values of $0.858$ and $0.841$, respectively.
+\hs Table~\ref{tab:housing_price_aggregated_results} presents the mean regression results for the California Housing Price dataset, the target variable is log-transformed before modeling. Therefore, the RMSE and MAPE values in Table~\ref{tab:housing_price_aggregated_results} are reported on the logarithmic target scale rather than on the original house-price scale. Random Forest Regressor achieves the strongest overall performance, with the lowest RMSE value of $0.213$ and the highest mean $R^2$ value of $0.874$. Gradient Boosting Regressor and SVR also perform strongly, with mean $R^2$ values of $0.858$ and $0.841$, respectively.
 
 The COBRA-based models remain executable and competitive, but they do not outperform the strongest tree-based baseline models on this dataset. \varname{MixCOBRARegressor} obtains a mean $R^2$ of $0.805$, while \varname{GradientCOBRA} obtains $0.791$. \varname{KFCRegressor-GradientCOBRA} obtains a lower mean $R^2$ of $0.778$ and a higher RMSE of $0.283$ compared with the best baseline models.
 
@@ -227,17 +226,16 @@ These results suggest that, under the tested configuration, the California Housi
     }
 \end{table}
 
-Table~\ref{tab:wind_turbine_aggregated_results} presents the mean regression results for the Wind Turbine dataset, \varname{MixCOBRARegressor} and Gradient Boosting Regressor obtain the strongest reported performance, with very similar mean $R^2$ values of $0.876$. Their RMSE values are also almost identical, with \varname{MixCOBRARegressor} achieving $519.079$ and Gradient Boosting Regressor achieving $519.241$. \varname{GradientCOBRA} and Random Forest Regressor also perform competitively, with mean $R^2$ values of $0.874$ and $0.872$, respectively.
+\hs Table~\ref{tab:wind_turbine_aggregated_results} presents the mean regression results for the Wind Turbine dataset, \varname{MixCOBRARegressor} and Gradient Boosting Regressor obtain the strongest reported performance, with very similar mean $R^2$ values of $0.876$. Their RMSE values are also almost identical, with \varname{MixCOBRARegressor} achieving $519.079$ and Gradient Boosting Regressor achieving $519.241$. \varname{GradientCOBRA} and Random Forest Regressor also perform competitively, with mean $R^2$ values of $0.874$ and $0.872$, respectively.
 
 The reported MAPE values are extremely large for all models because the target variable contains values equal to or very close to zero. Since MAPE divides the prediction error by the true target value, very small denominators can produce unstable and inflated percentage errors. Therefore, MAPE is not appropriate for interpreting the Wind Turbine results, and the discussion should mainly rely on RMSE and $R^2$.
 
 \varname{KFCRegressor-GradientCOBRA} completes successfully, with a mean $R^2$ value of $0.843$ and an RMSE of $583.174$. Although this confirms that the KFC regression pipeline is executable on this dataset, its performance is lower than the strongest standalone COBRA-based and tree-based models. This suggests that, under the tested configuration, the selected clusterwise structure and local linear models do not provide a clear advantage for the Wind Turbine dataset. The result may indicate that the relationship between wind speed, theoretical power curve, wind direction, and active power is better captured by strong global nonlinear models or direct aggregation methods than by the current KFC configuration.
 
-
 \section{Overall Discussion}
 \label{sec:overall_discussion_results}
 
-The experimental results show that the implemented \textbf{kfc\_procedure} package can support a unified evaluation workflow across heterogeneous supervised learning tasks. The framework is executable for both classification and regression experiments, and it can be compared with standard baseline models and COBRA-based aggregation models using repeated train--test evaluations. Across the seven datasets, the results demonstrate that the proposed framework is functional, reusable, and comparable, although its predictive advantage depends on the characteristics of each dataset.
+\hs The experimental results show that the implemented \textbf{kfc\_procedure} package can support a unified evaluation workflow across heterogeneous supervised learning tasks. The framework is executable for both classification and regression experiments, and it can be compared with standard baseline models and COBRA-based aggregation models using repeated train--test evaluations. Across the seven datasets, the results demonstrate that the proposed framework is functional, reusable, and comparable, although its predictive advantage depends on the characteristics of each dataset.
 
 For classification, \varname{KFCClassifier} is successfully executed on all four classification datasets. It obtains the highest reported mean performance on the Heart Disease dataset, where it slightly outperforms Logistic Regression and Random Forest Classifier. This result suggests that the Heart Disease dataset may contain local patterns or latent subgroups that benefit from the clusterwise learning workflow before final aggregation. On the Diabetes dataset, \varname{KFCClassifier} remains competitive and performs close to Random Forest Classifier, but it does not clearly exceed the strongest baseline. On the Loan Prediction dataset, Logistic Regression and Linear SVC perform slightly better, suggesting that this dataset may be well captured by simpler linear decision boundaries after preprocessing. On the Cyber Security Attacks dataset, all models produce very similar Accuracy values, indicating that the selected features and preprocessing strategy may not provide strong class separation. Overall, the classification results support the functional validity of the KFC classification pipeline, but they do not establish universal superiority over standard classifiers.
 
@@ -250,7 +248,7 @@ Overall, the experimental findings demonstrate that the proposed framework is us
 \section{Experimental Limitations}
 \label{sec:experimental_limitations}
 
-Several limitations should be considered when interpreting the experimental results:
+\hs Several limitations should be considered when interpreting the experimental results:
 
 \begin{itemize}
 \item \textbf{Repeated holdout evaluation:} The experiments use repeated holdout splits rather than full cross-validation or an external validation set. Although repeated holdout evaluation provides a useful estimate of model behavior across different random splits, it may not be as stable as cross-validation.
@@ -268,7 +266,7 @@ Several limitations should be considered when interpreting the experimental resu
 \section{Chapter Summary}
 \label{sec:chapter_summary_results}
 
-This chapter presented the experimental results of the implemented framework on both classification and regression tasks. The classification experiments evaluated four datasets: Heart Disease, Diabetes, Loan Prediction, and Cyber Security Attacks. The regression experiments evaluated three datasets: Abalone, California Housing Price, and Wind Turbine. All reported results were summarized using the mean and standard deviation across five repeated train--test splits.
+\hs This chapter presented the experimental results of the implemented framework on both classification and regression tasks. The classification experiments evaluated four datasets: Heart Disease, Diabetes, Loan Prediction, and Cyber Security Attacks. The regression experiments evaluated three datasets: Abalone, California Housing Price, and Wind Turbine. All reported results were summarized using the mean and standard deviation across five repeated train--test splits.
 
 The main finding is that the implemented \KFCProcedure{} framework is executable across multiple supervised learning tasks and can be compared consistently with standard baseline models and COBRA-based aggregation models. For classification, \varname{KFCClassifier} achieves the best reported mean performance on the Heart Disease dataset and remains competitive on the Diabetes, Loan Prediction, and Cyber Security Attacks datasets. However, it does not consistently outperform the strongest baseline classifiers across all classification datasets.
 

@@ -1,7 +1,7 @@
 \chapter{METHODOLOGY}
 \label{ch:methodology}
 
-This chapter presents the methodology adopted for the design, development, and evaluation of the proposed Python libraries, namely \GradientCOBRA{} and \KFCProcedure{}. The objective of this study is to transform consensus-based aggregation and clusterwise supervised learning methods from theoretical formulations into reusable and modular machine learning frameworks.
+\hs This chapter presents the methodology adopted for the design, development, and evaluation of the proposed Python libraries, namely \GradientCOBRA{} and \KFCProcedure{}. The objective of this study is to transform consensus-based aggregation and clusterwise supervised learning methods from theoretical formulations into reusable and modular machine learning frameworks.
 
 The study follows a design and development research methodology. It begins with a review of related aggregation and clusterwise learning methods, followed by requirements analysis, system architecture design, framework construction, and experimental validation. This approach focuses on the conceptual workflow of the proposed frameworks, the interaction between their major components, and the evaluation protocol used to assess their predictive performance.
 
@@ -17,7 +17,7 @@ Detailed implementation aspects, including source-code structure, class organiza
 \section{Research Methodology}
 \label{sec:research_methodology}
 
-This study adopts a design and development research methodology to implement, validate, and evaluate two advanced machine learning frameworks: \GradientCOBRA{} and \KFCProcedure{}. The primary objective is to convert theoretical aggregation and clusterwise learning methods into reusable and extensible Python libraries that follow modern machine learning workflows.
+\hs This study adopts a design and development research methodology to implement, validate, and evaluate two advanced machine learning frameworks: \GradientCOBRA{} and \KFCProcedure{}. The primary objective is to convert theoretical aggregation and clusterwise learning methods into reusable and extensible Python libraries that follow modern machine learning workflows.
 
 The research process consists of five sequential phases, as illustrated in \figref{fig:research_workflow}.
 
@@ -73,11 +73,11 @@ The overall methodology therefore bridges theoretical machine learning methods a
 \section{System Architecture}
 \label{sec:system_architecture}
 
-The proposed system consists of two related machine learning frameworks: \KFCProcedure{} and the COBRA aggregation subsystem centered on \GradientCOBRA{}. Each framework is designed as an independent predictive system, but they can also be combined through the aggregation stage of the \KFCProcedure{} pipeline.
+\hs The proposed system consists of two related machine learning frameworks: \KFCProcedure{} and the COBRA aggregation subsystem centered on \GradientCOBRA{}. Each framework is designed as an independent predictive system, but they can also be combined through the aggregation stage of the \KFCProcedure{} pipeline.
 
 \subsection{Independent Framework Design}
 
-\KFCProcedure{} is a clusterwise supervised learning framework designed to model heterogeneous data distributions through explicit input-space partitioning. Its learning process follows three main stages: clustering, local model training, and prediction aggregation. First, the input space is partitioned under one or more Bregman divergences. Then, separate local models are trained within each divergence-specific cluster. Finally, the divergence-level predictions are combined into a single global output.
+\hs \KFCProcedure{} is a clusterwise supervised learning framework designed to model heterogeneous data distributions through explicit input-space partitioning. Its learning process follows three main stages: clustering, local model training, and prediction aggregation. First, the input space is partitioned under one or more Bregman divergences. Then, separate local models are trained within each divergence-specific cluster. Finally, the divergence-level predictions are combined into a single global output.
 
 \GradientCOBRA{} is a prediction-space aggregation framework. Instead of partitioning the original feature space, it constructs a prediction matrix from multiple base estimators or receives such a prediction matrix directly. It then computes distances between prediction vectors, transforms these distances into kernel weights, optimizes aggregation parameters, and produces final predictions through weighted aggregation.
 
@@ -85,7 +85,7 @@ From a methodological perspective, \KFCProcedure{} emphasizes \textit{input-spac
 
 \subsection{Hybrid System Configuration}
 
-Beyond their independent operation, the two frameworks can be integrated into a hybrid architecture, as illustrated in \figref{fig:hybrid}.
+\hs Beyond their independent operation, the two frameworks can be integrated into a hybrid architecture, as illustrated in \figref{fig:hybrid}.
 
 \begin{figure}[H]
     \centering
@@ -109,7 +109,7 @@ Consequently, the hybrid system should not be viewed as a rigid sequence in whic
 \label{sec:gradientcobra_design}
 
 
-The \GradientCOBRA{} subsystem is designed as a modular framework for consensus-based aggregation in prediction space. The developed library provides three main predictive variants: \GradientCOBRA{} for regression aggregation in prediction space, \textbf{MixCOBRARegressor} for regression aggregation using both input-space and prediction-space distances, and \textbf{CombinedClassifier} for classification aggregation through weighted voting.
+\hs The \GradientCOBRA{} subsystem is designed as a modular framework for consensus-based aggregation in prediction space. The developed library provides three main predictive variants: \GradientCOBRA{} for regression aggregation in prediction space, \textbf{MixCOBRARegressor} for regression aggregation using both input-space and prediction-space distances, and \textbf{CombinedClassifier} for classification aggregation through weighted voting.
 
 
 The architecture follows a layered design in which individual methodological responsibilities are separated into independent components. Core functionalities such as data splitting, estimator management, distance computation, kernel transformation, optimization, loss evaluation, and aggregation are defined as interchangeable modules. This design enables the framework to support different aggregation strategies without changing the overall learning workflow. \figref{fig:gradientcobra_architecture} illustrates the conceptual architecture of the \GradientCOBRA{} subsystem.
@@ -141,7 +141,7 @@ These subsystems are coordinated by the main COBRA variants. Each variant follow
 \subsection{Splitters Module}
 \label{subsec:splitters_module}
 
-The Splitters module provides the data partitioning mechanism used in COBRA-style aggregation. It separates the data used to train base estimators from the data used for calibration. This separation is essential because the aggregation layer is evaluated using predictions computed on a reference set that is later used for kernel-based weighting.
+\hs The Splitters module provides the data partitioning mechanism used in COBRA-style aggregation. It separates the data used to train base estimators from the data used for calibration. This separation is essential because the aggregation layer is evaluated using predictions computed on a reference set that is later used for kernel-based weighting.
 
 \subsubsection*{Functional Role in the Framework}
 
@@ -156,7 +156,7 @@ Let $D = \{(x_i, y_i)\}_{i=1}^{n}$. The splitter defines two index sets $I_K$ an
 \subsection{Estimators Module}
 \label{subsec:estimators_module}
 
-The Estimators module constitutes the primary machine learning component of the COBRA framework. It is responsible for training individual base learners (referred to as ``machines'') and organizing their prediction outputs. Consistent with prior work on ensemble consensus efficiency \cite{ali2015, cagnini2023}, the module is designed to accommodate heterogeneous predictive models, enabling the combination of diverse learning algorithms, including linear models, tree-based ensembles, and neighborhood methods, within a unified aggregation framework.
+\hs The Estimators module constitutes the primary machine learning component of the COBRA framework. It is responsible for training individual base learners (referred to as ``machines'') and organizing their prediction outputs. Consistent with prior work on ensemble consensus efficiency \cite{ali2015, cagnini2023}, the module is designed to accommodate heterogeneous predictive models, enabling the combination of diverse learning algorithms, including linear models, tree-based ensembles, and neighborhood methods, within a unified aggregation framework.
 
 
 \subsubsection*{Mathematical Formulation}
@@ -174,7 +174,7 @@ This matrix $\hat{Y}$ represents the transformed data structure that is subseque
 \subsection{Normalizer Module}
 \label{subsec:normalizer_module}
 
-The Normalizer module applies scalar normalization to prediction outputs generated by base estimators, ensuring stable computation of distances in prediction space.
+\hs The Normalizer module applies scalar normalization to prediction outputs generated by base estimators, ensuring stable computation of distances in prediction space.
 
 In addition, the developed library provides standalone feature normalization methods, including standard scaling and min-max normalization. These utilities are implemented as reusable components; however, the primary training procedures of \GradientCOBRA{} and \textbf{MixCOBRARegressor} mainly rely on scalar normalization constants.
 
@@ -212,7 +212,7 @@ These normalizers support reusable preprocessing but should not be confused with
 \subsection{Kernel Adapter Module}
 \label{subsec:kernel_adapter_module}
 
-The Kernel Adapter module transforms distance matrices before they are passed to the kernel function. Its role is not to normalize final aggregation weights, but to control the scale and combination of distances. This distinction is important because weight normalization or fallback behavior is handled later by the aggregator.
+\hs The Kernel Adapter module transforms distance matrices before they are passed to the kernel function. Its role is not to normalize final aggregation weights, but to control the scale and combination of distances. This distinction is important because weight normalization or fallback behavior is handled later by the aggregator.
 
 \subsubsection*{Mathematical Formulation}
 
@@ -236,7 +236,7 @@ where $D_X$ is the input-space distance matrix, $D_Y$ is the prediction-space di
 \subsection{Kernel Module}
 \label{subsec:kernel_module}
 
-While the Kernel Adapter module handles scaling, bandwidth control, and structural transformation of distance values, the Kernel module implements the core kernel functions that map adapted distances into similarity weights. It isolates kernel evaluation into a dedicated component, ensuring both computational clarity and modularity in the aggregation process.
+\hs While the Kernel Adapter module handles scaling, bandwidth control, and structural transformation of distance values, the Kernel module implements the core kernel functions that map adapted distances into similarity weights. It isolates kernel evaluation into a dedicated component, ensuring both computational clarity and modularity in the aggregation process.
 
 The Kernel module operates on pre-adapted non-negative distances $D \ge 0$ and produces similarity weights via a kernel function $K(\cdot)$. A summary of the supported kernel functions is provided in \tabref{tab:kernel_functions}. A visual comparison of selected kernel shapes is presented in \figref{fig:kernel_function_shapes}, showing how each kernel maps distance values to aggregation weights.
 
@@ -375,7 +375,7 @@ As illustrated in \figref{fig:kernel_function_shapes}, the threshold kernel perf
 \subsection{Optimizer Module}
 \label{subsec:optimizer_module}
 
-The Optimizer module selects the numerical parameters governing kernel-based aggregation. Depending on the COBRA variant, these parameters include a bandwidth $h$ for \GradientCOBRA{} and \textbf{CombinedClassifier}, or a pair of mixing coefficients $(\alpha, \beta)$ for \textbf{MixCOBRARegressor} that balance input-space and prediction-space distances.
+\hs The Optimizer module selects the numerical parameters governing kernel-based aggregation. Depending on the COBRA variant, these parameters include a bandwidth $h$ for \GradientCOBRA{} and \textbf{CombinedClassifier}, or a pair of mixing coefficients $(\alpha, \beta)$ for \textbf{MixCOBRARegressor} that balance input-space and prediction-space distances.
 
 The optimization strategy is model-dependent. The \textbf{CombinedClassifier} uses grid search exclusively. In contrast, \GradientCOBRA{} and \textbf{MixCOBRARegressor} support both grid search and gradient-based optimization, where applicable. When gradient-based optimization is not supported by the selected kernel or objective function, the framework defaults to grid search.
 
@@ -393,12 +393,12 @@ where $\mathcal{L}$ is the selected loss function and the predictions $\hat{y}_{
 \subsection{Cross-Validation (CV) Module}
 \label{subsec:validators_module}
 
-The CV module supplies cross-validation strategies used during bandwidth optimization within \GradientCOBRA{}. Rather than a monolithic validator, the module provides three factory-registered splitters: \textbf{KFoldCV} for standard i.i.d.\ data, \textbf{StratifiedKFoldCV} for class-balanced classification settings, and \textbf{TimeSeriesCV} for chronological temporal data. Each splitter exposes a unified iterator interface that yields \textbf{SplitIndices} objects containing training and evaluation index sets, ensuring zero data leakage across folds.
+\hs The CV module supplies cross-validation strategies used during bandwidth optimization within \GradientCOBRA{}. Rather than a monolithic validator, the module provides three factory-registered splitters: \textbf{KFoldCV} for standard i.i.d.\ data, \textbf{StratifiedKFoldCV} for class-balanced classification settings, and \textbf{TimeSeriesCV} for chronological temporal data. Each splitter exposes a unified iterator interface that yields \textbf{SplitIndices} objects containing training and evaluation index sets, ensuring zero data leakage across folds.
 
 \subsection{Loss Module}
 \label{subsec:loss_module}
 
-The Loss module defines the formal optimization objectives. It accommodates differentiable and continuous functions required for gradient evaluations, alongside standard evaluation criteria.
+\hs The Loss module defines the formal optimization objectives. It accommodates differentiable and continuous functions required for gradient evaluations, alongside standard evaluation criteria.
 
 \subsubsection*{Mathematical Formulation}
 The module implements six concrete loss functions. For regression tasks, Mean Squared Error (MSE) and Mean Absolute Error (MAE) provide standard objectives, while Huber loss and Quantile loss provide robust alternatives. For classification tasks, Log Loss and Hinge Loss are implemented. The core regression losses are defined as:
@@ -418,7 +418,7 @@ The Huber loss combines quadratic and linear behavior, controlled by a transitio
 \subsection{Aggregators Module}
 \label{subsec:aggregators_module}
 
-The Aggregators module serves as the final step in the execution pipeline. It implements two factory-registered strategies: \textbf{WeightedMeanAggregator} for regression tasks and \textbf{WeightedVoteAggregator} for classification tasks. Both operate on kernel-derived weight vectors and validation target values.
+\hs The Aggregators module serves as the final step in the execution pipeline. It implements two factory-registered strategies: \textbf{WeightedMeanAggregator} for regression tasks and \textbf{WeightedVoteAggregator} for classification tasks. Both operate on kernel-derived weight vectors and validation target values.
 
 \paragraph{Weighted Mean (Regression)}
 Given a weight vector $W \in \mathbb{R}^n$ and target values $y \in \mathbb{R}^n$, the aggregated prediction is:
@@ -436,7 +436,7 @@ For discrete class labels $\mathcal{C}$, the aggregator assigns each class a wei
 \subsection{COBRA Predictive Variants}
 \label{subsec:cobra_predictive_variants}
 
-The developed library provides three main COBRA-style predictive variants: \GradientCOBRA{}, \textbf{MixCOBRARegressor}, and \textbf{CombinedClassifier}.
+\hs The developed library provides three main COBRA-style predictive variants: \GradientCOBRA{}, \textbf{MixCOBRARegressor}, and \textbf{CombinedClassifier}.
 
 \paragraph{\GradientCOBRA{}}
 
@@ -511,7 +511,7 @@ where $D_X$ is the input-space distance, $D_Y$ is the prediction-space distance,
 \section{Design of the \KFCProcedure{} Clusterwise Framework}
 \label{sec:kfc_design}
 
-The \KFCProcedure{} framework is expected to be particularly suitable for datasets that satisfy two main assumptions. First, the input feature space should contain more than one latent cluster or subgroup, although the exact number of clusters is not assumed to be known in advance. Second, the predictive relationship within each cluster does not necessarily have to follow the same underlying model. In other words, different regions of the input space may be better represented by different local predictive functions. Under these conditions, a single global model may be insufficient, while a clusterwise learning strategy can decompose the problem into several local learning tasks and then combine their predictions through the C-step.
+\hs The \KFCProcedure{} framework is expected to be particularly suitable for datasets that satisfy two main assumptions. First, the input feature space should contain more than one latent cluster or subgroup, although the exact number of clusters is not assumed to be known in advance. Second, the predictive relationship within each cluster does not necessarily have to follow the same underlying model. In other words, different regions of the input space may be better represented by different local predictive functions. Under these conditions, a single global model may be insufficient, while a clusterwise learning strategy can decompose the problem into several local learning tasks and then combine their predictions through the C-step.
 
 
 The overall architecture of the framework is illustrated in Figure~\ref{fig:kfc_architecture}, which presents the interaction between clustering, local modeling, and combiner components.
@@ -536,7 +536,7 @@ The library is structured into three unified pipeline stages:
 
 \subsection{Divergence-Based Clustering Module}
 
-The Clustering module represents the input-space decomposition stage of the \KFCProcedure{} framework. Its objective is to partition heterogeneous data into more coherent subregions before training local predictive models.
+\hs The Clustering module represents the input-space decomposition stage of the \KFCProcedure{} framework. Its objective is to partition heterogeneous data into more coherent subregions before training local predictive models.
 
 The module uses Bregman K-Means, which generalizes classical K-Means by replacing the standard Euclidean distance with a selected Bregman divergence. This allows the same dataset to be partitioned under different geometric assumptions. In the \KFCProcedure{} pipeline, each divergence produces a separate clustering hypothesis, which is later used to train divergence-specific local models.
 
@@ -598,7 +598,7 @@ The Clustering module provides the structural partitions required by the Local M
 
 \subsection{Local Model Module}
 
-The Local Model module constitutes the F-step of the \KFCProcedure{} pipeline. Instead of fitting one global predictive model over the entire dataset, the framework trains local estimators inside the clusters produced by each divergence. This design supports piecewise modeling, where different regions of the input space may be represented by different predictive functions.
+\hs The Local Model module constitutes the F-step of the \KFCProcedure{} pipeline. Instead of fitting one global predictive model over the entire dataset, the framework trains local estimators inside the clusters produced by each divergence. This design supports piecewise modeling, where different regions of the input space may be represented by different predictive functions.
 
 For each divergence $D_m$ and each cluster $k$, one local model is trained on the samples assigned to that cluster. During inference, each sample is routed to the local model associated with its predicted cluster under each divergence.
 
@@ -656,7 +656,7 @@ The Local Model module receives cluster labels from the K-step and produces the 
 
 \subsection{Combiner Module}
 
-The Combiner module constitutes the C-step of the \KFCProcedure{} framework. After the F-step produces a prediction matrix, the combiner transforms multiple divergence-level predictions into one final output.
+\hs The Combiner module constitutes the C-step of the \KFCProcedure{} framework. After the F-step produces a prediction matrix, the combiner transforms multiple divergence-level predictions into one final output.
 
 This module supports both regression and classification aggregation. Regression combiners include mean aggregation, weighted mean aggregation, stacking regression, \GradientCOBRA{}, and \textbf{MixCOBRARegressor}. Classification combiners include majority voting, stacking classification, and COBRA-based weighted voting through \textbf{CombinedClassifier}.
 
@@ -746,8 +746,6 @@ For classification, the same idea is applied through weighted voting over class 
 
 The Combiner module represents the final stage of the \KFCProcedure{} pipeline. It is fitted using the prediction matrix generated from the aggregation split together with the corresponding target values. During inference, the module receives the prediction matrix produced for new samples and transforms it into the final predicted output.
 
-
-
 \subsection{Algorithmic Pipeline}
 
 \begin{algorithm}[H]
@@ -787,18 +785,18 @@ The Combiner module represents the final stage of the \KFCProcedure{} pipeline. 
     \end{algorithmic}
 \end{algorithm}
 
-During inference, a new input matrix $X^*$ is first assigned to clusters under each fitted divergence. The F-step then routes each sample to the corresponding local model and forms a new prediction matrix $P^*$. Finally, the fitted C-step combiner transforms $P^*$ into the final prediction vector.
+\hs During inference, a new input matrix $X^*$ is first assigned to clusters under each fitted divergence. The F-step then routes each sample to the corresponding local model and forms a new prediction matrix $P^*$. Finally, the fitted C-step combiner transforms $P^*$ into the final prediction vector.
 
 % ========================= SOFTWARE ENGINEERING DESIGN PRINCIPLES
 
 \section{Software Engineering Design Principles}
 \label{sec:software_engineering_design}
 
-Although detailed implementation is discussed in Chapter~\ref{ch:implementation}, the methodological design of the two frameworks is guided by several software engineering principles. These principles are important because the objective of the study is not only to test an algorithm, but also to design reusable machine learning frameworks.
+\hs Although detailed implementation is discussed in Chapter~\ref{ch:implementation}, the methodological design of the two frameworks is guided by several software engineering principles. These principles are important because the objective of the study is not only to test an algorithm, but also to design reusable machine learning frameworks.
 
 \subsection{Architectural Pattern Mapping}
 
-The frameworks are organized around interchangeable methodological components. Distances, kernels, losses, optimizers, divergences, local models, and combiners are treated as replaceable strategies. This design allows experiments to change one methodological component without changing the whole pipeline. Table~\ref{tab:pattern_mapping} summarizes how the main software engineering design principles are connected to the machine learning objectives of the proposed frameworks.
+\hs The frameworks are organized around interchangeable methodological components. Distances, kernels, losses, optimizers, divergences, local models, and combiners are treated as replaceable strategies. This design allows experiments to change one methodological component without changing the whole pipeline. Table~\ref{tab:pattern_mapping} summarizes how the main software engineering design principles are connected to the machine learning objectives of the proposed frameworks.
 
 \begin{table}[H]
     \centering
@@ -833,20 +831,20 @@ The frameworks are organized around interchangeable methodological components. D
 
 \subsection{Scikit-Learn API Compliance}
 
-Both frameworks are designed around the common estimator workflow used in Python machine learning: models are initialized with configuration parameters, trained through a \textbf{fit} procedure, and used for inference through a \textbf{predict} procedure. Some classification components also provide probability outputs when supported by their internal estimators. However, probability prediction should be presented only for components where it is fully supported by the current framework, such as the COBRA classification aggregator, and not as a guaranteed feature of every \KFCProcedure{} configuration.
+\hs Both frameworks are designed around the common estimator workflow used in Python machine learning: models are initialized with configuration parameters, trained through a \textbf{fit} procedure, and used for inference through a \textbf{predict} procedure. Some classification components also provide probability outputs when supported by their internal estimators. However, probability prediction should be presented only for components where it is fully supported by the current framework, such as the COBRA classification aggregator, and not as a guaranteed feature of every \KFCProcedure{} configuration.
 
 % =============================== EXPERIMENTAL DESIGN
 
 \section{Experimental Design}
 \label{sec:experimental_design}
 
-This section describes the experimental design used to evaluate the implemented \KFCProcedure{} framework. The purpose of the experiments is not only to compare predictive performance, but also to verify that the proposed framework can be trained, executed, and evaluated consistently across different supervised learning tasks. The experimental workflow includes dataset preparation, preprocessing, model configuration, repeated train--test evaluation, and performance reporting.
+\hs This section describes the experimental design used to evaluate the implemented \KFCProcedure{} framework. The purpose of the experiments is not only to compare predictive performance, but also to verify that the proposed framework can be trained, executed, and evaluated consistently across different supervised learning tasks. The experimental workflow includes dataset preparation, preprocessing, model configuration, repeated train--test evaluation, and performance reporting.
 
 The experiments are divided into two main task groups: classification and regression. For classification, the proposed models are compared with standard baseline classifiers and a standalone aggregation classifier. For regression, the proposed models are compared with standard baseline regressors and COBRA-based aggregation regressors. This design allows the framework to be assessed under different data types, target variables, and prediction objectives.
 
 \subsection{Experimental Environment}
 
-The experimental implementation was conducted using Python in a notebook-based environment. The datasets were retrieved using \textbf{kagglehub}, while data processing and numerical computation were performed using \textbf{pandas} and \textbf{numpy}. Exploratory analysis and visualization were supported by \textbf{matplotlib} and \textbf{seaborn}. Standard preprocessing tools, baseline models, data splitting functions, and evaluation metrics were provided by \textbf{scikit-learn}.
+\hs The experimental implementation was conducted using Python in a notebook-based environment. The datasets were retrieved using \textbf{kagglehub}, while data processing and numerical computation were performed using \textbf{pandas} and \textbf{numpy}. Exploratory analysis and visualization were supported by \textbf{matplotlib} and \textbf{seaborn}. Standard preprocessing tools, baseline models, data splitting functions, and evaluation metrics were provided by \textbf{scikit-learn}.
 
 The main framework components imported from the developed package were \textbf{KFCProcedure}, \textbf{KFCClassifier}, \textbf{KFCRegressor}, \textbf{GradientCOBRA}, \textbf{MixCOBRARegressor}, and \textbf{CombinedClassifier}. The experiment was designed to use the same evaluation logic across datasets in order to reduce repetition and improve reproducibility. Table~\ref{tab:software_environment_used_in_the_experiment} summarizes the main software environment used in the experiment.
 
@@ -870,7 +868,7 @@ The main framework components imported from the developed package were \textbf{K
 
 \subsection{Benchmark Datasets}
 
-The experiment evaluates seven benchmark datasets: four classification datasets and three regression datasets. The datasets were selected to cover different prediction settings, including medical classification, financial decision classification, cyber security classification, biological regression, housing price regression, and wind turbine power prediction. Table~\ref{tab:datasets_experiment} summarizes the datasets used in the experiment, including the task type, original dataset size, number of rows used, and number of features.
+\hs The experiment evaluates seven benchmark datasets: four classification datasets and three regression datasets. The datasets were selected to cover different prediction settings, including medical classification, financial decision classification, cyber security classification, biological regression, housing price regression, and wind turbine power prediction. Table~\ref{tab:datasets_experiment} summarizes the datasets used in the experiment, including the task type, original dataset size, number of rows used, and number of features.
 
 \begin{table}[H]
     \centering
@@ -900,7 +898,7 @@ For regression tasks, the target variables are continuous numerical values. The 
 
 \subsection{Preprocessing Strategy}
 
-A shared preprocessing strategy was used to ensure that baseline models, COBRA-based models, and \KFCProcedure{} models could be evaluated under comparable conditions. For baseline models and standalone COBRA-based models, numerical variables were imputed using the median and scaled using \varname{StandardScaler}. Categorical variables were imputed using the most frequent category and encoded using \varname{OneHotEncoder} with \varname{handle_unknown="ignore"}.
+\hs A shared preprocessing strategy was used to ensure that baseline models, COBRA-based models, and \KFCProcedure{} models could be evaluated under comparable conditions. For baseline models and standalone COBRA-based models, numerical variables were imputed using the median and scaled using \varname{StandardScaler}. Categorical variables were imputed using the most frequent category and encoded using \varname{OneHotEncoder} with \varname{handle_unknown="ignore"}.
 
 For \KFCProcedure{} models, a separate positive-domain preprocessing pipeline was used. Numerical variables were imputed but not standardized inside the column transformer. Categorical variables were imputed and one-hot encoded. The transformed feature matrix was then scaled using:
 \varname{MinMaxScaler(feature_range=(0.05, 0.95), clip=True)}
@@ -908,7 +906,7 @@ This positive-domain scaling is required because several divergences used in the
 
 \subsection{Model Configurations}
 
-The classification experiments compare the proposed classification framework with five baseline classifiers:
+\hs The classification experiments compare the proposed classification framework with five baseline classifiers:
 
 \begin{itemize}
     \item \varname{LogisticRegression};
@@ -937,15 +935,14 @@ The standalone COBRA-based regression models are \varname{GradientCOBRA} and \va
 The KFC regression model is configured as \textbf{KFCRegressor} with \textbf{GradientCOBRA} as the combiner. It uses the divergences \varname{euclidean}, \varname{gkl}, and \varname{is}. The local model is \varname{linear_regression}, and the number of clusters is fixed at three for all regression datasets.
 
 \subsection{Train--Test Evaluation Protocol}
-The experiments use repeated holdout evaluation across five random seeds: [42, 52, 62, 72, 82].
 
-For classification tasks, the data are split using \varname{train_test_split} with stratification by the target variable. Stratification helps preserve the class distribution in both training and testing subsets. For regression tasks, the data are split using \varname{train_test_split} without stratification.
+\hs The experiments use repeated holdout evaluation across five random seeds: [42, 52, 62, 72, 82]. For classification tasks, the data are split using \varname{train_test_split} with stratification by the target variable. Stratification helps preserve the class distribution in both training and testing subsets. For regression tasks, the data are split using \varname{train_test_split} without stratification.
 
 Most experiments use a test size of 0.2. The Heart Disease experiment uses \varname{test_size=0.1} because the dataset becomes relatively small after duplicate removal. After all repeated runs are completed, the results are summarized using the mean and standard deviation of each metric across the five random seeds.
 
 \subsection{Evaluation Metrics}
 
-For classification tasks, the experiments report Accuracy, Precision, Recall, and F1-score. Precision, Recall, and F1-score are computed using weighted averaging with \varname{zero_division=0}. Weighted averaging is used because the datasets may contain imbalanced class distributions, and the Cyber Security Attacks dataset contains more than two classes.
+\hs For classification tasks, the experiments report Accuracy, Precision, Recall, and F1-score. Precision, Recall, and F1-score are computed using weighted averaging with \varname{zero_division=0}. Weighted averaging is used because the datasets may contain imbalanced class distributions, and the Cyber Security Attacks dataset contains more than two classes.
 
 For a dataset with $n$ observations, accuracy is computed as:
 
@@ -981,7 +978,7 @@ For the Wind Turbine dataset, MAPE is interpreted cautiously because the target 
 
 \subsection{Summary}
 
-The experimental design validates the proposed frameworks across both classification and regression settings. The experiments demonstrate the use of benchmark datasets, baseline models, direct COBRA aggregation, and \KFCProcedure{} configurations with COBRA-based combiners. This evaluation design provides the basis for comparing predictive performance in the results and discussion chapter.
+\hs The experimental design validates the proposed frameworks across both classification and regression settings. The experiments demonstrate the use of benchmark datasets, baseline models, direct COBRA aggregation, and \KFCProcedure{} configurations with COBRA-based combiners. This evaluation design provides the basis for comparing predictive performance in the results and discussion chapter.
 
 
 

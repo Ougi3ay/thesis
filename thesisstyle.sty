@@ -17,7 +17,7 @@
 
 % Khmer fonts
 \newfontfamily\khmerfont{Khmer OS Battambang}
-\newfontfamily\khmoul[            
+\newfontfamily\khmoul[                
     BoldFont = Khmer OS Muol Light
 ]{Khmer OS Muol Light}
 \newfontfamily\khsr{Khmer OS Siemreap}
@@ -36,7 +36,7 @@
 % 2. PAGE LAYOUT
 % =====================================================
 
-\RequirePackage[            
+\RequirePackage[                
     a4paper,
     top=2.5cm,
     bottom=2.5cm,
@@ -51,8 +51,8 @@
 \RequirePackage{indentfirst}
 
 \onehalfspacing
-\setlength{\parindent}{0.5in} % first-line indent, about 0.5 inch
-\setlength{\parskip}{0pt}   % no extra space between paragraphsa
+\setlength{\parindent}{0in} % first-line indent, about 0 inch
+\setlength{\parskip}{8pt}   % no extra space between paragraphsa
 
 % =====================================================
 % 4. CORE PACKAGES
@@ -90,7 +90,7 @@
 
 % TikZ diagrams
 \RequirePackage{tikz}
-\usetikzlibrary{            
+\usetikzlibrary{                
     positioning,
     arrows.meta,
     shapes.geometric,
@@ -118,14 +118,14 @@
 \providecommand{\filepath}[1]{\texttt{\seqsplit{#1}}}
 
 % Safer enumerate formatting
-\setlist[enumerate]{            
+\setlist[enumerate]{                
     leftmargin=1.25cm,
     itemsep=0.35em,
     topsep=0.5em
 }
 
 % Safer itemize formatting
-\setlist[itemize]{            
+\setlist[itemize]{                
     leftmargin=1.25cm,
     itemsep=0.35em,
     topsep=0.5em
@@ -211,6 +211,11 @@
 \renewcommand{\cftlottitlefont}{\hspace*{\fill}\Large\bfseries}
 \renewcommand{\cftafterlottitle}{\hspace*{\fill}}
 
+% Move titles upward
+\setlength{\cftbeforetoctitleskip}{-1cm}
+\setlength{\cftbeforeloftitleskip}{-1cm}
+\setlength{\cftbeforelottitleskip}{-1cm}
+
 % -----------------------------------------------------
 % Remove automatic extra chapter gap in LOF and LOT
 % -----------------------------------------------------
@@ -248,14 +253,14 @@
 \DeclareCaptionLabelSeparator{colonspace}{:\quad}
 
 % Caption format in document
-\captionsetup[figure]{            
+\captionsetup[figure]{                
     name=Figure,
     labelfont=bf,
     labelsep=colonspace,
     skip=8pt
 }
 
-\captionsetup[table]{            
+\captionsetup[table]{                
     name=Table,
     labelfont=bf,
     labelsep=colonspace,
@@ -318,7 +323,7 @@
 % Chapter spacing
 \titlespacing{\chapter}
 {0in}      % left indent
-{0pt}      % space before
+{-1cm}      % space before
 {12pt}     % space after
 
 % -----------------------------------------------------
@@ -329,11 +334,11 @@
 \titleformat{\section}
 {\bfseries\fontsize{12pt}{18pt}\selectfont}
 {\thesection.}
-{0.5cm}
+{0.6cm}
 {}
 
 \titlespacing{\section}
-{0.5in}    % left indent
+{0in}    % left indent
 {18pt}     % space before
 {12pt}     % space after
 
@@ -345,11 +350,11 @@
 \titleformat{\subsection}
 {\bfseries\fontsize{11pt}{16.5pt}\selectfont}
 {\thesubsection.}
-{0.5cm}
+{0.4cm}
 {}
 
 \titlespacing{\subsection}
-{0.5in}    % left indent
+{0in}    % left indent
 {14pt}     % space before
 {10pt}     % space after
 
@@ -366,7 +371,7 @@
 {}
 
 \titlespacing{\subsubsection}
-{1.0in} % left indent
+{0in} % left indent
 {8pt} % space before
 {4pt} % space after
 
@@ -374,7 +379,7 @@
 % 9. CITATIONS, REFERENCES, AND HYPERLINKS
 % =====================================================
 
-\RequirePackage[            
+\RequirePackage[                
     backend=biber,
     style=ieee,
     sorting=none
@@ -388,7 +393,7 @@
 \RequirePackage{hyperref}
 \RequirePackage{bookmark}
 
-\hypersetup{            
+\hypersetup{                
     colorlinks=true,
     linkcolor=black,
     citecolor=black,
@@ -403,11 +408,11 @@
 \newcommand{\Watermark}{%
     \AddToShipoutPictureBG*{%
         \begin{tikzpicture}[remember picture, overlay]
-            \node[        
+            \node[            
                 opacity=0.18,
                 anchor=center
             ] at ([xshift=0cm,yshift=-1.5cm]current page.center) {%
-                \includegraphics[        
+                \includegraphics[            
                     width=0.75\paperwidth,
                     keepaspectratio
                 ]{figures/schools/watermark.png}%
